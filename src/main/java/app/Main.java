@@ -28,6 +28,7 @@ public class Main {
                 System.out.println("\tYou decided to attack.");
             } else {
                 System.out.println("\tYou longed for death");
+                player.wait(player);
             }
 
             System.out.println("\tThe wolf attacked you!\n");

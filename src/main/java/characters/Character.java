@@ -1,10 +1,16 @@
 package characters;
 
+import statuses.Status;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Character {
     private int health;
     private int damage;
     private int armor;
     private boolean alive = true;
+    private List<Status> statuses = new ArrayList<Status>();
 
     public Character(int health, int damage, int armor) {
         this.health = health;
@@ -55,5 +61,13 @@ public abstract class Character {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public List<Status> getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(List<Status> statuses) {
+        this.statuses = statuses;
     }
 }
