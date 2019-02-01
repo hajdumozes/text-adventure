@@ -36,7 +36,7 @@ public abstract class Character {
     }
 
     public void defend() {
-        armor.setValue(armor.getValue() + 5);
+        armor.increase(5);
         statuses.add(new Status(armor, 5, 3));
     }
 
