@@ -17,7 +17,10 @@ public class Main {
                 "\t this tale, or the newcoming hero dies to the first lonely wolf in the deep of the woods? \n" +
                 "\t Let's find out!\n");
         while (wolf.isAlive() && player.isAlive()) {
-            System.out.println("\t Your HP: " + player.getHealth());
+            System.out.println("--------------------------------------------------");
+
+            System.out.println("\t Your HP: " + player.getHealth().getValue());
+            System.out.println("\t Wolf HP: " + wolf.getHealth().getValue());
             System.out.println("\n\t What would you like to do?");
             System.out.println("\t 1. Attack");
             System.out.println("\t 2. Wait for certain death");

@@ -14,7 +14,7 @@ public abstract class Attribute {
     }
 
     public void decrease(int amount) {
-        value += amount;
+        value -= amount;
     }
 
     public String getName() {
