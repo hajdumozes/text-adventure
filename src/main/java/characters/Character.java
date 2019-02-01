@@ -15,11 +15,15 @@ public abstract class Character {
     private Attribute armor;
     private boolean alive = true;
     private List<Status> statuses = new ArrayList<Status>();
+    private List<Attribute> attributes = new ArrayList<Attribute>();
 
     public Character(int health, int damage, int armor) {
         this.health = new Health(health);
         this.damage = new Damage(damage);
         this.armor = new Armor(armor);
+        attributes.add(this.health);
+        attributes.add(this.damage);
+        attributes.add(this.armor);
     }
 
     public void attack(Character defender) {
@@ -78,5 +82,13 @@ public abstract class Character {
 
     public void setStatuses(List<Status> statuses) {
         this.statuses = statuses;
+    }
+
+    public List<Attribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<Attribute> attributes) {
+        this.attributes = attributes;
     }
 }

@@ -1,5 +1,6 @@
 package app;
 
+import attributes.Attribute;
 import characters.*;
 import characters.Character;
 import statuses.Status;
@@ -62,7 +63,16 @@ public class Main {
             Status current = iterator.next();
             current.setDuration(current.getDuration() - 1);
             if (current.getDuration() <= 0) {
+                nullifyStatusEffect(current, player);
                 iterator.remove();
+            }
+        }
+    }
+
+    private static void nullifyStatusEffect(Status status, Character player) {
+        for (Attribute attribute : player.getAttributes()) {
+            if (attribute.getName().equals(status.getAttribute().getName())) {
+                attribute.decrease(status.getValue());
             }
         }
     }
