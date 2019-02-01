@@ -18,13 +18,18 @@ public abstract class Character {
         this.armor = armor;
     }
 
-    public void attack(Character attacker, Character defender) {
-        if (attacker.damage > defender.armor) {
-            defender.health -= attacker.damage - defender.armor;
+    public void attack(Character defender) {
+        if (damage > defender.armor) {
+            defender.health -= damage - defender.armor;
         }
         if (defender.health <= 0) {
             defender.alive = false;
         }
+    }
+
+    public void defend() {
+        armor += 5;
+        statuses.add(new Status(5, 3));
     }
 
     public void wait(Character character) {
