@@ -1,62 +1,66 @@
 package characters;
 
+import attributes.Armor;
+import attributes.Attribute;
+import attributes.Damage;
+import attributes.Health;
 import statuses.Status;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Character {
-    private int health;
-    private int damage;
-    private int armor;
+    private Attribute health;
+    private Attribute damage;
+    private Attribute armor;
     private boolean alive = true;
     private List<Status> statuses = new ArrayList<Status>();
 
     public Character(int health, int damage, int armor) {
-        this.health = health;
-        this.damage = damage;
-        this.armor = armor;
+        this.health = new Health(health);
+        this.damage = new Damage(damage);
+        this.armor = new Armor(armor);
     }
 
     public void attack(Character defender) {
-        if (damage > defender.armor) {
-            defender.health -= damage - defender.armor;
+        if (damage.getValue() > defender.getArmor().getValue()) {
+            defender.getHealth().decrease(damage.getValue() - defender.getArmor().getValue());
         }
-        if (defender.health <= 0) {
+        if (defender.health.getValue() <= 0) {
             defender.alive = false;
         }
     }
 
     public void defend() {
-        armor += 5;
-        statuses.add(new Status(5, 3));
+        armor.setValue(armor.getValue() + 5);
+        statuses.add(new Status(armor, 5, 3));
     }
 
     public void wait(Character character) {
         // useless right now
     }
 
-    public int getHealth() {
+    public Attribute getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(Attribute health) {
         this.health = health;
     }
 
-    public int getDamage() {
+    public Attribute getDamage() {
         return damage;
     }
 
-    public void setDamage(int damage) {
+    public void setDamage(Attribute damage) {
         this.damage = damage;
     }
 
-    public int getArmor() {
+    public Attribute getArmor() {
         return armor;
     }
 
-    public void setArmor(int armor) {
+    public void setArmor(Attribute armor) {
         this.armor = armor;
     }
 
