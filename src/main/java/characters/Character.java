@@ -2,8 +2,8 @@ package characters;
 
 import attributes.ArmorClass;
 import attributes.Attribute;
-import attributes.Damage;
 import attributes.Health;
+import items.Weapon;
 import statuses.Status;
 
 import java.text.MessageFormat;
@@ -14,18 +14,17 @@ import java.util.Random;
 public abstract class Character {
     private String name;
     private Attribute health;
-    private Attribute damage;
     private Attribute armorClass;
-    private List<Status> statuses = new ArrayList<Status>();
-    private List<Attribute> attributes = new ArrayList<Attribute>();
+    private List<Status> statuses = new ArrayList<>();
+    private List<Attribute> attributes = new ArrayList<>();
+    private Weapon weaponEquipped;
 
-    public Character(String name, int health, int damage, int armorClass) {
+    public Character(String name, int health, int armorClass, Weapon weaponEquipped) {
         this.name = name;
         this.health = new Health(health);
-        this.damage = new Damage(damage);
         this.armorClass = new ArmorClass(armorClass);
+        this.weaponEquipped = weaponEquipped;
         attributes.add(this.health);
-        attributes.add(this.damage);
         attributes.add(this.armorClass);
     }
 
@@ -48,9 +47,15 @@ public abstract class Character {
         }
     }
 
-    public int dealDamage(Character defender) {
-        defender.getHealth().decrease(damage.getValue());
-        return damage.getValue();
+    private int dealDamage(Character defender) {
+        int damage = rollDamage();
+        defender.getHealth().decrease(damage);
+        return damage;
+    }
+
+    private int rollDamage() {
+        return weaponEquipped.getNumberOfDices() *
+                new Random().nextInt(weaponEquipped.getDamage()) + 1;
     }
 
     public void defend() {
@@ -60,6 +65,14 @@ public abstract class Character {
 
     public void wait(Character character) {
         // useless right now
+    }
+
+    public Weapon getWeaponEquipped() {
+        return weaponEquipped;
+    }
+
+    public void setWeaponEquipped(Weapon weaponEquipped) {
+        this.weaponEquipped = weaponEquipped;
     }
 
     public String getName() {
@@ -76,14 +89,6 @@ public abstract class Character {
 
     public void setHealth(Attribute health) {
         this.health = health;
-    }
-
-    public Attribute getDamage() {
-        return damage;
-    }
-
-    public void setDamage(Attribute damage) {
-        this.damage = damage;
     }
 
     public Attribute getArmorClass() {

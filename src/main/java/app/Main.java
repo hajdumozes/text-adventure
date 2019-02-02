@@ -16,7 +16,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         List<Character> friendlyCharacters = new ArrayList<Character>();
         List<Character> enemyCharacters = new ArrayList<Character>();
-        Character player = new Player();
+        Character player = new Barbarian();
         Character wolf = new Wolf();
         friendlyCharacters.add(player);
         enemyCharacters.add(wolf);
