@@ -7,4 +7,9 @@ public class Wolf extends Character {
     public Wolf() {
         super("Wolf", 30, 5, new WolfClaw());
     }
+
+    @Override
+    public void special() {
+
+    }
 }

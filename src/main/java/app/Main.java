@@ -14,8 +14,8 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        List<Character> friendlyCharacters = new ArrayList<Character>();
-        List<Character> enemyCharacters = new ArrayList<Character>();
+        List<Character> friendlyCharacters = new ArrayList<>();
+        List<Character> enemyCharacters = new ArrayList<>();
         Character player = new Barbarian();
         Character wolf = new Wolf();
         friendlyCharacters.add(player);
@@ -37,16 +37,18 @@ public class Main {
                 System.out.println("\n--------------------------------------------------");
                 Character player = friendlyCharacters.get(0);
                 Character wolf = enemyCharacters.get(0);
-                refreshStatuses(player);
-                turnCounter++;
 
+                turnCounter++;
                 System.out.println("\tTurn " + turnCounter);
+                refreshStatuses(player);
+
                 System.out.println("\tYour HP: " + player.getHealth().getValue());
                 System.out.println("\tWolf's HP: " + wolf.getHealth().getValue());
                 System.out.println("\n\tWhat would you like to do?");
                 System.out.println("\t1. Attack");
                 System.out.println("\t2. Wait for certain death");
                 System.out.println("\t3. Defend");
+                System.out.println("\t4. Special attack");
 
                 String input = scanner.nextLine();
                 evaluateUserInput(input, player, wolf);
@@ -71,6 +73,10 @@ public class Main {
                 System.out.println("\tYou decided to defend.");
                 player.defend();
                 break;
+            case "4":
+                System.out.println("\tYou decided to use special attack.");
+                player.special();
+                break;
             default:
                 System.out.println("\tYou longed for death");
                 player.wait(player);
@@ -84,6 +90,7 @@ public class Main {
             Status current = iterator.next();
             current.setDuration(current.getDuration() - 1);
             if (current.getDuration() <= 0) {
+                System.out.println("\n\tEffect of " + current.getName() + " expired.\n");
                 nullifyStatusEffect(current, player);
                 iterator.remove();
             }

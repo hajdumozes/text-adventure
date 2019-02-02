@@ -2,6 +2,7 @@ package characters;
 
 import attributes.ArmorClass;
 import attributes.Attribute;
+import attributes.DamageBonus;
 import attributes.Health;
 import items.Weapon;
 import statuses.Status;
@@ -15,6 +16,7 @@ public abstract class Character {
     private String name;
     private Attribute health;
     private Attribute armorClass;
+    private Attribute damageBonus = new DamageBonus();
     private List<Status> statuses = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
     private Weapon weaponEquipped;
@@ -26,6 +28,7 @@ public abstract class Character {
         this.weaponEquipped = weaponEquipped;
         attributes.add(this.health);
         attributes.add(this.armorClass);
+        attributes.add(new DamageBonus());
     }
 
     public void attack(Character defender) {
@@ -47,8 +50,10 @@ public abstract class Character {
         }
     }
 
+    public abstract void special();
+
     private int dealDamage(Character defender) {
-        int damage = rollDamage();
+        int damage = rollDamage() + damageBonus.getValue();
         defender.getHealth().decrease(damage);
         return damage;
     }
@@ -60,15 +65,31 @@ public abstract class Character {
 
     public void defend() {
         armorClass.increase(5);
-        statuses.add(new Status(armorClass, 5, 3));
+        statuses.add(new Status(armorClass, "Defend", 5, 3));
     }
 
     public void wait(Character character) {
         // useless right now
     }
 
+    protected void addToStatuses(Status status) {
+        statuses.add(status);
+    }
+
+    protected void addToAttributes(Attribute attribute) {
+        attributes.add(attribute);
+    }
+
     public Weapon getWeaponEquipped() {
         return weaponEquipped;
+    }
+
+    public Attribute getDamageBonus() {
+        return damageBonus;
+    }
+
+    public void setDamageBonus(Attribute damageBonus) {
+        this.damageBonus = damageBonus;
     }
 
     public void setWeaponEquipped(Weapon weaponEquipped) {
