@@ -8,11 +8,11 @@
 * Battle is based on D&D d20 system
 * Damage is based on weapons
 * Barebone attributes
-* Barebone statuses
+* Barebone combat
 * Multiple characters can fight on each side
+* Special attacks are available to all characters, including enemies
 
 ## Certain future plans chronologically:
-* Special attacks addition to all characters, including enemies.
 * Choosable class at the beginning of the game.
 * Initiative for party-battles.
 * Ranged battle and combat distance.

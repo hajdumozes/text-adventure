@@ -1,11 +1,13 @@
 package characters;
 
+import app.Main;
 import attributes.ArmorClass;
 import attributes.Attribute;
 import attributes.DamageBonus;
 import attributes.Health;
+import combat.Ability;
 import items.Weapon;
-import statuses.Status;
+import combat.Status;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ public abstract class Character {
     private Attribute damageBonus = new DamageBonus();
     private List<Status> statuses = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
+    private List<Ability> abilityCountdowns = new ArrayList<>();
     private Weapon weaponEquipped;
 
     public Character(String name, int health, int armorClass, Weapon weaponEquipped) {
@@ -33,7 +36,7 @@ public abstract class Character {
 
     public void attack(Character defender) {
         int attackingRoll = new Random().nextInt(20) + 1;
-        System.out.println(MessageFormat.format("\t{0} rolled {1}.", name, attackingRoll));
+        System.out.println(MessageFormat.format("\n\t{0} rolled {1}.", name, attackingRoll));
         if (attackingRoll == 1) {
             //critical failure
         } else if (attackingRoll == 20) {
@@ -46,11 +49,16 @@ public abstract class Character {
             System.out.println(MessageFormat.format("\t{0} hit {1}, and dealt {2} damage.", name, defender.name, damage));
         }
         if (defender.health.getValue() <= 0) {
-            throw new CharacterDiedException(defender);
+            System.out.println(MessageFormat.format("\t{0} died!", defender.getName()));
+            if (!Main.HOSTILE_PARTY.remove(defender)) {
+                Main.FRIENDLY_PARTY.remove(defender);
+            }
         }
     }
 
     public abstract void special();
+
+    public abstract void letAiDecide();
 
     private int dealDamage(Character defender) {
         int damage = rollDamage() + damageBonus.getValue();
@@ -134,5 +142,13 @@ public abstract class Character {
 
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
+    }
+
+    public List<Ability> getAbilityCountdowns() {
+        return abilityCountdowns;
+    }
+
+    public void setAbilityCountdowns(List<Ability> abilityCountdowns) {
+        this.abilityCountdowns = abilityCountdowns;
     }
 }

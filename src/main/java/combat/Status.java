@@ -1,4 +1,4 @@
-package statuses;
+package combat;
 
 import attributes.Attribute;
 
