@@ -16,7 +16,6 @@ public abstract class Character {
     private Attribute health;
     private Attribute damage;
     private Attribute armorClass;
-    private boolean alive = true;
     private List<Status> statuses = new ArrayList<Status>();
     private List<Attribute> attributes = new ArrayList<Attribute>();
 
@@ -45,7 +44,7 @@ public abstract class Character {
             System.out.println(MessageFormat.format("\t{0} hit {1}, and dealt {2} damage.", name, defender.name, damage));
         }
         if (defender.health.getValue() <= 0) {
-            defender.alive = false;
+            throw new CharacterDiedException(defender);
         }
     }
 
@@ -93,14 +92,6 @@ public abstract class Character {
 
     public void setArmorClass(Attribute armorClass) {
         this.armorClass = armorClass;
-    }
-
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public void setAlive(boolean alive) {
-        this.alive = alive;
     }
 
     public List<Status> getStatuses() {

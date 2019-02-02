@@ -7,6 +7,12 @@
     <groupId>hajdumozes</groupId>
     <artifactId>text-adventure</artifactId>
     <version>1.0-SNAPSHOT</version>
-
+    <name>text-adventure</name>
+    <description>Test adventure game</description>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>10</java.version>
+    </properties>
 
 </project>

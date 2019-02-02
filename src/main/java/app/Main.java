@@ -5,53 +5,76 @@ import characters.*;
 import characters.Character;
 import statuses.Status;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        List<Character> friendlyCharacters = new ArrayList<Character>();
+        List<Character> enemyCharacters = new ArrayList<Character>();
         Character player = new Player();
         Character wolf = new Wolf();
+        friendlyCharacters.add(player);
+        enemyCharacters.add(wolf);
         System.out.println("\t Every good story begins with a traveler, who is lost in the woods and have to \n" +
                 "\t climb the ladder of the hierarchy from the very base of it. Should we even start telling \n" +
                 "\t this tale, or the newcoming hero dies to the first lonely wolf in the deep of the woods? \n" +
                 "\t Let's find out!\n");
-        int counter = 0;
-        while (wolf.isAlive() && player.isAlive()) {
-            System.out.println("\n--------------------------------------------------");
+        int turnCounter = 0;
 
-            refreshStatuses(player);
-            counter++;
+        progressThroughBattle(friendlyCharacters, enemyCharacters, turnCounter, scanner);
+        decideOutcome(friendlyCharacters);
+    }
 
-            System.out.println("\t Turn " + counter);
-            System.out.println("\t Your HP: " + player.getHealth().getValue());
-            System.out.println("\t Wolf's HP: " + wolf.getHealth().getValue());
-            System.out.println("\n\t What would you like to do?");
-            System.out.println("\t 1. Attack");
-            System.out.println("\t 2. Wait for certain death");
-            System.out.println("\t 3. Defend");
 
-            String input = scanner.nextLine();
-            evaluateUserInput(input, player, wolf);
+    private static void progressThroughBattle(List<Character> friendlyCharacters, List<Character> enemyCharacters, int turnCounter, Scanner scanner) {
+        while (friendlyCharacters.size() > 0 && enemyCharacters.size() > 0) {
+            try {
+                System.out.println("\n--------------------------------------------------");
+                Character player = friendlyCharacters.get(0);
+                Character wolf = enemyCharacters.get(0);
+                refreshStatuses(player);
+                turnCounter++;
 
-            System.out.println("\n\tThe wolf attacked you!");
-            wolf.attack(player);
+                System.out.println("\tTurn " + turnCounter);
+                System.out.println("\tYour HP: " + player.getHealth().getValue());
+                System.out.println("\tWolf's HP: " + wolf.getHealth().getValue());
+                System.out.println("\n\tWhat would you like to do?");
+                System.out.println("\t1. Attack");
+                System.out.println("\t2. Wait for certain death");
+                System.out.println("\t3. Defend");
+
+                String input = scanner.nextLine();
+                evaluateUserInput(input, player, wolf);
+
+                System.out.println("\n\tThe wolf attacked you!");
+                wolf.attack(player);
+            } catch (CharacterDiedException characterDeath) {
+                if (!enemyCharacters.remove(characterDeath.getCharacter())) {
+                    friendlyCharacters.remove(characterDeath.getCharacter());
+                }
+            }
         }
-        decideOutcome(player);
     }
 
     private static void evaluateUserInput(String input, Character player, Character wolf) {
-        if (input.equals("1")) {
-            System.out.println("\n\tYou decided to attack.");
-            player.attack(wolf);
-        } else if (input.equals("3")) {
-            System.out.println("\tYou decided to defend.");
-            player.defend();
-        } else {
-            System.out.println("\tYou longed for death");
-            player.wait(player);
+        switch (input) {
+            case "1":
+                System.out.println("\n\tYou decided to attack.");
+                player.attack(wolf);
+                break;
+            case "3":
+                System.out.println("\tYou decided to defend.");
+                player.defend();
+                break;
+            default:
+                System.out.println("\tYou longed for death");
+                player.wait(player);
+                break;
         }
     }
 
@@ -75,11 +98,11 @@ public class Main {
         }
     }
 
-    private static void decideOutcome(Character player) {
-        if (player.isAlive()) {
-            System.out.println("\tCongratulations you've won! You may begin your journey!");
+    private static void decideOutcome(List<Character> party) {
+        if (party.size() > 0) {
+            System.out.println("\n\tCongratulations you've won! You may begin your journey!");
         } else {
-            System.out.println("\tYou are dead.");
+            System.out.println("\n\tYou are dead.");
         }
     }
 }
