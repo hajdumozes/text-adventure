@@ -20,7 +20,7 @@ public class Main {
                 "\t Let's find out!\n");
         int counter = 0;
         while (wolf.isAlive() && player.isAlive()) {
-            System.out.println("--------------------------------------------------");
+            System.out.println("\n--------------------------------------------------");
 
             refreshStatuses(player);
             counter++;
@@ -36,7 +36,7 @@ public class Main {
             String input = scanner.nextLine();
             evaluateUserInput(input, player, wolf);
 
-            System.out.println("\tThe wolf attacked you!\n");
+            System.out.println("\n\tThe wolf attacked you!");
             wolf.attack(player);
         }
         decideOutcome(player);
@@ -44,11 +44,11 @@ public class Main {
 
     private static void evaluateUserInput(String input, Character player, Character wolf) {
         if (input.equals("1")) {
+            System.out.println("\n\tYou decided to attack.");
             player.attack(wolf);
-            System.out.println("\tYou decided to attack.");
         } else if (input.equals("3")) {
-            player.defend();
             System.out.println("\tYou decided to defend.");
+            player.defend();
         } else {
             System.out.println("\tYou longed for death");
             player.wait(player);

@@ -3,6 +3,6 @@ package characters;
 public class Wolf extends Character {
 
     public Wolf() {
-        super(30, 10, 0);
+        super("Wolf",30, 5, 10);
     }
 }

@@ -3,6 +3,6 @@ package characters;
 public class Player extends Character {
 
     public Player() {
-        super(100, 5, 0);
+        super("You",100, 5, 5);
     }
 }
