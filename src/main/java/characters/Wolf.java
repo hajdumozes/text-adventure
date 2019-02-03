@@ -10,7 +10,7 @@ public class Wolf extends Character {
     private boolean usedHowl;
 
     public Wolf() {
-        super("Wolf", 20, 5, new Equipment(new WolfClaw(), new WolfClaw()));
+        super("Wolf", 11, 15, 5, new Equipment(new WolfClaw(), new WolfClaw()));
     }
 
     @Override

@@ -4,12 +4,10 @@ import characters.*;
 import characters.Character;
 import items.Equipment.Equipment;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import static app.Combat.*;
+import static characters.Character.roll;
 
 public class Main {
     public static final List<Character> FRIENDLY_PARTY = new ArrayList<>();
@@ -20,6 +18,7 @@ public class Main {
     public static void main(String[] args) {
         chooseClass();
         chooseEquipment();
+        rollAbility();
         Character wolf = new Wolf();
         HOSTILE_PARTY.add(wolf);
         System.out.println("\t Every good story begins with a traveler, who is lost in the woods and have to \n" +
@@ -47,6 +46,19 @@ public class Main {
         String input = CONSOLE.nextLine();
         Character character = (Character) PLAYABLE_CLASSES.get(Integer.parseInt(input) - 1);
         FRIENDLY_PARTY.add(character);
+    }
+
+    public static int rollAbility() {
+        List<Integer> rolls = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            rolls.add(roll(1, 6));
+        }
+        rolls.sort(Comparator.comparing(Integer::intValue));
+        rolls.remove(0);
+        int abilityPoint = rolls.stream().mapToInt(Integer::intValue).sum();
+        FRIENDLY_PARTY.get(0).getDexterity().setValue(abilityPoint);
+        return abilityPoint;
+        // With more ability the return will have an impact. Player will roll 6times and choose which points go where.
     }
 
     private static void chooseEquipment() {

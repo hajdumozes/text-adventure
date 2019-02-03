@@ -1,17 +1,16 @@
 package characters;
 
 import app.Main;
-import attributes.ArmorClass;
-import attributes.Attribute;
-import attributes.DamageBonus;
-import attributes.Health;
+import attributes.*;
 import combat.Ability;
 import items.Equipment.Equipment;
 import items.Weapon;
 import combat.Status;
+import org.w3c.dom.Attr;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -19,20 +18,23 @@ public abstract class Character {
     private String name;
     private Attribute health;
     private Attribute armorClass;
+    private Attribute dexterity;
     private Attribute damageBonus = new DamageBonus();
     private List<Status> statuses = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
     private List<Ability> abilityCountdowns = new ArrayList<>();
     private Equipment equipment;
 
-    public Character(String name, int health, int armorClass, Equipment equipment) {
+    public Character(String name, int health, int dexterity, int armorClass, Equipment equipment) {
         this.name = name;
         this.health = new Health(health);
         this.armorClass = new ArmorClass(armorClass);
+        this.dexterity = new Dexterity(dexterity);
         this.equipment = equipment;
         attributes.add(this.health);
         attributes.add(this.armorClass);
         attributes.add(new DamageBonus());
+        attributes.add(this.dexterity);
     }
 
     public void attack(Character defender) {
@@ -67,12 +69,15 @@ public abstract class Character {
         return damage;
     }
 
+    public static int roll(int numberOfDices, int maxNumber) {
+        return numberOfDices * new Random().nextInt(maxNumber) + 1;
+    }
+
     private int rollDamage() {
         Weapon rightHandedWeapon = equipment.getRightHand();
         Weapon leftHandedWeapon = equipment.getLeftHand();
-        int damageWithTwoWeapon =
-                (rightHandedWeapon.getNumberOfDices() * new Random().nextInt(rightHandedWeapon.getDamage()) + 1) +
-                        (leftHandedWeapon.getNumberOfDices() * new Random().nextInt(leftHandedWeapon.getDamage()) + 1);
+        int damageWithTwoWeapon = (roll(rightHandedWeapon.getNumberOfDices(), rightHandedWeapon.getDamage())) +
+                (roll(leftHandedWeapon.getNumberOfDices(), leftHandedWeapon.getDamage()));
         if (!rightHandedWeapon.isTwoHanded() && !leftHandedWeapon.isTwoHanded()) {
             return damageWithTwoWeapon;
         } else {
@@ -159,5 +164,13 @@ public abstract class Character {
 
     public void setEquipment(Equipment equipment) {
         this.equipment = equipment;
+    }
+
+    public Attribute getDexterity() {
+        return dexterity;
+    }
+
+    public void setDexterity(Attribute dexterity) {
+        this.dexterity = dexterity;
     }
 }
