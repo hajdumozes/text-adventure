@@ -7,7 +7,7 @@ import combat.Status;
 
 public class Barbarian extends Character {
     public Barbarian() {
-        super("You", 50, 5, new Equipment(new Handaxe(), new Handaxe()));
+        super("Barbarian", 50, 5, new Equipment(new Handaxe(), new Handaxe()));
     }
 
     @Override

@@ -4,6 +4,7 @@ import characters.*;
 import characters.Character;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,6 +13,7 @@ import static app.Combat.*;
 public class Main {
     public static final List<Character> FRIENDLY_PARTY = new ArrayList<>();
     public static final List<Character> HOSTILE_PARTY = new ArrayList<>();
+    public static final List<Character> PLAYABLE_CLASSES = Arrays.asList(new Barbarian(), new Paladin());
     public static final Scanner CONSOLE = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -36,17 +38,12 @@ public class Main {
     }
 
     private static void chooseClass() {
-        System.out.println("\n\tChoose your starting class:");
-        System.out.println("\t1. Barbarian");
-        System.out.println("\t2. Paladin");
-        String input = CONSOLE.nextLine();
-        switch (input) {
-            case "1":
-                FRIENDLY_PARTY.add(new Barbarian());
-                break;
-            case "2":
-                FRIENDLY_PARTY.add(new Paladin());
-                break;
+        System.out.println("\n\tChoose your starting class:\n");
+        for (int i = 1; i <= PLAYABLE_CLASSES.size(); i++) {
+            System.out.println("\t" + i + ". " + PLAYABLE_CLASSES.get(i - 1).getName());
         }
+        String input = CONSOLE.nextLine();
+        Character character = PLAYABLE_CLASSES.get(Integer.parseInt(input) - 1);
+        FRIENDLY_PARTY.add(character);
     }
 }
