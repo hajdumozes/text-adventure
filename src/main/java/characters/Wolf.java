@@ -5,12 +5,14 @@ import combat.Ability;
 import items.Equipment.Equipment;
 import items.WolfClaw;
 
+import static app.Combat.findPossibleTargets;
+
 public class Wolf extends Character {
 
     private boolean usedHowl;
 
     public Wolf() {
-        super("Wolf", 11, 15, 5, new Equipment(new WolfClaw(), new WolfClaw()));
+        super("Wolf", 11, 15, 5, new Equipment(new WolfClaw(), new WolfClaw()), false);
     }
 
     @Override
@@ -25,7 +27,7 @@ public class Wolf extends Character {
 
     public void howl() {
         System.out.println("\n\t# Wolf appeared! #");
-        Main.HOSTILE_PARTY.add(new Wolf());
+        Main.CHARACTERS_ALIVE.add(new Wolf());
     }
 
     @Override
@@ -34,7 +36,7 @@ public class Wolf extends Character {
             special();
             usedHowl = true;
         } else {
-            attack(Main.FRIENDLY_PARTY.get(0));
+            attack(findPossibleTargets(this).get(0));
         }
     }
 }

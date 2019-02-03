@@ -1,12 +1,18 @@
 package attributes;
 
-public abstract class Attribute {
+
+public abstract class Attribute implements Comparable<Attribute> {
     private String name;
     private int value;
 
     public Attribute(String name, int value) {
         this.name = name;
         this.value = value;
+    }
+
+    @Override
+    public int compareTo(Attribute attribute) {
+        return value - attribute.getValue();
     }
 
     public void increase(int amount) {

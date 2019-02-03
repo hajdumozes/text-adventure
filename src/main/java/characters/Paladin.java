@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Paladin extends Character implements Playable {
     public Paladin() {
-        super("Paladin", 50,10, 10, new Equipment(new Longsword(), new Shield()));
+        super("Paladin", 50,10, 10, new Equipment(new Longsword(), new Shield()), true);
     }
 
     @Override

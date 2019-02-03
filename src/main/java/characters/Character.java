@@ -6,13 +6,14 @@ import combat.Ability;
 import items.Equipment.Equipment;
 import items.Weapon;
 import combat.Status;
-import org.w3c.dom.Attr;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+
+import static app.Combat.getAliveCharactersFromBothSides;
+import static app.Main.decideOutcome;
 
 public abstract class Character {
     private String name;
@@ -24,13 +25,16 @@ public abstract class Character {
     private List<Attribute> attributes = new ArrayList<>();
     private List<Ability> abilityCountdowns = new ArrayList<>();
     private Equipment equipment;
+    private boolean isAlive = true;
+    private boolean isFriendly;
 
-    public Character(String name, int health, int dexterity, int armorClass, Equipment equipment) {
+    public Character(String name, int health, int dexterity, int armorClass, Equipment equipment, boolean isFriendly) {
         this.name = name;
         this.health = new Health(health);
         this.armorClass = new ArmorClass(armorClass);
         this.dexterity = new Dexterity(dexterity);
         this.equipment = equipment;
+        this.isFriendly = isFriendly;
         attributes.add(this.health);
         attributes.add(this.armorClass);
         attributes.add(new DamageBonus());
@@ -52,9 +56,11 @@ public abstract class Character {
             System.out.println(MessageFormat.format("\t{0} hit {1}, and dealt {2} damage.", name, defender.name, damage));
         }
         if (defender.health.getValue() <= 0) {
+            defender.isAlive = false;
             System.out.println(MessageFormat.format("\t{0} died!", defender.getName()));
-            if (!Main.HOSTILE_PARTY.remove(defender)) {
-                Main.FRIENDLY_PARTY.remove(defender);
+            Main.CHARACTERS_ALIVE.remove(defender);
+            if (!getAliveCharactersFromBothSides()) {
+                decideOutcome();
             }
         }
     }
@@ -172,5 +178,21 @@ public abstract class Character {
 
     public void setDexterity(Attribute dexterity) {
         this.dexterity = dexterity;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
+    public boolean isFriendly() {
+        return isFriendly;
+    }
+
+    public void setFriendly(boolean friendly) {
+        isFriendly = friendly;
     }
 }

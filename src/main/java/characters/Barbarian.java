@@ -8,12 +8,11 @@ import combat.Status;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 public class Barbarian extends Character implements Playable {
     public Barbarian() {
-        super("Barbarian", 50, 10, 5, new Equipment(new Handaxe(), new Handaxe()));
+        super("Barbarian", 50, 10, 5, new Equipment(new Handaxe(), new Handaxe()), true);
     }
 
     @Override
