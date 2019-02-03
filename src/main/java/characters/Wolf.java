@@ -2,6 +2,7 @@ package characters;
 
 import app.Main;
 import combat.Ability;
+import items.Equipment.Equipment;
 import items.WolfClaw;
 
 public class Wolf extends Character {
@@ -9,7 +10,7 @@ public class Wolf extends Character {
     private boolean usedHowl;
 
     public Wolf() {
-        super("Wolf", 20, 5, new WolfClaw());
+        super("Wolf", 20, 5, new Equipment(new WolfClaw(), new WolfClaw()));
     }
 
     @Override

@@ -41,8 +41,12 @@ public class Main {
         System.out.println("\t2. Paladin");
         String input = CONSOLE.nextLine();
         switch (input) {
-            case "1" : FRIENDLY_PARTY.add(new Barbarian());
-            case "2" : FRIENDLY_PARTY.add(new Paladin());
+            case "1":
+                FRIENDLY_PARTY.add(new Barbarian());
+                break;
+            case "2":
+                FRIENDLY_PARTY.add(new Paladin());
+                break;
         }
     }
 }

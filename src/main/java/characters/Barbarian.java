@@ -1,12 +1,13 @@
 package characters;
 
 import attributes.DamageBonus;
+import items.Equipment.Equipment;
 import items.Handaxe;
 import combat.Status;
 
 public class Barbarian extends Character {
     public Barbarian() {
-        super("You", 50, 5, new Handaxe());
+        super("You", 50, 5, new Equipment(new Handaxe(), new Handaxe()));
     }
 
     @Override

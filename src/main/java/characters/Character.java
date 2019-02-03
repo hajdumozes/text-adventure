@@ -6,6 +6,7 @@ import attributes.Attribute;
 import attributes.DamageBonus;
 import attributes.Health;
 import combat.Ability;
+import items.Equipment.Equipment;
 import items.Weapon;
 import combat.Status;
 
@@ -22,13 +23,13 @@ public abstract class Character {
     private List<Status> statuses = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
     private List<Ability> abilityCountdowns = new ArrayList<>();
-    private Weapon weaponEquipped;
+    private Equipment equipment;
 
-    public Character(String name, int health, int armorClass, Weapon weaponEquipped) {
+    public Character(String name, int health, int armorClass, Equipment equipment) {
         this.name = name;
         this.health = new Health(health);
         this.armorClass = new ArmorClass(armorClass);
-        this.weaponEquipped = weaponEquipped;
+        this.equipment = equipment;
         attributes.add(this.health);
         attributes.add(this.armorClass);
         attributes.add(new DamageBonus());
@@ -67,8 +68,16 @@ public abstract class Character {
     }
 
     private int rollDamage() {
-        return weaponEquipped.getNumberOfDices() *
-                new Random().nextInt(weaponEquipped.getDamage()) + 1;
+        Weapon rightHandedWeapon = equipment.getRightHand();
+        Weapon leftHandedWeapon = equipment.getLeftHand();
+        int damageWithTwoWeapon =
+                (rightHandedWeapon.getNumberOfDices() * new Random().nextInt(rightHandedWeapon.getDamage()) + 1) +
+                        (leftHandedWeapon.getNumberOfDices() * new Random().nextInt(leftHandedWeapon.getDamage()) + 1);
+        if (!rightHandedWeapon.isTwoHanded() && !leftHandedWeapon.isTwoHanded()) {
+            return damageWithTwoWeapon;
+        } else {
+            return damageWithTwoWeapon / 2;
+        }
     }
 
     public void defend() {
@@ -88,20 +97,12 @@ public abstract class Character {
         attributes.add(attribute);
     }
 
-    public Weapon getWeaponEquipped() {
-        return weaponEquipped;
-    }
-
     public Attribute getDamageBonus() {
         return damageBonus;
     }
 
     public void setDamageBonus(Attribute damageBonus) {
         this.damageBonus = damageBonus;
-    }
-
-    public void setWeaponEquipped(Weapon weaponEquipped) {
-        this.weaponEquipped = weaponEquipped;
     }
 
     public String getName() {
@@ -150,5 +151,13 @@ public abstract class Character {
 
     public void setAbilityCountdowns(List<Ability> abilityCountdowns) {
         this.abilityCountdowns = abilityCountdowns;
+    }
+
+    public Equipment getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(Equipment equipment) {
+        this.equipment = equipment;
     }
 }
