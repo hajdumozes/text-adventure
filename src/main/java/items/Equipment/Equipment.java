@@ -36,4 +36,10 @@ public class Equipment {
             this.leftHand = weapon;
         }
     }
+
+    @Override
+    public String toString() {
+        return "\tRight hand: " + rightHand.getName() +
+                "\n\t\tLeft hand: " + leftHand.getName() + "\n";
+    }
 }

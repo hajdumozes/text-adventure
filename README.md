@@ -4,6 +4,7 @@
 
 ## Features:
 * Gameplay is based on user inputs
+* At the start of the game, the player can choose a class and an equipment based on the class
 * One battle is available so far
 * Battle is based on D&D d20 system
 * Damage is based on weapons
@@ -13,7 +14,7 @@
 * Special attacks are available to all characters, including enemies
 
 ## Certain future plans chronologically:
-* Choosable class at the beginning of the game.
+* Shields
 * Initiative for party-battles.
 * Ranged battle and combat distance.
 
