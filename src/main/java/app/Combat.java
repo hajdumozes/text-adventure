@@ -6,6 +6,7 @@ import combat.Skill;
 import combat.Status;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public class Combat {
 
     private static void progressThroughTurnsOfAliveCharacters() {
         CHARACTERS_ALIVE.sort(Comparator.comparing(Character::getInitiative));
-        for (Character character : CHARACTERS_ALIVE) {
+        for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
             System.out.println("\n--------------------------------------------------");
             if (character.isAlive() && character.isFriendly()) {
                 System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
@@ -91,8 +92,8 @@ public class Combat {
                 character.defend();
                 break;
             case "4":
-                System.out.println("\tYou decided to use special attack.");
-                character.special();
+                Method chosenMethod = chooseSpecial(character);
+                invokeMethod(chosenMethod, character);
                 break;
             default:
                 System.out.println("\tYou longed for death");
@@ -103,7 +104,7 @@ public class Combat {
 
     private static Character chooseEnemy(Character character) {
         List<Character> possibleTargets = findPossibleTargets(character);
-        System.out.println("\n\tWhich enemy you want to attack?");
+        System.out.println("\n\tWhich enemy do you want to use?");
         for (int i = 1; i <= possibleTargets.size(); i++) {
             System.out.println(MessageFormat.format("\t{0}. {1} - {2} HP",
                     i, possibleTargets.get(i - 1).getName(), possibleTargets.get(i - 1).getHealth().getValue()));
@@ -118,6 +119,17 @@ public class Combat {
         } else {
             return CHARACTERS_ALIVE.stream().filter(character -> character.isFriendly()).collect(Collectors.toList());
         }
+    }
+
+    private static Method chooseSpecial(Character character) { //maybe it can be merged with chooseEnemy
+        List<Method> specialAttacks = character.showSpecialAttacks();
+        System.out.println("\n\tWhich skill do you want to attack?");
+        for (int i = 1; i <= specialAttacks.size(); i++) {
+            System.out.println(MessageFormat.format("\t{0}. {1}",
+                    i, specialAttacks.get(i - 1).getName()));
+        }
+        String input = CONSOLE.nextLine();
+        return specialAttacks.get((Integer.parseInt(input) - 1));
     }
 
     private static void refreshStatuses() {
@@ -151,14 +163,18 @@ public class Combat {
                 Skill current = iterator.next();
                 current.setCountdown(current.getCountdown() - 1);
                 if (current.getCountdown() <= 0) {
-                    try {
-                        current.getMethod().invoke(character);
-                    } catch (InvocationTargetException | IllegalAccessException iae) {
-                        throw new RuntimeException("Method invoking error" + iae);
-                    }
+                    invokeMethod(current.getMethod(), character);
                     iterator.remove();
                 }
             }
+        }
+    }
+
+    private static void invokeMethod(Method method, Character character) {
+        try {
+            method.invoke(character);
+        } catch (InvocationTargetException | IllegalAccessException iae) {
+            throw new RuntimeException("Method invoking error" + iae);
         }
     }
 }

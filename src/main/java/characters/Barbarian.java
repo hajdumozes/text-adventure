@@ -6,6 +6,7 @@ import items.Greataxe;
 import items.Handaxe;
 import combat.Status;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,13 @@ public class Barbarian extends Character implements Playable {
     }
 
     @Override
-    public void special() {
+    public List<Method> showSpecialAttacks() {
+        List<Method> specialAttacks = new ArrayList<>();
+        specialAttacks.add(findMethod("rage"));
+        return specialAttacks;
+    }
+
+    public void rage() {
         this.getDamageBonus().setValue(getDamageBonus().getValue() + 2);
         addToStatuses(new Status(new DamageBonus(), "Rage", 2, 3));
     }

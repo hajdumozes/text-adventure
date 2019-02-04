@@ -7,6 +7,7 @@ import items.Equipment.Equipment;
 import items.Weapon;
 import combat.Status;
 
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,15 @@ public abstract class Character {
         }
     }
 
-    public abstract void special();
+    public abstract List<Method> showSpecialAttacks();
+
+    protected Method findMethod(String methodName) {
+        try {
+            return this.getClass().getMethod(methodName);
+        } catch (NoSuchMethodException nsme) {
+            throw new RuntimeException("Method not found" + nsme);
+        }
+    }
 
     public abstract void letAiDecide();
 

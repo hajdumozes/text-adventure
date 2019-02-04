@@ -3,6 +3,7 @@ package characters;
 import items.*;
 import items.Equipment.Equipment;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +14,13 @@ public class Paladin extends Character implements Playable {
     }
 
     @Override
-    public void special() {
+    public List<Method> showSpecialAttacks() {
+        List<Method> specialAttacks = new ArrayList<>();
+        specialAttacks.add(findMethod("layOnHands"));
+        return specialAttacks;
+    }
+
+    public void layOnHands() {
         getHealth().setValue(getHealth().getValue() + 5);
     }
 

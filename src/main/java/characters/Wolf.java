@@ -6,6 +6,10 @@ import items.Equipment.Equipment;
 import items.WolfClaw;
 
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
 import static app.Combat.findPossibleTargets;
 import static app.Combat.rollInitiative;
 
@@ -18,16 +22,19 @@ public class Wolf extends Character {
     }
 
     @Override
-    public void special() {
-        System.out.println("\n\tWolf howled!");
-        try {
-            getSkills().add(new Skill("Howl", 3, this.getClass().getMethod("howl")));
-        } catch (NoSuchMethodException nsme) {
-            throw new RuntimeException("Skill not found" + nsme);
-        }
+    public List<Method> showSpecialAttacks() {
+        List<Method> specialAttacks = new ArrayList<>();
+        specialAttacks.add(findMethod("howl"));
+        return specialAttacks;
     }
 
-    public void howl() {
+    private void howl() {
+        System.out.println("\n\tWolf howled!");
+        usedHowl = true;
+        getSkills().add(new Skill("Howl", 3, findMethod("wolfArrive")));
+    }
+
+    public void wolfArrive() {
         System.out.println("\n\t# Wolf appeared! #");
         Wolf reinforcement = new Wolf();
         Main.CHARACTERS_ALIVE.add(reinforcement);
@@ -37,8 +44,7 @@ public class Wolf extends Character {
     @Override
     public void letAiDecide() {
         if (getHealth().getValue() < 10 && !usedHowl) {
-            special();
-            usedHowl = true;
+            howl();
         } else {
             attack(findPossibleTargets(this).get(0));
         }
