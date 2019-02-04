@@ -2,6 +2,8 @@ package items.Equipment;
 
 import items.Weapon;
 
+import java.text.MessageFormat;
+
 public class Equipment {
     private Weapon rightHand;
     private Weapon leftHand;
@@ -39,7 +41,6 @@ public class Equipment {
 
     @Override
     public String toString() {
-        return "\tRight hand: " + rightHand.getName() +
-                "\n\t\tLeft hand: " + leftHand.getName() + "\n";
+        return MessageFormat.format("\tRight hand: {0},\n\t\tLeft hand: {1}.", rightHand, leftHand);
     }
 }

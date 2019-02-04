@@ -1,5 +1,7 @@
 package items;
 
+import java.text.MessageFormat;
+
 public abstract class Weapon extends Item {
     private int numberOfDices;
     private int damage;
@@ -34,5 +36,11 @@ public abstract class Weapon extends Item {
 
     public void setTwoHanded(boolean twoHanded) {
         this.twoHanded = twoHanded;
+    }
+
+    @Override
+    public String toString() {
+        int handToWield = twoHanded ? 2 : 1;
+        return MessageFormat.format("{0} {1}d{2} {3}H", getName(), getNumberOfDices(), getDamage(), handToWield);
     }
 }

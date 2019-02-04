@@ -4,6 +4,7 @@ import characters.*;
 import characters.Character;
 import items.Equipment.Equipment;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 import static app.Combat.*;
@@ -38,11 +39,13 @@ public class Main {
     private static void chooseClass() {
         System.out.println("\n\tChoose your starting class:\n");
         for (int i = 1; i <= PLAYABLE_CLASSES.size(); i++) {
-            System.out.println("\t" + i + ". " + ((Character) PLAYABLE_CLASSES.get(i - 1)).getName());
+            System.out.println(MessageFormat.format("\t {0}. {1}", i,
+                    ((Character) PLAYABLE_CLASSES.get(i - 1)).getName()));
         }
         String input = CONSOLE.nextLine();
         Character character = (Character) PLAYABLE_CLASSES.get(Integer.parseInt(input) - 1);
         CHARACTERS_ALIVE.add(character);
+        System.out.println(MessageFormat.format("\n\tYou selected {0}.", character.getName()));
     }
 
     public static int rollAbility() {
@@ -62,7 +65,8 @@ public class Main {
         System.out.println("\n\tChoose your starting equipment:\n");
         Playable chosenCharacter = (Playable) CHARACTERS_ALIVE.get(0);
         for (int i = 1; i <= chosenCharacter.showStartingEquipments().size(); i++) {
-            System.out.println("\t" + i + ". " + chosenCharacter.showStartingEquipments().get(i - 1).toString());
+            System.out.println(MessageFormat.format(
+                    "\t{0}. {1}", i, chosenCharacter.showStartingEquipments().get(i-1).toString()));
         }
         String input = CONSOLE.nextLine();
         Equipment equipment = chosenCharacter.showStartingEquipments().get((Integer.parseInt(input) - 1));

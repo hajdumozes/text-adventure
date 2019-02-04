@@ -43,6 +43,7 @@ public abstract class Character {
     }
 
     public void attack(Character defender) {
+        System.out.println(MessageFormat.format("\n\t{0} decided to attack.", name));
         int attackingRoll = new Random().nextInt(20) + 1;
         System.out.println(MessageFormat.format("\n\t{0} rolled {1}.", name, attackingRoll));
         if (attackingRoll == 1) {
@@ -93,8 +94,10 @@ public abstract class Character {
     }
 
     public void defend() {
+        System.out.println(MessageFormat.format("\t{0} decided to defend.", name));
         armorClass.increase(5);
-        statuses.add(new Status(armorClass, "Defend", 5, 3));
+        statuses.add(new Status(armorClass, "Defend", 5, 1));
+        System.out.println(MessageFormat.format("\tAC increased by {0} for {1} turns.", 5, 1));
     }
 
     public void wait(Character character) {

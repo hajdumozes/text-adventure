@@ -6,6 +6,7 @@ import combat.Skill;
 import combat.Status;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ public class Combat {
             System.out.println("\n--------------------------------------------------");
 
             turnCounter++;
-            System.out.println("\tTurn " + turnCounter);
+            System.out.println(MessageFormat.format("\tTurn {0}", turnCounter));
             refreshStatuses();
             refreshSkillCountdowns();
             printInfoOfAliveCharacters();
@@ -29,7 +30,8 @@ public class Combat {
 
     private static void printInfoOfAliveCharacters() {
         for (Character character : CHARACTERS_ALIVE) {
-            System.out.println("\t" + character.getName() + "'s HP: " + character.getHealth().getValue());
+            System.out.println(MessageFormat.format(
+                    "\t{0}''s HP: {1}", character.getName(), character.getHealth().getValue()));
         }
     }
 
@@ -37,7 +39,7 @@ public class Combat {
         CHARACTERS_ALIVE.sort(Comparator.comparing(Character::getDexterity));
         for (Character character : CHARACTERS_ALIVE) {
             if (character.isAlive() && character.isFriendly()) {
-                System.out.println("\n\t" + character.getName() + "'s turn:");
+                System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
                 System.out.println("\n\tWhat would you like to do?");
                 System.out.println("\t1. Attack");
                 System.out.println("\t2. Wait for certain death");
@@ -47,7 +49,7 @@ public class Combat {
                 String input = CONSOLE.nextLine();
                 evaluateUserInput(input, character);
             } else if (character.isAlive() && !character.isFriendly()) {
-                System.out.println("\n\t" + character.getName() + "'s turn:");
+                System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
                 character.letAiDecide();
             }
         }
@@ -69,11 +71,9 @@ public class Combat {
     private static void evaluateUserInput(String input, Character character) {
         switch (input) {
             case "1":
-                System.out.println("\n\tYou decided to attack.");
                 character.attack(chooseEnemy(character));
                 break;
             case "3":
-                System.out.println("\tYou decided to defend.");
                 character.defend();
                 break;
             case "4":
@@ -91,8 +91,8 @@ public class Combat {
         List<Character> possibleTargets = findPossibleTargets(character);
         System.out.println("\n\tWhich enemy you want to attack?");
         for (int i = 1; i <= possibleTargets.size(); i++) {
-            System.out.println("\t" + i + ". " + possibleTargets.get(i - 1).getName()
-                    + " - " + possibleTargets.get(i - 1).getHealth().getValue() + " HP");
+            System.out.println(MessageFormat.format("\t{0}. {1} - {2} HP",
+                    i, possibleTargets.get(i - 1).getName(), possibleTargets.get(i - 1).getHealth().getValue()));
         }
         String input = CONSOLE.nextLine();
         return possibleTargets.get((Integer.parseInt(input) - 1));
@@ -113,7 +113,7 @@ public class Combat {
                 Status current = iterator.next();
                 current.setDuration(current.getDuration() - 1);
                 if (current.getDuration() <= 0) {
-                    System.out.println("\n\tEffect of " + current.getName() + " expired.\n");
+                    System.out.println(MessageFormat.format("\n\tEffect of {0} expired.\n", current.getName()));
                     nullifyStatusEffect(current, character);
                     iterator.remove();
                 }
