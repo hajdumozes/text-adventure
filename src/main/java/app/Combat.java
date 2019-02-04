@@ -3,6 +3,7 @@ package app;
 import attributes.Attribute;
 import characters.Character;
 import combat.Skill;
+import combat.SkillWithCountDown;
 import combat.Status;
 
 import java.lang.reflect.InvocationTargetException;
@@ -104,7 +105,7 @@ public class Combat {
 
     private static Character chooseEnemy(Character character) {
         List<Character> possibleTargets = findPossibleTargets(character);
-        System.out.println("\n\tWhich enemy do you want to use?");
+        System.out.println("\n\tWhich enemy do you want to attack?");
         for (int i = 1; i <= possibleTargets.size(); i++) {
             System.out.println(MessageFormat.format("\t{0}. {1} - {2} HP",
                     i, possibleTargets.get(i - 1).getName(), possibleTargets.get(i - 1).getHealth().getValue()));
@@ -122,14 +123,14 @@ public class Combat {
     }
 
     private static Method chooseSpecial(Character character) { //maybe it can be merged with chooseEnemy
-        List<Method> specialAttacks = character.showSpecialAttacks();
-        System.out.println("\n\tWhich skill do you want to attack?");
+        List<Skill> specialAttacks = character.showSpecialAttacks();
+        System.out.println("\n\tWhich skill do you want to use?");
         for (int i = 1; i <= specialAttacks.size(); i++) {
-            System.out.println(MessageFormat.format("\t{0}. {1}",
-                    i, specialAttacks.get(i - 1).getName()));
+            System.out.println(MessageFormat.format("\t{0}. {1} ({2})",
+                    i, specialAttacks.get(i - 1).getName(), specialAttacks.get(i - 1).getDescription()));
         }
         String input = CONSOLE.nextLine();
-        return specialAttacks.get((Integer.parseInt(input) - 1));
+        return specialAttacks.get((Integer.parseInt(input) - 1)).getMethod();
     }
 
     private static void refreshStatuses() {
@@ -158,12 +159,12 @@ public class Combat {
 
     private static void refreshSkillCountdowns() {
         for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
-            Iterator<Skill> iterator = character.getSkills().iterator();
+            Iterator<SkillWithCountDown> iterator = character.getSkillWithCountDowns().iterator();
             while (iterator.hasNext()) {
-                Skill current = iterator.next();
+                SkillWithCountDown current = iterator.next();
                 current.setCountdown(current.getCountdown() - 1);
                 if (current.getCountdown() <= 0) {
-                    invokeMethod(current.getMethod(), character);
+                    invokeMethod(current.getMethodToInvoke(), character);
                     iterator.remove();
                 }
             }

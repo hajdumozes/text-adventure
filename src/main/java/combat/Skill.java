@@ -1,16 +1,15 @@
 package combat;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
 
 public class Skill {
     private String name;
-    private int countdown;
+    private String description;
     private Method method;
 
-    public Skill(String name, int countdown, Method method) {
+    public Skill(String name, String description, Method method) {
         this.name = name;
-        this.countdown = countdown;
+        this.description = description;
         this.method = method;
     }
 
@@ -22,12 +21,12 @@ public class Skill {
         this.name = name;
     }
 
-    public int getCountdown() {
-        return countdown;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCountdown(int countdown) {
-        this.countdown = countdown;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Method getMethod() {

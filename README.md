@@ -4,19 +4,19 @@
 
 ## Features:
 * Gameplay is based on user inputs
-* At the start of the game, the player can choose a class and an equipment based on the class
+* Class and equipment selection availability at the beginning
 * One battle is available so far
 * Battle is based on D&D d20 system
-    * During battle turns based on Dexterity roll
+    * Turns based on Initiative, which comes from a Dexterity check.
     * Damage is based on weapons
     * Multiple characters can fight on each side
-    * Selectable targets
-    * Special attacks are available to all characters, including enemies
+    * Target selection availability
+    * Multiple special attacks are available to all characters, including enemies
 * Barebone attributes
-* Barebone combat
 
 ## Certain future plans chronologically:
-* Multiple special attacks for all characters
+* More specials to existing characters with a target
+* Max attribute implementation, which cannot be exceeded, like HP
 * Dexterity multiplier implementation to damage and initiative
-* Ranged battle and combat distance.
+* Ranged battle and combat distance
 

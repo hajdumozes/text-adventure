@@ -3,6 +3,7 @@ package characters;
 import app.Main;
 import attributes.*;
 import combat.Skill;
+import combat.SkillWithCountDown;
 import items.Equipment.Equipment;
 import items.Weapon;
 import combat.Status;
@@ -26,7 +27,7 @@ public abstract class Character {
     private Initiative initiative = new Initiative();
     private List<Status> statuses = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
-    private List<Skill> skills = new ArrayList<>();
+    private List<SkillWithCountDown> skillWithCountDowns = new ArrayList<>();
     private Equipment equipment;
     private boolean isAlive = true;
     private boolean isFriendly;
@@ -73,7 +74,7 @@ public abstract class Character {
         }
     }
 
-    public abstract List<Method> showSpecialAttacks();
+    public abstract List<Skill> showSpecialAttacks();
 
     protected Method findMethod(String methodName) {
         try {
@@ -170,12 +171,12 @@ public abstract class Character {
         this.attributes = attributes;
     }
 
-    public List<Skill> getSkills() {
-        return skills;
+    public List<SkillWithCountDown> getSkillWithCountDowns() {
+        return skillWithCountDowns;
     }
 
-    public void setSkills(List<Skill> skills) {
-        this.skills = skills;
+    public void setSkillWithCountDowns(List<SkillWithCountDown> skillWithCountDowns) {
+        this.skillWithCountDowns = skillWithCountDowns;
     }
 
     public Equipment getEquipment() {

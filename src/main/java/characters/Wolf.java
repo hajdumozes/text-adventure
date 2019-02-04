@@ -2,11 +2,10 @@ package characters;
 
 import app.Main;
 import combat.Skill;
+import combat.SkillWithCountDown;
 import items.Equipment.Equipment;
 import items.WolfClaw;
 
-
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,22 +15,25 @@ import static app.Combat.rollInitiative;
 public class Wolf extends Character {
 
     private boolean usedHowl;
+    private SkillWithCountDown howl = new SkillWithCountDown("Howl",
+            "Calls for another wolf, which arrives in 3 turns.", findMethod("howl"),
+                3, findMethod("wolfArrive"));
 
     public Wolf() {
         super("Wolf", 11, 15, 5, new Equipment(new WolfClaw(), new WolfClaw()), false);
     }
 
     @Override
-    public List<Method> showSpecialAttacks() {
-        List<Method> specialAttacks = new ArrayList<>();
-        specialAttacks.add(findMethod("howl"));
+    public List<Skill> showSpecialAttacks() {
+        List<Skill> specialAttacks = new ArrayList<>();
+        specialAttacks.add(howl);
         return specialAttacks;
     }
 
-    private void howl() {
+    public void howl() {
         System.out.println("\n\tWolf howled!");
         usedHowl = true;
-        getSkills().add(new Skill("Howl", 3, findMethod("wolfArrive")));
+        getSkillWithCountDowns().add(howl);
     }
 
     public void wolfArrive() {

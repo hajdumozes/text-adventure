@@ -1,25 +1,28 @@
 package characters;
 
 import attributes.DamageBonus;
+import combat.Skill;
 import items.Equipment.Equipment;
 import items.Greataxe;
 import items.Handaxe;
 import combat.Status;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Barbarian extends Character implements Playable {
+    private Skill rage = new Skill("Rage", "Increases damage by 2 for 3 turns.",
+            findMethod("rage"));
+
     public Barbarian() {
         super("Barbarian", 50, 10, 5, new Equipment(new Handaxe(), new Handaxe()), true);
     }
 
     @Override
-    public List<Method> showSpecialAttacks() {
-        List<Method> specialAttacks = new ArrayList<>();
-        specialAttacks.add(findMethod("rage"));
+    public List<Skill> showSpecialAttacks() {
+        List<Skill> specialAttacks = new ArrayList<>();
+        specialAttacks.add(rage);
         return specialAttacks;
     }
 

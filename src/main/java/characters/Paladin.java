@@ -1,22 +1,25 @@
 package characters;
 
+import combat.Skill;
 import items.*;
 import items.Equipment.Equipment;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Paladin extends Character implements Playable {
+    private Skill layOnHands = new Skill("Lay on Hands", "Heal self for 5HP",
+            findMethod("layOnHands"));
+
     public Paladin() {
-        super("Paladin", 50,10, 10, new Equipment(new Longsword(), new Shield()), true);
+        super("Paladin", 50, 10, 10, new Equipment(new Longsword(), new Shield()), true);
     }
 
     @Override
-    public List<Method> showSpecialAttacks() {
-        List<Method> specialAttacks = new ArrayList<>();
-        specialAttacks.add(findMethod("layOnHands"));
+    public List<Skill> showSpecialAttacks() {
+        List<Skill> specialAttacks = new ArrayList<>();
+        specialAttacks.add(layOnHands);
         return specialAttacks;
     }
 
