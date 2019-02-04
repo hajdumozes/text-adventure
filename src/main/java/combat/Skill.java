@@ -1,13 +1,14 @@
 package combat;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
-public class Ability {
+public class Skill {
     private String name;
     private int countdown;
     private Method method;
 
-    public Ability(String name, int countdown, Method method) {
+    public Skill(String name, int countdown, Method method) {
         this.name = name;
         this.countdown = countdown;
         this.method = method;

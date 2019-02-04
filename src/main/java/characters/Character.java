@@ -2,7 +2,7 @@ package characters;
 
 import app.Main;
 import attributes.*;
-import combat.Ability;
+import combat.Skill;
 import items.Equipment.Equipment;
 import items.Weapon;
 import combat.Status;
@@ -14,6 +14,7 @@ import java.util.Random;
 
 import static app.Combat.getAliveCharactersFromBothSides;
 import static app.Main.decideOutcome;
+import static app.Main.roll;
 
 public abstract class Character {
     private String name;
@@ -23,7 +24,7 @@ public abstract class Character {
     private Attribute damageBonus = new DamageBonus();
     private List<Status> statuses = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
-    private List<Ability> abilityCountdowns = new ArrayList<>();
+    private List<Skill> skills = new ArrayList<>();
     private Equipment equipment;
     private boolean isAlive = true;
     private boolean isFriendly;
@@ -56,12 +57,16 @@ public abstract class Character {
             System.out.println(MessageFormat.format("\t{0} hit {1}, and dealt {2} damage.", name, defender.name, damage));
         }
         if (defender.health.getValue() <= 0) {
-            defender.isAlive = false;
-            System.out.println(MessageFormat.format("\t{0} died!", defender.getName()));
-            Main.CHARACTERS_ALIVE.remove(defender);
-            if (!getAliveCharactersFromBothSides()) {
-                decideOutcome();
-            }
+            kill(defender);
+        }
+    }
+
+    private void kill(Character defender) {
+        defender.isAlive = false;
+        System.out.println(MessageFormat.format("\t{0} died!", defender.getName()));
+        Main.CHARACTERS_ALIVE.remove(defender);
+        if (!getAliveCharactersFromBothSides()) {
+            decideOutcome();
         }
     }
 
@@ -73,10 +78,6 @@ public abstract class Character {
         int damage = rollDamage() + damageBonus.getValue();
         defender.getHealth().decrease(damage);
         return damage;
-    }
-
-    public static int roll(int numberOfDices, int maxNumber) {
-        return numberOfDices * new Random().nextInt(maxNumber) + 1;
     }
 
     private int rollDamage() {
@@ -156,12 +157,12 @@ public abstract class Character {
         this.attributes = attributes;
     }
 
-    public List<Ability> getAbilityCountdowns() {
-        return abilityCountdowns;
+    public List<Skill> getSkills() {
+        return skills;
     }
 
-    public void setAbilityCountdowns(List<Ability> abilityCountdowns) {
-        this.abilityCountdowns = abilityCountdowns;
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
     }
 
     public Equipment getEquipment() {

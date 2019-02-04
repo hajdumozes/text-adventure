@@ -1,7 +1,7 @@
 package characters;
 
 import app.Main;
-import combat.Ability;
+import combat.Skill;
 import items.Equipment.Equipment;
 import items.WolfClaw;
 
@@ -19,9 +19,9 @@ public class Wolf extends Character {
     public void special() {
         System.out.println("\n\tWolf howled!");
         try {
-            getAbilityCountdowns().add(new Ability("Howl", 3, this.getClass().getMethod("howl")));
+            getSkills().add(new Skill("Howl", 3, this.getClass().getMethod("howl")));
         } catch (NoSuchMethodException nsme) {
-            throw new RuntimeException("Ability not found" + nsme);
+            throw new RuntimeException("Skill not found" + nsme);
         }
     }
 

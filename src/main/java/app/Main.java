@@ -7,7 +7,6 @@ import items.Equipment.Equipment;
 import java.util.*;
 
 import static app.Combat.*;
-import static characters.Character.roll;
 
 public class Main {
     public static final List<Character> CHARACTERS_ALIVE = new ArrayList<>();
@@ -68,5 +67,9 @@ public class Main {
         String input = CONSOLE.nextLine();
         Equipment equipment = chosenCharacter.showStartingEquipments().get((Integer.parseInt(input) - 1));
         ((Character) chosenCharacter).setEquipment(equipment);
+    }
+
+    public static int roll(int numberOfDices, int maxNumber) {
+        return numberOfDices * new Random().nextInt(maxNumber) + 1;
     }
 }
