@@ -16,7 +16,9 @@ public class Combat {
 
     protected static void progressThroughBattle() {
         int turnCounter = 0;
+        rollInitiativeForAllCharacters();
         while (getAliveCharactersFromBothSides()) {
+            System.out.print("\033[H\033[2J"); // it should clear console
             System.out.println("\n--------------------------------------------------");
 
             turnCounter++;
@@ -28,6 +30,17 @@ public class Combat {
         }
     }
 
+    private static void rollInitiativeForAllCharacters() {
+        for (Character character : CHARACTERS_ALIVE) {
+            rollInitiative(character);
+        }
+    }
+
+    public static void rollInitiative(Character character) {
+        int initiative = roll(1, 20) + (character.getDexterity().getValue() / 2);
+        character.getInitiative().setValue(initiative);
+    }
+
     private static void printInfoOfAliveCharacters() {
         for (Character character : CHARACTERS_ALIVE) {
             System.out.println(MessageFormat.format(
@@ -36,8 +49,9 @@ public class Combat {
     }
 
     private static void progressThroughTurnsOfAliveCharacters() {
-        CHARACTERS_ALIVE.sort(Comparator.comparing(Character::getDexterity));
+        CHARACTERS_ALIVE.sort(Comparator.comparing(Character::getInitiative));
         for (Character character : CHARACTERS_ALIVE) {
+            System.out.println("\n--------------------------------------------------");
             if (character.isAlive() && character.isFriendly()) {
                 System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
                 System.out.println("\n\tWhat would you like to do?");
@@ -113,7 +127,8 @@ public class Combat {
                 Status current = iterator.next();
                 current.setDuration(current.getDuration() - 1);
                 if (current.getDuration() <= 0) {
-                    System.out.println(MessageFormat.format("\n\tEffect of {0} expired.\n", current.getName()));
+                    System.out.println(MessageFormat.format(
+                            "\n\tEffect of {0} expired on {1}.\n", current.getName(), character.getName()));
                     nullifyStatusEffect(current, character);
                     iterator.remove();
                 }

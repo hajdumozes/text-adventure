@@ -5,7 +5,9 @@ import combat.Skill;
 import items.Equipment.Equipment;
 import items.WolfClaw;
 
+
 import static app.Combat.findPossibleTargets;
+import static app.Combat.rollInitiative;
 
 public class Wolf extends Character {
 
@@ -27,7 +29,9 @@ public class Wolf extends Character {
 
     public void howl() {
         System.out.println("\n\t# Wolf appeared! #");
-        Main.CHARACTERS_ALIVE.add(new Wolf());
+        Wolf reinforcement = new Wolf();
+        Main.CHARACTERS_ALIVE.add(reinforcement);
+        rollInitiative(reinforcement);
     }
 
     @Override
