@@ -16,8 +16,8 @@ public class Wolf extends Character {
 
     private boolean usedHowl;
     private SkillWithCountDown howl = new SkillWithCountDown("Howl",
-            "Calls for another wolf, which arrives in 3 turns.", findMethod("howl"),
-                3, findMethod("wolfArrive"));
+            "Calls for another wolf, which arrives in 3 turns.", findMethod("howl"), 1,
+            3, findMethod("wolfArrive"));
 
     public Wolf() {
         super("Wolf", 11, 15, 5, new Equipment(new WolfClaw(), new WolfClaw()), false);

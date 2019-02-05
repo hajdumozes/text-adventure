@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Barbarian extends Character implements Playable {
     private Skill rage = new Skill("Rage", "Increases damage by 2 for 3 turns.",
-            findMethod("rage"));
+            findMethod("rage"), 1);
 
     public Barbarian() {
         super("Barbarian", 50, 10, 5, new Equipment(new Handaxe(), new Handaxe()), true);

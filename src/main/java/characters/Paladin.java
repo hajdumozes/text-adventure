@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Paladin extends Character implements Playable {
     private Skill layOnHands = new Skill("Lay on Hands", "Heal self for 5HP",
-            findMethod("layOnHands"));
+            findMethod("layOnHands"), 3);
 
     public Paladin() {
         super("Paladin", 50, 10, 10, new Equipment(new Longsword(), new Shield()), true);

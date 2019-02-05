@@ -55,20 +55,24 @@ public class Combat {
         for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
             System.out.println("\n--------------------------------------------------");
             if (character.isAlive() && character.isFriendly()) {
-                System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
-                System.out.println("\n\tWhat would you like to do?");
-                System.out.println("\t1. Attack");
-                System.out.println("\t2. Wait for certain death");
-                System.out.println("\t3. Defend");
-                System.out.println("\t4. Special attack");
-
-                String input = CONSOLE.nextLine();
-                evaluateUserInput(input, character);
+                progressThroughTurnOfFriendlyCharacter(character);
             } else if (character.isAlive() && !character.isFriendly()) {
                 System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
                 character.letAiDecide();
             }
         }
+    }
+
+    private static void progressThroughTurnOfFriendlyCharacter(Character character) {
+        System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
+        System.out.println("\n\tWhat would you like to do?");
+        System.out.println("\t1. Attack");
+        System.out.println("\t2. Wait for certain death");
+        System.out.println("\t3. Defend");
+        System.out.println("\t4. Special attack");
+
+        String input = CONSOLE.nextLine();
+        evaluateUserInput(input, character);
     }
 
     public static boolean getAliveCharactersFromBothSides() {
@@ -123,14 +127,34 @@ public class Combat {
     }
 
     private static Method chooseSpecial(Character character) { //maybe it can be merged with chooseEnemy
-        List<Skill> specialAttacks = character.showSpecialAttacks();
-        System.out.println("\n\tWhich skill do you want to use?");
-        for (int i = 1; i <= specialAttacks.size(); i++) {
-            System.out.println(MessageFormat.format("\t{0}. {1} ({2})",
-                    i, specialAttacks.get(i - 1).getName(), specialAttacks.get(i - 1).getDescription()));
-        }
+        List<Skill> usableSkills = character.showSpecialAttacks().stream()
+                .filter(skill -> skill.getUsagePerBattle() > 0).collect(Collectors.toList());
+        dealWithOutOfSkillsSituation(usableSkills.size(), character);
+        printSkills(usableSkills);
         String input = CONSOLE.nextLine();
-        return specialAttacks.get((Integer.parseInt(input) - 1)).getMethod();
+        Skill chosenSkill = character.showSpecialAttacks().get((Integer.parseInt(input) - 1));
+        useSkill(chosenSkill);
+        return chosenSkill.getMethod();
+    }
+
+    private static void printSkills(List<Skill> skills) {
+        System.out.println("\n\tWhich skill do you want to use?");
+        for (int i = 1; i <= skills.size(); i++) {
+            if (skills.get(i - 1).getUsagePerBattle() > 0) {
+                Skill currentSkill = skills.get(i - 1);
+                System.out.println(MessageFormat.format("\t{0}. {1} ({2})\n\t\tCan be used {3} more times",
+                        i, currentSkill.getName(), currentSkill.getDescription(),
+                        currentSkill.getUsagePerBattle()));
+            }
+        }
+    }
+
+    private static void dealWithOutOfSkillsSituation(int usableSkills, Character character) {
+        if (usableSkills == 0) {
+            System.out.println("\tOut of skills for this battle. Press a key to get back.");
+            CONSOLE.nextLine();
+            progressThroughTurnOfFriendlyCharacter(character);
+        }
     }
 
     private static void refreshStatuses() {
@@ -171,6 +195,14 @@ public class Combat {
         }
     }
 
+    public static void useSkill(Skill skill) {
+        if (skill.getUsagePerBattle() > 0)
+            skill.setUsagePerBattle(skill.getUsagePerBattle() - 1);
+        else {
+            System.out.println(MessageFormat.format("\t{0} cannot be used", skill));
+        }
+    }
+
     private static void invokeMethod(Method method, Character character) {
         try {
             method.invoke(character);
@@ -178,4 +210,5 @@ public class Combat {
             throw new RuntimeException("Method invoking error" + iae);
         }
     }
+
 }

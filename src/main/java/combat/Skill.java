@@ -6,11 +6,13 @@ public class Skill {
     private String name;
     private String description;
     private Method method;
+    private int usagePerBattle;
 
-    public Skill(String name, String description, Method method) {
+    public Skill(String name, String description, Method method, int usagePerBattle) {
         this.name = name;
         this.description = description;
         this.method = method;
+        this.usagePerBattle = usagePerBattle;
     }
 
     public String getName() {
@@ -35,5 +37,14 @@ public class Skill {
 
     public void setMethod(Method method) {
         this.method = method;
+    }
+
+
+    public int getUsagePerBattle() {
+        return usagePerBattle;
+    }
+
+    public void setUsagePerBattle(int usagePerBattle) {
+        this.usagePerBattle = usagePerBattle;
     }
 }

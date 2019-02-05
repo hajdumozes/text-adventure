@@ -1,6 +1,6 @@
 # Text-adventure
 
-## A text-based, simplified D&D game
+## A text-based simple game, which according to the plan will merge elements of D&D and Heroes of Might and Magic.
 
 ## Features:
 * Gameplay is based on user inputs
@@ -12,11 +12,14 @@
     * Multiple characters can fight on each side
     * Target selection availability
     * Multiple special attacks are available to all characters, including enemies
+    * Special attacks have a limit per battle
 * Barebone attributes
 
 ## Certain future plans chronologically:
 * More specials to existing characters with a target
 * Max attribute implementation, which cannot be exceeded, like HP
+* Limiting special usage
 * Dexterity multiplier implementation to damage and initiative
+* Battlefield (HOMM-like)
 * Ranged battle and combat distance
 
