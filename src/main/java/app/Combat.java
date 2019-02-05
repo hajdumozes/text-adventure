@@ -91,17 +91,17 @@ public class Combat {
     private static void evaluateUserInput(String input, Character character) {
         switch (input) {
             case "1":
-                character.attack(chooseTarget(true));
+                character.attack(chooseTarget(false));
                 break;
             case "3":
                 character.defend();
                 break;
             case "4":
-                Skill chosenMethod = chooseSkill(character);
-                if (chosenMethod.getTarget().isTargetable()) {
-                    invokeMethod(chosenMethod.getMethod(), character, chooseTarget(chosenMethod.getTarget().isEnemyTarget()));
+                Skill chosenSkill = chooseSkill(character);
+                if (chosenSkill.getTarget().isTargetable()) {
+                    invokeMethod(chosenSkill.getMethod(), character, chooseTarget(chosenSkill.getTarget().isTargetOnPlayersSide()));
                 } else {
-                    invokeMethod(chosenMethod.getMethod(), character, null);
+                    invokeMethod(chosenSkill.getMethod(), character, null);
                 }
                 break;
             default:
@@ -111,8 +111,8 @@ public class Combat {
         }
     }
 
-    private static Character chooseTarget(boolean isTargetEnemy) {
-        List<Character> possibleTargets = findPossibleTargets(isTargetEnemy);
+    private static Character chooseTarget(boolean isTargetOnPlayersSide) {
+        List<Character> possibleTargets = findPossibleTargets(isTargetOnPlayersSide);
         System.out.println("\n\tSelect your target");
         for (int i = 1; i <= possibleTargets.size(); i++) {
             System.out.println(MessageFormat.format("\t{0}. {1} - {2} HP",
@@ -122,23 +122,25 @@ public class Combat {
         return possibleTargets.get((Integer.parseInt(input) - 1));
     }
 
-    public static List<Character> findPossibleTargets(boolean isTargetOnOppositeParty) {
-        if (isTargetOnOppositeParty) {
-            return CHARACTERS_ALIVE.stream().filter(character -> !character.isFriendly()).collect(Collectors.toList());
-        } else {
+    public static List<Character> findPossibleTargets(boolean isTargetOnPlayersSide) {
+        if (isTargetOnPlayersSide) {
             return CHARACTERS_ALIVE.stream().filter(character -> character.isFriendly()).collect(Collectors.toList());
+        } else {
+            return CHARACTERS_ALIVE.stream().filter(character -> !character.isFriendly()).collect(Collectors.toList());
         }
     }
 
     private static Skill chooseSkill(Character character) { //maybe it can be merged with chooseTarget
-        List<Skill> usableSkills = character.showSpecialAttacks().stream()
-                .filter(skill -> skill.getUsagePerBattle() > 0).collect(Collectors.toList());
+        List<Skill> usableSkills = getUsableSkills(character);
         dealWithOutOfSkillsSituation(usableSkills.size(), character);
         printSkills(usableSkills);
         String input = CONSOLE.nextLine();
-        Skill chosenSkill = character.showSpecialAttacks().get((Integer.parseInt(input) - 1));
-        useSkill(chosenSkill);
-        return chosenSkill;
+        return character.showSpecialAttacks().get((Integer.parseInt(input) - 1));
+    }
+
+    public static List<Skill> getUsableSkills(Character character) {
+        return character.showSpecialAttacks().stream()
+                .filter(skill -> skill.getUsagePerBattle() > 0).collect(Collectors.toList());
     }
 
     private static void printSkills(List<Skill> skills) {
@@ -207,7 +209,7 @@ public class Combat {
         }
     }
 
-    private static void invokeMethod(Method method, Character character, Character target) {
+    public static void invokeMethod(Method method, Character character, Character target) {
         try {
             if (target == null) {
                 method.invoke(character);

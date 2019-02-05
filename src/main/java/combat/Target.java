@@ -2,11 +2,11 @@ package combat;
 
 public class Target {
     private boolean targetable;
-    private boolean enemyTarget;
+    private boolean isTargetOnPlayersSide;
 
-    public Target(boolean targetable, boolean friendly) {
+    public Target(boolean targetable, boolean isTargetOnPlayersSide) {
         this.targetable = targetable;
-        this.enemyTarget = friendly;
+        this.isTargetOnPlayersSide = isTargetOnPlayersSide;
     }
 
     public boolean isTargetable() {
@@ -17,11 +17,11 @@ public class Target {
         this.targetable = targetable;
     }
 
-    public boolean isEnemyTarget() {
-        return enemyTarget;
+    public boolean isTargetOnPlayersSide() {
+        return isTargetOnPlayersSide;
     }
 
-    public void setEnemyTarget(boolean enemyTarget) {
-        this.enemyTarget = enemyTarget;
+    public void setTargetOnPlayersSide(boolean targetOnPlayersSide) {
+        this.isTargetOnPlayersSide = targetOnPlayersSide;
     }
 }

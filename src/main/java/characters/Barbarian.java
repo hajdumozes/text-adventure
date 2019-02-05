@@ -1,5 +1,6 @@
 package characters;
 
+import app.Combat;
 import attributes.DamageBonus;
 import combat.Skill;
 import combat.Target;
@@ -30,6 +31,7 @@ public class Barbarian extends Character implements Playable {
     public void rage() {
         this.getDamageBonus().setCurrentValue(getDamageBonus().getCurrentValue() + 2);
         addToStatuses(new Status(new DamageBonus(), "Rage", 2, 3));
+        Combat.useSkill(rage);
     }
 
     @Override

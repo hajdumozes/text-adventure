@@ -49,6 +49,10 @@ public abstract class Character {
         System.out.println(MessageFormat.format("\n\t{0} decided to attack.", name));
         int attackingRoll = new Random().nextInt(20) + 1;
         System.out.println(MessageFormat.format("\t{0} rolled {1}.", name, attackingRoll));
+        evaluateAttackRoll(attackingRoll, defender);
+    }
+
+    protected void evaluateAttackRoll(int attackingRoll, Character defender) {
         if (attackingRoll == 1) {
             //critical failure
         } else if (attackingRoll == 20) {

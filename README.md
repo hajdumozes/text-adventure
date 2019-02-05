@@ -10,6 +10,7 @@
     * Turns based on Initiative, which comes from a Dexterity check.
     * Damage is based on weapons
     * Multiple characters can fight on each side
+    * Basic AI are available for enemies
     * Target selection availability
     * Multiple special attacks are available to all characters, including enemies
     * Special attacks have a limit per battle
