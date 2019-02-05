@@ -91,14 +91,18 @@ public class Combat {
     private static void evaluateUserInput(String input, Character character) {
         switch (input) {
             case "1":
-                character.attack(chooseEnemy(character));
+                character.attack(chooseTarget(true));
                 break;
             case "3":
                 character.defend();
                 break;
             case "4":
-                Method chosenMethod = chooseSpecial(character);
-                invokeMethod(chosenMethod, character);
+                Skill chosenMethod = chooseSkill(character);
+                if (chosenMethod.getTarget().isTargetable()) {
+                    invokeMethod(chosenMethod.getMethod(), character, chooseTarget(chosenMethod.getTarget().isEnemyTarget()));
+                } else {
+                    invokeMethod(chosenMethod.getMethod(), character, null);
+                }
                 break;
             default:
                 System.out.println("\tYou longed for death");
@@ -107,9 +111,9 @@ public class Combat {
         }
     }
 
-    private static Character chooseEnemy(Character character) {
-        List<Character> possibleTargets = findPossibleTargets(character);
-        System.out.println("\n\tWhich enemy do you want to attack?");
+    private static Character chooseTarget(boolean isTargetEnemy) {
+        List<Character> possibleTargets = findPossibleTargets(isTargetEnemy);
+        System.out.println("\n\tSelect your target");
         for (int i = 1; i <= possibleTargets.size(); i++) {
             System.out.println(MessageFormat.format("\t{0}. {1} - {2} HP",
                     i, possibleTargets.get(i - 1).getName(), possibleTargets.get(i - 1).getHealth().getCurrentValue()));
@@ -118,15 +122,15 @@ public class Combat {
         return possibleTargets.get((Integer.parseInt(input) - 1));
     }
 
-    public static List<Character> findPossibleTargets(Character currentCharacter) {
-        if (currentCharacter.isFriendly()) {
+    public static List<Character> findPossibleTargets(boolean isTargetOnOppositeParty) {
+        if (isTargetOnOppositeParty) {
             return CHARACTERS_ALIVE.stream().filter(character -> !character.isFriendly()).collect(Collectors.toList());
         } else {
             return CHARACTERS_ALIVE.stream().filter(character -> character.isFriendly()).collect(Collectors.toList());
         }
     }
 
-    private static Method chooseSpecial(Character character) { //maybe it can be merged with chooseEnemy
+    private static Skill chooseSkill(Character character) { //maybe it can be merged with chooseTarget
         List<Skill> usableSkills = character.showSpecialAttacks().stream()
                 .filter(skill -> skill.getUsagePerBattle() > 0).collect(Collectors.toList());
         dealWithOutOfSkillsSituation(usableSkills.size(), character);
@@ -134,7 +138,7 @@ public class Combat {
         String input = CONSOLE.nextLine();
         Skill chosenSkill = character.showSpecialAttacks().get((Integer.parseInt(input) - 1));
         useSkill(chosenSkill);
-        return chosenSkill.getMethod();
+        return chosenSkill;
     }
 
     private static void printSkills(List<Skill> skills) {
@@ -188,7 +192,7 @@ public class Combat {
                 SkillWithCountDown current = iterator.next();
                 current.setCountdown(current.getCountdown() - 1);
                 if (current.getCountdown() <= 0) {
-                    invokeMethod(current.getMethodToInvoke(), character);
+                    invokeMethod(current.getMethodToInvoke(), character, null);
                     iterator.remove();
                 }
             }
@@ -203,9 +207,13 @@ public class Combat {
         }
     }
 
-    private static void invokeMethod(Method method, Character character) {
+    private static void invokeMethod(Method method, Character character, Character target) {
         try {
-            method.invoke(character);
+            if (target == null) {
+                method.invoke(character);
+            } else {
+                method.invoke(character, target);
+            }
         } catch (InvocationTargetException | IllegalAccessException iae) {
             throw new RuntimeException("Method invoking error" + iae);
         }

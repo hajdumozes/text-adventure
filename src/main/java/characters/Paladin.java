@@ -1,6 +1,7 @@
 package characters;
 
 import combat.Skill;
+import combat.Target;
 import items.*;
 import items.Equipment.Equipment;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class Paladin extends Character implements Playable {
     private Skill layOnHands = new Skill("Lay on Hands", "Heal self for 5HP",
-            findMethod("layOnHands"), 3);
+            findMethod("layOnHands", Character.class), 3, new Target(true, false));
 
     public Paladin() {
         super("Paladin", 50, 10, 10, new Equipment(new Longsword(), new Shield()), true);
@@ -23,13 +24,13 @@ public class Paladin extends Character implements Playable {
         return specialAttacks;
     }
 
-    public void layOnHands() {
-        int currentHealth = getHealth().getCurrentValue();
-        int maxHealth = getHealth().getMaxValue();
+    public void layOnHands(Character target) {
+        int currentHealth = target.getHealth().getCurrentValue();
+        int maxHealth = target.getHealth().getMaxValue();
         if (currentHealth + 5 > maxHealth) {
-            getHealth().setCurrentValue(maxHealth);
+            target.getHealth().setCurrentValue(maxHealth);
         } else {
-            getHealth().setCurrentValue(currentHealth + 5);
+            target.getHealth().setCurrentValue(currentHealth + 5);
         }
     }
 

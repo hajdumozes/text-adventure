@@ -3,6 +3,7 @@ package characters;
 import app.Main;
 import combat.Skill;
 import combat.SkillWithCountDown;
+import combat.Target;
 import items.Equipment.Equipment;
 import items.WolfClaw;
 
@@ -16,8 +17,8 @@ public class Wolf extends Character {
 
     private boolean usedHowl;
     private SkillWithCountDown howl = new SkillWithCountDown("Howl",
-            "Calls for another wolf, which arrives in 3 turns.", findMethod("howl"), 1,
-            3, findMethod("wolfArrive"));
+            "Calls for another wolf, which arrives in 3 turns.", findMethod("howl", null), 1,
+            new Target(false, false),3, findMethod("wolfArrive", null));
 
     public Wolf() {
         super("Wolf", 11, 15, 5, new Equipment(new WolfClaw(), new WolfClaw()), false);
@@ -48,7 +49,7 @@ public class Wolf extends Character {
         if (getHealth().getCurrentValue() < 10 && !usedHowl) {
             howl();
         } else {
-            attack(findPossibleTargets(this).get(0));
+            attack(findPossibleTargets( true).get(0));
         }
     }
 }

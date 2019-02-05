@@ -6,8 +6,9 @@ public class SkillWithCountDown extends Skill{
     private int countdown;
     private Method methodToInvoke;
 
-    public SkillWithCountDown(String name, String description, Method method, int usagePerBattle, int countdown, Method methodToInvoke) {
-        super(name, description, method, usagePerBattle);
+    public SkillWithCountDown(String name, String description, Method method, int usagePerBattle, Target target,
+                              int countdown, Method methodToInvoke) {
+        super(name, description, method, usagePerBattle, target);
         this.countdown = countdown;
         this.methodToInvoke = methodToInvoke;
     }

@@ -76,9 +76,13 @@ public abstract class Character {
 
     public abstract List<Skill> showSpecialAttacks();
 
-    protected Method findMethod(String methodName) {
+    protected Method findMethod(String methodName, Class targetCharacter) {
         try {
-            return this.getClass().getMethod(methodName);
+            if (targetCharacter == null) {
+                return this.getClass().getMethod(methodName);
+            } else {
+                return this.getClass().getMethod(methodName, targetCharacter);
+            }
         } catch (NoSuchMethodException nsme) {
             throw new RuntimeException("Method not found" + nsme);
         }
