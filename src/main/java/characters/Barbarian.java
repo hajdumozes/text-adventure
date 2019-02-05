@@ -27,7 +27,7 @@ public class Barbarian extends Character implements Playable {
     }
 
     public void rage() {
-        this.getDamageBonus().setValue(getDamageBonus().getValue() + 2);
+        this.getDamageBonus().setCurrentValue(getDamageBonus().getCurrentValue() + 2);
         addToStatuses(new Status(new DamageBonus(), "Rage", 2, 3));
     }
 

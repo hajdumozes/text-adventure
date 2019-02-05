@@ -17,8 +17,6 @@
 
 ## Certain future plans chronologically:
 * More specials to existing characters with a target
-* Max attribute implementation, which cannot be exceeded, like HP
-* Limiting special usage
 * Dexterity multiplier implementation to damage and initiative
 * Battlefield (HOMM-like)
 * Ranged battle and combat distance

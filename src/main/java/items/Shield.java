@@ -14,7 +14,7 @@ public class Shield extends Weapon {
 
     @Override
     public String toString() {
-        return MessageFormat.format("{0} AC:{1}", getName(), armorClass.getValue());
+        return MessageFormat.format("{0} AC:{1}", getName(), armorClass.getCurrentValue());
     }
 
     public ArmorClass getArmorClass() {

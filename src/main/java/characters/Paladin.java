@@ -24,7 +24,13 @@ public class Paladin extends Character implements Playable {
     }
 
     public void layOnHands() {
-        getHealth().setValue(getHealth().getValue() + 5);
+        int currentHealth = getHealth().getCurrentValue();
+        int maxHealth = getHealth().getMaxValue();
+        if (currentHealth + 5 > maxHealth) {
+            getHealth().setCurrentValue(maxHealth);
+        } else {
+            getHealth().setCurrentValue(currentHealth + 5);
+        }
     }
 
     @Override

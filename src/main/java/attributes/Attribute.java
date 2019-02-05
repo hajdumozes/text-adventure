@@ -3,24 +3,24 @@ package attributes;
 
 public abstract class Attribute implements Comparable<Attribute> {
     private String name;
-    private int value;
+    private int currentValue;
 
     public Attribute(String name, int value) {
         this.name = name;
-        this.value = value;
+        this.currentValue = value;
     }
 
     @Override
     public int compareTo(Attribute attribute) {
-        return value - attribute.getValue();
+        return currentValue - attribute.getCurrentValue();
     }
 
     public void increase(int amount) {
-        value += amount;
+        currentValue += amount;
     }
 
     public void decrease(int amount) {
-        value -= amount;
+        currentValue -= amount;
     }
 
     public String getName() {
@@ -31,11 +31,11 @@ public abstract class Attribute implements Comparable<Attribute> {
         this.name = name;
     }
 
-    public int getValue() {
-        return value;
+    public int getCurrentValue() {
+        return currentValue;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setCurrentValue(int currentValue) {
+        this.currentValue = currentValue;
     }
 }

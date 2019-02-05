@@ -45,7 +45,7 @@ public class Wolf extends Character {
 
     @Override
     public void letAiDecide() {
-        if (getHealth().getValue() < 10 && !usedHowl) {
+        if (getHealth().getCurrentValue() < 10 && !usedHowl) {
             howl();
         } else {
             attack(findPossibleTargets(this).get(0));

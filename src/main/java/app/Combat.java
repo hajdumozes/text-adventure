@@ -39,14 +39,14 @@ public class Combat {
     }
 
     public static void rollInitiative(Character character) {
-        int initiative = roll(1, 20) + (character.getDexterity().getValue() / 2);
-        character.getInitiative().setValue(initiative);
+        int initiative = roll(1, 20) + (character.getDexterity().getCurrentValue() / 2);
+        character.getInitiative().setCurrentValue(initiative);
     }
 
     private static void printInfoOfAliveCharacters() {
         for (Character character : CHARACTERS_ALIVE) {
             System.out.println(MessageFormat.format(
-                    "\t{0}''s HP: {1}", character.getName(), character.getHealth().getValue()));
+                    "\t{0}''s HP: {1}", character.getName(), character.getHealth().getCurrentValue()));
         }
     }
 
@@ -112,7 +112,7 @@ public class Combat {
         System.out.println("\n\tWhich enemy do you want to attack?");
         for (int i = 1; i <= possibleTargets.size(); i++) {
             System.out.println(MessageFormat.format("\t{0}. {1} - {2} HP",
-                    i, possibleTargets.get(i - 1).getName(), possibleTargets.get(i - 1).getHealth().getValue()));
+                    i, possibleTargets.get(i - 1).getName(), possibleTargets.get(i - 1).getHealth().getCurrentValue()));
         }
         String input = CONSOLE.nextLine();
         return possibleTargets.get((Integer.parseInt(input) - 1));

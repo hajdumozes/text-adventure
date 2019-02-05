@@ -56,7 +56,7 @@ public class Main {
         rolls.sort(Comparator.comparing(Integer::intValue));
         rolls.remove(0);
         int abilityPoint = rolls.stream().mapToInt(Integer::intValue).sum();
-        CHARACTERS_ALIVE.get(0).getDexterity().setValue(abilityPoint);
+        CHARACTERS_ALIVE.get(0).getDexterity().setCurrentValue(abilityPoint);
         return abilityPoint;
         // With more ability the return will have an impact. Player will roll 6times and choose which points go where.
     }

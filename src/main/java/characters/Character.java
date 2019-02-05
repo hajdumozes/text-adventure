@@ -20,7 +20,7 @@ import static app.Main.roll;
 
 public abstract class Character {
     private String name;
-    private Attribute health;
+    private DepletableAttribute health;
     private Attribute armorClass;
     private Attribute dexterity;
     private Attribute damageBonus = new DamageBonus();
@@ -34,7 +34,7 @@ public abstract class Character {
 
     public Character(String name, int health, int dexterity, int armorClass, Equipment equipment, boolean isFriendly) {
         this.name = name;
-        this.health = new Health(health);
+        this.health = new Health(health, health);
         this.armorClass = new ArmorClass(armorClass);
         this.dexterity = new Dexterity(dexterity);
         this.equipment = equipment;
@@ -54,13 +54,13 @@ public abstract class Character {
         } else if (attackingRoll == 20) {
             int damage = dealDamage(defender) + dealDamage(defender);
             System.out.println(MessageFormat.format("\tCritical hit! {0} dealt {1} damage to {2}.", name, damage, defender.name));
-        } else if (attackingRoll < defender.armorClass.getValue()) {
+        } else if (attackingRoll < defender.armorClass.getCurrentValue()) {
             System.out.println(MessageFormat.format("\t{0} failed to hit {1}.", name, defender.name));
-        } else if (attackingRoll >= defender.armorClass.getValue()) {
+        } else if (attackingRoll >= defender.armorClass.getCurrentValue()) {
             int damage = dealDamage(defender);
             System.out.println(MessageFormat.format("\t{0} hit {1}, and dealt {2} damage.", name, defender.name, damage));
         }
-        if (defender.health.getValue() <= 0) {
+        if (defender.health.getCurrentValue() <= 0) {
             kill(defender);
         }
     }
@@ -87,7 +87,7 @@ public abstract class Character {
     public abstract void letAiDecide();
 
     private int dealDamage(Character defender) {
-        int damage = rollDamage() + damageBonus.getValue();
+        int damage = rollDamage() + damageBonus.getCurrentValue();
         defender.getHealth().decrease(damage);
         return damage;
     }
@@ -139,11 +139,11 @@ public abstract class Character {
         this.name = name;
     }
 
-    public Attribute getHealth() {
+    public DepletableAttribute getHealth() {
         return health;
     }
 
-    public void setHealth(Attribute health) {
+    public void setHealth(DepletableAttribute health) {
         this.health = health;
     }
 
