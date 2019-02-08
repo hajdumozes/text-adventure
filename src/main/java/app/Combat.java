@@ -64,16 +64,21 @@ public class Combat {
     }
 
     private static void progressThroughTurnOfFriendlyCharacter(Character character) {
-        System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
-        System.out.println("\n\tWhat would you like to do?");
-        System.out.println("\t1. Attack");
-        System.out.println("\t2. Wait for certain death");
-        System.out.println("\t3. Defend");
-        System.out.println("\t4. Special attack");
-        System.out.println("\t5. Inspect character");
+        try {
+            System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
+            System.out.println("\n\tWhat would you like to do?");
+            System.out.println("\t1. Attack");
+            System.out.println("\t2. Wait for certain death");
+            System.out.println("\t3. Defend");
+            System.out.println("\t4. Special attack");
+            System.out.println("\t5. Inspect character");
 
-        String input = CONSOLE.nextLine();
-        evaluateUserInput(input, character);
+            String input = CONSOLE.nextLine();
+            evaluateUserInput(input, character);
+        } catch (NumberFormatException | IndexOutOfBoundsException mistype) {
+            System.out.println("\tUnsupported actions count as ESC.");
+            progressThroughTurnOfFriendlyCharacter(character);
+        }
     }
 
     public static boolean getAliveCharactersFromBothSides() {
@@ -112,8 +117,6 @@ public class Combat {
                 break;
             case "5":
                 inspectCharacter(character);
-            default:
-                progressThroughTurnOfFriendlyCharacter(character);
         }
     }
 
