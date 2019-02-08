@@ -14,11 +14,11 @@
     * Target selection availability
     * Multiple special attacks are available to all characters, including enemies
     * Special attacks have a limit per battle
+* Battlefield is based on HoMM battlefield
 * Barebone attributes
 
 ## Certain future plans chronologically:
-* Position for Characters battlefield-wise
-* Dynamic battlefield
+* Movement implementation on battlefield
 * Speed attribute for characters
 * Battlefield AI implementation
 * Ranged battle and combat distance

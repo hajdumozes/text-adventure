@@ -23,13 +23,14 @@ public class Combat {
         int turnCounter = 0;
         rollInitiativeForAllCharacters();
         while (getAliveCharactersFromBothSides()) {
-            System.out.print("\033[H\033[2J"); // it should clear console
             System.out.println("\n--------------------------------------------------");
 
+            Battlefield.setCharacterPositions();
             turnCounter++;
-            System.out.println(MessageFormat.format("\tTurn {0}", turnCounter));
+            System.out.println(MessageFormat.format("\tTurn {0}\n\n", turnCounter));
             refreshStatuses();
             refreshSkillCountdowns();
+            Battlefield.showBattlefield();
             printInfoOfAliveCharacters();
             progressThroughTurnsOfAliveCharacters();
         }
