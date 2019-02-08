@@ -42,14 +42,14 @@ public class Combat {
     }
 
     public static void rollInitiative(Character character) {
-        int initiative = roll(1, 20) + (character.getDexterity().getCurrentValue() / 2);
+        int initiative = roll(1, 20) + (character.getDexterityValue() / 2);
         character.getInitiative().setCurrentValue(initiative);
     }
 
     private static void printInfoOfAliveCharacters() {
         for (Character character : CHARACTERS_ALIVE) {
             System.out.println(MessageFormat.format(
-                    "\t{0}''s HP: {1}", character.getName(), character.getHealth().getCurrentValue()));
+                    "\t{0}''s HP: {1}", character.getName(), character.getHealthCurrentValue()));
         }
     }
 

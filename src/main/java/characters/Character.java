@@ -2,12 +2,13 @@ package characters;
 
 import app.Main;
 import attributes.*;
+import combat.Position;
 import combat.Skill;
 import combat.SkillWithCountDown;
+import combat.Status;
 import items.Equipment.Equipment;
 import items.Shield;
 import items.Weapon;
-import combat.Status;
 
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -21,10 +22,6 @@ import static app.Main.roll;
 
 public abstract class Character {
     private String name;
-    private DepletableAttribute health;
-    private Attribute armorClass;
-    private Attribute dexterity;
-    private Attribute damageBonus = new DamageBonus();
     private Initiative initiative = new Initiative();
     private List<Status> statuses = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
@@ -32,21 +29,19 @@ public abstract class Character {
     private Equipment equipment;
     private boolean isAlive = true;
     private boolean isFriendly;
+    private Position position = new Position(0, 0);
 
     public Character(String name, int health, int dexterity, int armorClass, Equipment equipment, boolean isFriendly) {
         this.name = name;
-        this.health = new Health(health, health);
-        this.armorClass = new ArmorClass(armorClass);
-        if (equipment.getLeftHand() instanceof Shield) {
-            this.armorClass.increase(((Shield) equipment.getLeftHand()).getArmorClass().getCurrentValue());
-        }
-        this.dexterity = new Dexterity(dexterity);
         this.equipment = equipment;
         this.isFriendly = isFriendly;
-        attributes.add(this.health);
-        attributes.add(this.armorClass);
+        attributes.add(new Health(health, health));
+        attributes.add(new ArmorClass(armorClass));
         attributes.add(new DamageBonus());
-        attributes.add(this.dexterity);
+        attributes.add(new Dexterity(dexterity));
+        if (equipment.getLeftHand() instanceof Shield) {
+            getArmorClass().increase(((Shield) equipment.getLeftHand()).getArmorClass().getCurrentValue());
+        }
     }
 
     public void attack(Character defender) {
@@ -62,13 +57,13 @@ public abstract class Character {
         } else if (attackingRoll == 20) {
             int damage = dealDamage(defender) + dealDamage(defender);
             System.out.println(MessageFormat.format("\tCritical hit! {0} dealt {1} damage to {2}.", name, damage, defender.name));
-        } else if (attackingRoll < defender.armorClass.getCurrentValue()) {
+        } else if (attackingRoll < defender.getArmorClassValue()) {
             System.out.println(MessageFormat.format("\t{0} failed to hit {1}.", name, defender.name));
-        } else if (attackingRoll >= defender.armorClass.getCurrentValue()) {
+        } else if (attackingRoll >= defender.getArmorClassValue()) {
             int damage = dealDamage(defender);
             System.out.println(MessageFormat.format("\t{0} hit {1}, and dealt {2} damage.", name, defender.name, damage));
         }
-        if (defender.health.getCurrentValue() <= 0) {
+        if (defender.getHealthCurrentValue() <= 0) {
             kill(defender);
         }
     }
@@ -99,7 +94,7 @@ public abstract class Character {
     public abstract void letAiDecide();
 
     private int dealDamage(Character defender) {
-        int damage = rollDamage() + damageBonus.getCurrentValue();
+        int damage = rollDamage() + getDamageBonusValue();
         defender.getHealth().decrease(damage);
         return damage;
     }
@@ -118,8 +113,8 @@ public abstract class Character {
 
     public void defend() {
         System.out.println(MessageFormat.format("\t{0} decided to defend.", name));
-        armorClass.increase(5);
-        statuses.add(new Status(armorClass, "Defend", 5, 1));
+        getArmorClass().increase(5);
+        statuses.add(new Status(getArmorClass(), "Defend", 5, 1));
         System.out.println(MessageFormat.format("\t{0}''s AC increased by {1} for {2} turns.", 5, 1, 1));
     }
 
@@ -136,11 +131,11 @@ public abstract class Character {
     }
 
     public Attribute getDamageBonus() {
-        return damageBonus;
+        return attributes.get(attributes.indexOf(new DamageBonus()));
     }
 
-    public void setDamageBonus(Attribute damageBonus) {
-        this.damageBonus = damageBonus;
+    public int getDamageBonusValue() {
+        return attributes.get(attributes.indexOf(new DamageBonus())).getCurrentValue();
     }
 
     public String getName() {
@@ -152,28 +147,25 @@ public abstract class Character {
     }
 
     public DepletableAttribute getHealth() {
-        return health;
+        return (DepletableAttribute) attributes.get(attributes.indexOf(new Health()));
     }
 
-    public void setHealth(DepletableAttribute health) {
-        this.health = health;
+    public int getHealthCurrentValue() {
+        return attributes.get(attributes.indexOf(new Health())).getCurrentValue();
     }
 
     public Attribute getArmorClass() {
-        return armorClass;
+        return attributes.get(attributes.indexOf(new ArmorClass()));
     }
 
-    public void setArmorClass(Attribute armorClass) {
-        this.armorClass = armorClass;
+    public int getArmorClassValue() {
+        return attributes.get(attributes.indexOf(new ArmorClass())).getCurrentValue();
     }
 
     public List<Status> getStatuses() {
         return statuses;
     }
 
-    public void setStatuses(List<Status> statuses) {
-        this.statuses = statuses;
-    }
 
     public List<Attribute> getAttributes() {
         return attributes;
@@ -187,9 +179,6 @@ public abstract class Character {
         return skillWithCountDowns;
     }
 
-    public void setSkillWithCountDowns(List<SkillWithCountDown> skillWithCountDowns) {
-        this.skillWithCountDowns = skillWithCountDowns;
-    }
 
     public Equipment getEquipment() {
         return equipment;
@@ -200,11 +189,11 @@ public abstract class Character {
     }
 
     public Attribute getDexterity() {
-        return dexterity;
+        return attributes.get(attributes.indexOf(new Dexterity()));
     }
 
-    public void setDexterity(Attribute dexterity) {
-        this.dexterity = dexterity;
+    public int getDexterityValue() {
+        return attributes.get(attributes.indexOf(new Dexterity())).getCurrentValue();
     }
 
     public boolean isAlive() {
@@ -229,5 +218,13 @@ public abstract class Character {
 
     public void setInitiative(Initiative initiative) {
         this.initiative = initiative;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 }
