@@ -9,7 +9,10 @@ import combat.Status;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static app.Main.*;
@@ -117,6 +120,9 @@ public class Combat {
                 break;
             case "5":
                 inspectCharacter(character);
+                break;
+            default:
+                throw new IndexOutOfBoundsException();
         }
     }
 
