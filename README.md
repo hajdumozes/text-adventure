@@ -17,7 +17,11 @@
 * Barebone attributes
 
 ## Certain future plans chronologically:
-* Dexterity multiplier implementation to damage and initiative
-* Battlefield (HOMM-like)
+* Position for Characters battlefield-wise
+* Dynamic battlefield
+* Speed attribute for characters
+* Battlefield AI implementation
 * Ranged battle and combat distance
+* Dexterity multiplier implementation to damage and initiative
+
 

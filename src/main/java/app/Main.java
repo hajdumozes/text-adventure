@@ -1,13 +1,13 @@
 package app;
 
-import characters.*;
 import characters.Character;
+import characters.*;
 import items.Equipment.Equipment;
 
 import java.text.MessageFormat;
 import java.util.*;
 
-import static app.Combat.*;
+import static app.Combat.progressThroughBattle;
 
 public class Main {
     public static final List<Character> CHARACTERS_ALIVE = new ArrayList<>();
@@ -66,7 +66,7 @@ public class Main {
         Playable chosenCharacter = (Playable) CHARACTERS_ALIVE.get(0);
         for (int i = 1; i <= chosenCharacter.showStartingEquipments().size(); i++) {
             System.out.println(MessageFormat.format(
-                    "\t{0}. {1}", i, chosenCharacter.showStartingEquipments().get(i-1).toString()));
+                    "\t{0}. {1}", i, chosenCharacter.showStartingEquipments().get(i - 1).toString()));
         }
         String input = CONSOLE.nextLine();
         Equipment equipment = chosenCharacter.showStartingEquipments().get((Integer.parseInt(input) - 1));
