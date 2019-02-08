@@ -1,6 +1,6 @@
 package attributes;
 
-public class DepletableAttribute extends Attribute {
+public abstract class DepletableAttribute extends Attribute {
     private int maxValue;
 
     public DepletableAttribute(String name, int value, int max) {

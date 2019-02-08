@@ -70,6 +70,7 @@ public class Combat {
         System.out.println("\t2. Wait for certain death");
         System.out.println("\t3. Defend");
         System.out.println("\t4. Special attack");
+        System.out.println("\t5. Inspect character");
 
         String input = CONSOLE.nextLine();
         evaluateUserInput(input, character);
@@ -91,7 +92,11 @@ public class Combat {
     private static void evaluateUserInput(String input, Character character) {
         switch (input) {
             case "1":
-                character.attack(chooseTarget(false));
+                character.attack(chooseTargetFromCharacters(getCharactersFromSelectedSide(false)));
+                break;
+            case "2":
+                System.out.println("\tYou longed for death");
+                character.wait(character);
                 break;
             case "3":
                 character.defend();
@@ -99,20 +104,34 @@ public class Combat {
             case "4":
                 Skill chosenSkill = chooseSkill(character);
                 if (chosenSkill.getTarget().isTargetable()) {
-                    invokeMethod(chosenSkill.getMethod(), character, chooseTarget(chosenSkill.getTarget().isTargetOnPlayersSide()));
+                    invokeMethod(chosenSkill.getMethod(), character,
+                            chooseTargetFromCharacters(getCharactersFromSelectedSide(chosenSkill.getTarget().isTargetOnPlayersSide())));
                 } else {
                     invokeMethod(chosenSkill.getMethod(), character, null);
                 }
                 break;
+            case "5":
+                inspectCharacter(character);
             default:
-                System.out.println("\tYou longed for death");
-                character.wait(character);
-                break;
+                progressThroughTurnOfFriendlyCharacter(character);
         }
     }
 
-    private static Character chooseTarget(boolean isTargetOnPlayersSide) {
-        List<Character> possibleTargets = findPossibleTargets(isTargetOnPlayersSide);
+    private static void inspectCharacter(Character turnOfCharacter) {
+        List<Character> allCharacters = getCharactersFromSelectedSide(true);
+        allCharacters.addAll(getCharactersFromSelectedSide(false));
+        Character chosenCharacter = chooseTargetFromCharacters(allCharacters);
+        System.out.println(MessageFormat.format("\tName: {0}\n\tHealth: {1}/{2}\n\tInitiative: {3}\n\tDexterity: {4}",
+                chosenCharacter.getName(), chosenCharacter.getHealth().getCurrentValue(), chosenCharacter.getHealth().getMaxValue(),
+                chosenCharacter.getInitiative().getCurrentValue(), chosenCharacter.getDexterity().getCurrentValue()));
+        progressThroughTurnOfFriendlyCharacter(turnOfCharacter);
+    }
+
+    private static List<Character> getCharactersFromSelectedSide(boolean isTargetOnPlayersSide) {
+        return findPossibleTargets(isTargetOnPlayersSide);
+    }
+
+    private static Character chooseTargetFromCharacters(List<Character> possibleTargets) {
         System.out.println("\n\tSelect your target");
         for (int i = 1; i <= possibleTargets.size(); i++) {
             System.out.println(MessageFormat.format("\t{0}. {1} - {2} HP",
@@ -130,7 +149,7 @@ public class Combat {
         }
     }
 
-    private static Skill chooseSkill(Character character) { //maybe it can be merged with chooseTarget
+    private static Skill chooseSkill(Character character) { //maybe it can be merged with chooseTargetFromCharacters
         List<Skill> usableSkills = getUsableSkills(character);
         dealWithOutOfSkillsSituation(usableSkills.size(), character);
         printSkills(usableSkills);

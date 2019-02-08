@@ -64,7 +64,7 @@ public class Wolf extends Character {
     @Override
     public void letAiDecide() {
         List<Skill> allAvailableSkills = getUsableSkills(this);
-        if (allAvailableSkills.size() > 0) {
+        if (allAvailableSkills.size() > 0 && new Random().nextInt(100) + 1 > 50) {
             Skill selectedSkill = allAvailableSkills.get(new Random().nextInt(allAvailableSkills.size()));
             if (selectedSkill.getTarget().isTargetable()) {
                 invokeMethod(selectedSkill.getMethod(), this, letAiChooseTarget());

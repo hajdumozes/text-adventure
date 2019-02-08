@@ -5,6 +5,7 @@ import attributes.*;
 import combat.Skill;
 import combat.SkillWithCountDown;
 import items.Equipment.Equipment;
+import items.Shield;
 import items.Weapon;
 import combat.Status;
 
@@ -36,6 +37,9 @@ public abstract class Character {
         this.name = name;
         this.health = new Health(health, health);
         this.armorClass = new ArmorClass(armorClass);
+        if (equipment.getLeftHand() instanceof Shield) {
+            this.armorClass.increase(((Shield) equipment.getLeftHand()).getArmorClass().getCurrentValue());
+        }
         this.dexterity = new Dexterity(dexterity);
         this.equipment = equipment;
         this.isFriendly = isFriendly;
@@ -116,7 +120,7 @@ public abstract class Character {
         System.out.println(MessageFormat.format("\t{0} decided to defend.", name));
         armorClass.increase(5);
         statuses.add(new Status(armorClass, "Defend", 5, 1));
-        System.out.println(MessageFormat.format("\t{0}''s AC increased by {1} for {2} turns.", 5, 1));
+        System.out.println(MessageFormat.format("\t{0}''s AC increased by {1} for {2} turns.", 5, 1, 1));
     }
 
     public void wait(Character character) {

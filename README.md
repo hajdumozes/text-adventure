@@ -17,7 +17,6 @@
 * Barebone attributes
 
 ## Certain future plans chronologically:
-* More specials to existing characters with a target
 * Dexterity multiplier implementation to damage and initiative
 * Battlefield (HOMM-like)
 * Ranged battle and combat distance
