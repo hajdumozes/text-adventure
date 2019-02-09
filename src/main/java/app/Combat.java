@@ -2,6 +2,7 @@ package app;
 
 import attributes.Attribute;
 import characters.Character;
+import combat.OutOfReachException;
 import combat.Skill;
 import combat.SkillWithCountDown;
 import combat.Status;
@@ -104,11 +105,7 @@ public class Combat {
                 character.attack(chooseTargetFromCharacters(getCharactersFromSelectedSide(false)));
                 break;
             case "2":
-                character.move(getMovementDestinationFromUser());
-                if (!character.isMovedThisTurn()) {
-                    character.setMovedThisTurn(true);
-                    progressThroughTurnOfFriendlyCharacter(character);
-                }
+                evaluateCharacterMovement(character);
                 break;
             case "3":
                 character.defend();
@@ -127,6 +124,19 @@ public class Combat {
                 break;
             default:
                 throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private static void evaluateCharacterMovement(Character character) {
+        try {
+            character.move(getMovementDestinationFromUser());
+            if (!character.isMovedThisTurn()) {
+                character.setMovedThisTurn(true);
+                progressThroughTurnOfFriendlyCharacter(character);
+            }
+        } catch (OutOfReachException impossibleMovement) {
+            System.out.println("\t" + impossibleMovement.getMessage());
+            evaluateCharacterMovement(character);
         }
     }
 

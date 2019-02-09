@@ -31,6 +31,17 @@ public class Battlefield {
         return new Position(row, column);
     }
 
+    public static boolean checkIfDestinationIsReacheable(Character character, Position position) {
+        int oldColumn = character.getPosition().getColumn();
+        int oldRow = character.getPosition().getRow();
+        int newColumn = position.getColumn();
+        int newRow = position.getRow();
+        int difference = Math.abs((oldColumn - newColumn)) + Math.abs((oldRow - newRow));
+        System.out.println(character.getSpeedValue() + " speed");
+        System.out.println(difference + " difference");
+        return difference <= character.getSpeedValue();
+    }
+
     private static void emptyBattlefield() {
         for (int row = 0; row < BATTLEFIELD.length; row++) {
             for (int column = 0; column < BATTLEFIELD[row].length; column++) {

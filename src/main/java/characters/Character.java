@@ -1,11 +1,9 @@
 package characters;
 
+import app.Battlefield;
 import app.Main;
 import attributes.*;
-import combat.Position;
-import combat.Skill;
-import combat.SkillWithCountDown;
-import combat.Status;
+import combat.*;
 import items.Equipment.Equipment;
 import items.Shield;
 import items.Weapon;
@@ -40,7 +38,7 @@ public abstract class Character {
         attributes.add(new DamageBonus());
         attributes.add(new Dexterity(dexterity));
         attributes.add(new Initiative());
-        attributes.add(new Speed());
+        attributes.add(new Speed(speed));
         if (equipment.getLeftHand() instanceof Shield) {
             getArmorClass().increase(((Shield) equipment.getLeftHand()).getArmorClass().getCurrentValue());
         }
@@ -125,7 +123,11 @@ public abstract class Character {
     }
 
     public void move(Position position) {
-        setPosition(position);
+        if (Battlefield.checkIfDestinationIsReacheable(this, position)) {
+            setPosition(position);
+        } else {
+            throw new OutOfReachException("Destination is too far away");
+        }
     }
 
     protected void addToStatuses(Status status) {
