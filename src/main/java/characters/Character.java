@@ -22,7 +22,6 @@ import static app.Main.roll;
 
 public abstract class Character {
     private String name;
-    private Initiative initiative = new Initiative();
     private List<Status> statuses = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
     private List<SkillWithCountDown> skillWithCountDowns = new ArrayList<>();
@@ -30,6 +29,7 @@ public abstract class Character {
     private boolean isAlive = true;
     private boolean isFriendly;
     private Position position = new Position(0, 0);
+    private boolean movedThisTurn = false;
 
     public Character(String name, int health, int dexterity, int armorClass, Equipment equipment, boolean isFriendly) {
         this.name = name;
@@ -39,6 +39,7 @@ public abstract class Character {
         attributes.add(new ArmorClass(armorClass));
         attributes.add(new DamageBonus());
         attributes.add(new Dexterity(dexterity));
+        attributes.add(new Initiative());
         if (equipment.getLeftHand() instanceof Shield) {
             getArmorClass().increase(((Shield) equipment.getLeftHand()).getArmorClass().getCurrentValue());
         }
@@ -120,6 +121,10 @@ public abstract class Character {
 
     public void wait(Character character) {
         // useless right now
+    }
+
+    public void move(Position position) {
+        setPosition(position);
     }
 
     protected void addToStatuses(Status status) {
@@ -212,12 +217,16 @@ public abstract class Character {
         isFriendly = friendly;
     }
 
-    public Initiative getInitiative() {
-        return initiative;
+    public Attribute getInitiative() {
+        return attributes.get(attributes.indexOf(new Initiative()));
     }
 
-    public void setInitiative(Initiative initiative) {
-        this.initiative = initiative;
+    public int getInitiativeValue() {
+        return attributes.get(attributes.indexOf(new Initiative())).getCurrentValue();
+    }
+
+    public void setInitiativeValue(int value) {
+        getInitiative().setCurrentValue(value);
     }
 
     public Position getPosition() {
@@ -226,5 +235,13 @@ public abstract class Character {
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public boolean isMovedThisTurn() {
+        return movedThisTurn;
+    }
+
+    public void setMovedThisTurn(boolean movedThisTurn) {
+        this.movedThisTurn = movedThisTurn;
     }
 }

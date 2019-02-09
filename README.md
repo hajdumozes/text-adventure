@@ -18,7 +18,6 @@
 * Barebone attributes
 
 ## Certain future plans chronologically:
-* Movement implementation on battlefield
 * Speed attribute for characters
 * Battlefield AI implementation
 * Ranged battle and combat distance

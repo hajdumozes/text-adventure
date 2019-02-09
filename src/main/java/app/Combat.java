@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static app.Battlefield.getMovementDestinationFromUser;
 import static app.Main.*;
 
 public class Combat {
@@ -23,15 +24,12 @@ public class Combat {
         int turnCounter = 0;
         rollInitiativeForAllCharacters();
         while (getAliveCharactersFromBothSides()) {
-            System.out.println("\n--------------------------------------------------");
-
             Battlefield.setCharacterPositions();
             turnCounter++;
-            System.out.println(MessageFormat.format("\tTurn {0}\n\n", turnCounter));
+            System.out.println(MessageFormat.format("\n\n\t\t\t\t\t\t\t\t\t\t\t\tTURN {0}\n\n", turnCounter));
             refreshStatuses();
             refreshSkillCountdowns();
-            Battlefield.showBattlefield();
-            printInfoOfAliveCharacters();
+            refreshMovementAvailability();
             progressThroughTurnsOfAliveCharacters();
         }
     }
@@ -68,11 +66,13 @@ public class Combat {
     }
 
     private static void progressThroughTurnOfFriendlyCharacter(Character character) {
+        Battlefield.showBattlefield();
+        printInfoOfAliveCharacters();
         try {
             System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
             System.out.println("\n\tWhat would you like to do?");
             System.out.println("\t1. Attack");
-            System.out.println("\t2. Wait for certain death");
+            System.out.println("\t2. Move - free action once per turn");
             System.out.println("\t3. Defend");
             System.out.println("\t4. Special attack");
             System.out.println("\t5. Inspect character");
@@ -104,8 +104,11 @@ public class Combat {
                 character.attack(chooseTargetFromCharacters(getCharactersFromSelectedSide(false)));
                 break;
             case "2":
-                System.out.println("\tYou longed for death");
-                character.wait(character);
+                character.move(getMovementDestinationFromUser());
+                if (!character.isMovedThisTurn()) {
+                    character.setMovedThisTurn(true);
+                    progressThroughTurnOfFriendlyCharacter(character);
+                }
                 break;
             case "3":
                 character.defend();
@@ -193,7 +196,7 @@ public class Combat {
     }
 
     private static void refreshStatuses() {
-        for (Character character : CHARACTERS_ALIVE) {
+        for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
             Iterator<Status> iterator = character.getStatuses().iterator();
             while (iterator.hasNext()) {
                 Status current = iterator.next();
@@ -205,6 +208,12 @@ public class Combat {
                     iterator.remove();
                 }
             }
+        }
+    }
+
+    private static void refreshMovementAvailability() {
+        for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
+            character.setMovedThisTurn(false);
         }
     }
 

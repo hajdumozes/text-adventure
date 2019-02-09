@@ -3,6 +3,8 @@ package app;
 import characters.Character;
 import combat.Position;
 
+import static app.Main.CONSOLE;
+
 public class Battlefield {
     public static final String[][] BATTLEFIELD = new String[9][9];
 
@@ -18,8 +20,15 @@ public class Battlefield {
     }
 
     protected static void setCharacterPositions() {
-        Main.CHARACTERS_ALIVE.get(0).setPosition(new Position(3, 3));
         Main.CHARACTERS_ALIVE.get(1).setPosition(new Position(5, 6));
+    }
+
+    protected static Position getMovementDestinationFromUser() {
+        System.out.println("\t Give destination in the following pattern: A3");
+        String input = CONSOLE.nextLine();
+        int row = input.charAt(0) - 65;
+        int column = Integer.parseInt(input.substring(1, 2)) - 1;
+        return new Position(row, column);
     }
 
     private static void emptyBattlefield() {
