@@ -125,8 +125,9 @@ public class Wolf extends Character {
                 int newColumn = getPosition().getColumn() + i;
                 int newRow = getPosition().getRow() + j;
                 if (newColumn >= 0 && newColumn < BATTLEFIELD[0].length
-                        && newRow + j >= 0 && newRow < BATTLEFIELD.length) {
+                        && newRow >= 0 && newRow < BATTLEFIELD.length) {
                     routes.add(new Position(getPosition().getRow() + j, getPosition().getColumn() + i));
+                    System.out.print("\t" + new Position(getPosition().getRow() + j, getPosition().getColumn() + i));
                 }
             }
         }
