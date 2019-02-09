@@ -18,7 +18,6 @@
 * Barebone attributes
 
 ## Certain future plans chronologically:
-* Speed attribute for characters
 * Battlefield AI implementation
 * Ranged battle and combat distance
 * Dexterity multiplier implementation to damage and initiative

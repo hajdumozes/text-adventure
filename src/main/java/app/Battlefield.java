@@ -19,10 +19,6 @@ public class Battlefield {
         System.out.println("\n\n");
     }
 
-    protected static void setCharacterPositions() {
-        Main.CHARACTERS_ALIVE.get(1).setPosition(new Position(5, 6));
-    }
-
     protected static Position getMovementDestinationFromUser() {
         System.out.println("\t Give destination in the following pattern: A3");
         String input = CONSOLE.nextLine();
@@ -32,14 +28,18 @@ public class Battlefield {
     }
 
     public static boolean checkIfDestinationIsReacheable(Character character, Position position) {
-        int oldColumn = character.getPosition().getColumn();
-        int oldRow = character.getPosition().getRow();
-        int newColumn = position.getColumn();
-        int newRow = position.getRow();
-        int difference = Math.abs((oldColumn - newColumn)) + Math.abs((oldRow - newRow));
+        int difference = countPositionDifference(character.getPosition(), position);
         System.out.println(character.getSpeedValue() + " speed");
         System.out.println(difference + " difference");
         return difference <= character.getSpeedValue();
+    }
+
+    public static int countPositionDifference(Position one, Position other) {
+        int oneColumn = one.getColumn();
+        int oneRow = one.getRow();
+        int otherColumn = other.getColumn();
+        int otherRow = other.getRow();
+        return Math.abs((oneColumn - otherColumn)) + Math.abs((oneRow - otherRow));
     }
 
     private static void emptyBattlefield() {

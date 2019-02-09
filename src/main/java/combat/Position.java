@@ -24,4 +24,9 @@ public class Position {
     public void setColumn(int column) {
         this.column = column;
     }
+
+    @Override
+    public String toString() {
+        return "" + (char) ((row) + 65) + (column + 1);
+    }
 }

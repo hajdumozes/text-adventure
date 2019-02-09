@@ -2,10 +2,7 @@ package characters;
 
 import app.Main;
 import attributes.DamageBonus;
-import combat.Skill;
-import combat.SkillWithCountDown;
-import combat.Status;
-import combat.Target;
+import combat.*;
 import items.Equipment.Equipment;
 import items.WolfClaw;
 
@@ -14,6 +11,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import static app.Battlefield.BATTLEFIELD;
+import static app.Battlefield.countPositionDifference;
 import static app.Combat.*;
 
 public class Wolf extends Character {
@@ -26,6 +25,10 @@ public class Wolf extends Character {
     private Skill bite = new Skill("Bite", "2d4 +2 damage, +4 to hit",
             findMethod("bite", Character.class),
             3, new Target(true, true));
+
+    {
+        setPosition(new Position(5, 6));
+    }
 
     public Wolf() {
         super("Wolf", 11, 15, 5, 6, new Equipment(new WolfClaw(), new WolfClaw()), false);
@@ -63,6 +66,13 @@ public class Wolf extends Character {
 
     @Override
     public void letAiDecide() {
+        // Temporary for making certain it works
+        List<Position> positions = findAllPossibleRoutes();
+        for (Position position : positions) {
+            System.out.println(position);
+        }
+
+
         List<Skill> allAvailableSkills = getUsableSkills(this);
         if (allAvailableSkills.size() > 0 && new Random().nextInt(100) + 1 > 50) {
             Skill selectedSkill = allAvailableSkills.get(new Random().nextInt(allAvailableSkills.size()));
@@ -85,5 +95,33 @@ public class Wolf extends Character {
         } else {
             return enemies.get(new Random().nextInt(enemies.size()));
         }
+    }
+
+    private Position getNearestEnemyPosition() {
+        List<Character> possibleTargets = findPossibleTargets(true);
+        Position positionFound = null;
+        int minimalDifference = countPositionDifference(getPosition(), possibleTargets.get(0).getPosition());
+        for (Character enemy : possibleTargets) {
+            if (countPositionDifference(getPosition(), enemy.getPosition()) < minimalDifference) {
+                positionFound = enemy.getPosition();
+            }
+        }
+        return positionFound;
+    }
+
+    private List<Position> findAllPossibleRoutes() {
+        List<Position> routes = new ArrayList<>();
+        for (int i = 0 - getSpeedValue(); i <= getSpeedValue(); i++) {
+            int leftoverSteps = getSpeedValue() - Math.abs(i);
+            for (int j = 0 - leftoverSteps; j <= leftoverSteps; j++) {
+                int newColumn = getPosition().getColumn() + i;
+                int newRow = getPosition().getRow() + j;
+                if (newColumn >= 0 && newColumn < BATTLEFIELD[0].length
+                        && newRow + j >= 0 && newRow < BATTLEFIELD.length) {
+                    routes.add(new Position(getPosition().getRow() + j, getPosition().getColumn() + i));
+                }
+            }
+        }
+        return routes;
     }
 }

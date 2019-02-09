@@ -25,7 +25,6 @@ public class Combat {
         int turnCounter = 0;
         rollInitiativeForAllCharacters();
         while (getAliveCharactersFromBothSides()) {
-            Battlefield.setCharacterPositions();
             turnCounter++;
             System.out.println(MessageFormat.format("\n\n\t\t\t\t\t\t\t\t\t\t\t\tTURN {0}\n\n", turnCounter));
             refreshStatuses();
