@@ -31,7 +31,7 @@ public class Wolf extends Character {
     }
 
     public Wolf() {
-        super("Wolf", 11, 15, 5, 6, new Equipment(new WolfClaw(), new WolfClaw()), false);
+        super("Wolf", 11, 15, 5, 3, new Equipment(new WolfClaw(), new WolfClaw()), false);
     }
 
     @Override
@@ -66,23 +66,31 @@ public class Wolf extends Character {
 
     @Override
     public void letAiDecide() {
-        // Temporary for making certain it works
-        List<Position> positions = findAllPossibleRoutes();
-        for (Position position : positions) {
-            System.out.println(position);
-        }
-
+        Character chosenTarget = letAiChooseTarget();
+        List<Position> optimalRoutes = selectOptimalRoutesToPosition(chosenTarget.getPosition());
+        moveToSelectedDestination(optimalRoutes);
 
         List<Skill> allAvailableSkills = getUsableSkills(this);
         if (allAvailableSkills.size() > 0 && new Random().nextInt(100) + 1 > 50) {
             Skill selectedSkill = allAvailableSkills.get(new Random().nextInt(allAvailableSkills.size()));
             if (selectedSkill.getTarget().isTargetable()) {
-                invokeMethod(selectedSkill.getMethod(), this, letAiChooseTarget());
+                invokeMethod(selectedSkill.getMethod(), this, chosenTarget);
             } else {
                 invokeMethod(selectedSkill.getMethod(), this, null);
             }
         } else {
-            attack(letAiChooseTarget());
+            attack(chosenTarget);
+        }
+    }
+
+    private void moveToSelectedDestination(List<Position> optimalRoutes) {
+        try {
+            Position destination = selectFromOptimalRoutes(optimalRoutes);
+            move(destination);
+        } catch (UnreachablePositionException positionException) {
+            if (optimalRoutes.size() > 1) {
+                moveToSelectedDestination(optimalRoutes);
+            }
         }
     }
 
@@ -123,5 +131,28 @@ public class Wolf extends Character {
             }
         }
         return routes;
+    }
+
+    private List<Position> selectOptimalRoutesToPosition(Position destination) {
+        List<Position> allRoutes = findAllPossibleRoutes();
+        List<Position> optimalRoutes = new ArrayList<>();
+        for (Position position : allRoutes) {
+            int currentDifference = countPositionDifference(position, destination);
+            if (currentDifference != 0) {
+                if (optimalRoutes.isEmpty()) {
+                    optimalRoutes.add(position);
+                } else if (countPositionDifference(optimalRoutes.get(0), destination) > countPositionDifference(position, destination)) {
+                    optimalRoutes.clear();
+                    optimalRoutes.add(position);
+                } else if (countPositionDifference(optimalRoutes.get(0), destination) == countPositionDifference(position, destination)) {
+                    optimalRoutes.add(position);
+                }
+            }
+        }
+        return optimalRoutes;
+    }
+
+    private Position selectFromOptimalRoutes(List<Position> optimalRoutes) {
+        return optimalRoutes.get(new Random().nextInt(optimalRoutes.size()));
     }
 }

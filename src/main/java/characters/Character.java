@@ -17,6 +17,7 @@ import java.util.Random;
 import static app.Combat.getAliveCharactersFromBothSides;
 import static app.Main.decideOutcome;
 import static app.Main.roll;
+import static app.Battlefield.*;
 
 public abstract class Character {
     private String name;
@@ -123,10 +124,10 @@ public abstract class Character {
     }
 
     public void move(Position position) {
-        if (Battlefield.checkIfDestinationIsReacheable(this, position)) {
+        if (checkIfDestinationIsReacheable(this, position) && checkIfPositionIsOccupied(position)) {
             setPosition(position);
         } else {
-            throw new OutOfReachException("Destination is too far away");
+            throw new UnreachablePositionException("Destination is too far away");
         }
     }
 

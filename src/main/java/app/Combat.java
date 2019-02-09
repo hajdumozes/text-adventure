@@ -2,7 +2,7 @@ package app;
 
 import attributes.Attribute;
 import characters.Character;
-import combat.OutOfReachException;
+import combat.UnreachablePositionException;
 import combat.Skill;
 import combat.SkillWithCountDown;
 import combat.Status;
@@ -133,7 +133,7 @@ public class Combat {
                 character.setMovedThisTurn(true);
                 progressThroughTurnOfFriendlyCharacter(character);
             }
-        } catch (OutOfReachException impossibleMovement) {
+        } catch (UnreachablePositionException impossibleMovement) {
             System.out.println("\t" + impossibleMovement.getMessage());
             evaluateCharacterMovement(character);
         }

@@ -8,6 +8,10 @@ import static app.Main.CONSOLE;
 public class Battlefield {
     public static final String[][] BATTLEFIELD = new String[9][9];
 
+    static {
+        emptyBattlefield();
+    }
+
 
     public static void showBattlefield() {
         emptyBattlefield();
@@ -29,8 +33,6 @@ public class Battlefield {
 
     public static boolean checkIfDestinationIsReacheable(Character character, Position position) {
         int difference = countPositionDifference(character.getPosition(), position);
-        System.out.println(character.getSpeedValue() + " speed");
-        System.out.println(difference + " difference");
         return difference <= character.getSpeedValue();
     }
 
@@ -48,6 +50,10 @@ public class Battlefield {
                 BATTLEFIELD[row][column] = "  x ";
             }
         }
+    }
+
+    public static boolean checkIfPositionIsOccupied(Position position) {
+        return BATTLEFIELD[position.getRow()][position.getColumn()].trim().equals("x");
     }
 
     private static void fillBattlefield() {
