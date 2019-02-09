@@ -18,7 +18,6 @@
 * Barebone attributes
 
 ## Certain future plans chronologically:
-* Multiple wolfs movement bugfix
 * Ranged battle and combat distance
 * Dexterity multiplier implementation to damage and initiative
 

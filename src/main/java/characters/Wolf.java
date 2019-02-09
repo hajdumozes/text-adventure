@@ -11,8 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-import static app.Battlefield.BATTLEFIELD;
-import static app.Battlefield.countPositionDifference;
+import static app.Battlefield.*;
 import static app.Combat.*;
 
 public class Wolf extends Character {
@@ -85,12 +84,13 @@ public class Wolf extends Character {
 
     private void moveToSelectedDestination(List<Position> optimalRoutes) {
         try {
-            Position destination = selectFromOptimalRoutes(optimalRoutes);
-            move(destination);
-        } catch (UnreachablePositionException positionException) {
-            if (optimalRoutes.size() > 1) {
-                moveToSelectedDestination(optimalRoutes);
+            List<Position> filteredRoutes = filterNonOccupiedRoutes(optimalRoutes);
+            if (filteredRoutes.size() > 0) {
+                Position destination = selectFromOptimalRoutes(filteredRoutes);
+                move(destination);
             }
+        } catch (UnreachablePositionException positionException) {
+            moveToSelectedDestination(optimalRoutes);
         }
     }
 
@@ -127,7 +127,6 @@ public class Wolf extends Character {
                 if (newColumn >= 0 && newColumn < BATTLEFIELD[0].length
                         && newRow >= 0 && newRow < BATTLEFIELD.length) {
                     routes.add(new Position(getPosition().getRow() + j, getPosition().getColumn() + i));
-                    System.out.print("\t" + new Position(getPosition().getRow() + j, getPosition().getColumn() + i));
                 }
             }
         }
@@ -151,6 +150,16 @@ public class Wolf extends Character {
             }
         }
         return optimalRoutes;
+    }
+
+    private List<Position> filterNonOccupiedRoutes(List<Position> routes) {
+        List<Position> filtered = new ArrayList<>();
+        for (Position position : routes) {
+            if (checkIfPositionIsOccupied(position)) {
+                filtered.add(position);
+            }
+        }
+        return filtered;
     }
 
     private Position selectFromOptimalRoutes(List<Position> optimalRoutes) {

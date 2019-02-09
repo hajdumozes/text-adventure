@@ -1,6 +1,5 @@
 package characters;
 
-import app.Battlefield;
 import app.Main;
 import attributes.*;
 import combat.*;
@@ -14,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static app.Battlefield.*;
 import static app.Combat.getAliveCharactersFromBothSides;
 import static app.Main.decideOutcome;
 import static app.Main.roll;
-import static app.Battlefield.*;
 
 public abstract class Character {
     private String name;
@@ -126,6 +125,7 @@ public abstract class Character {
     public void move(Position position) {
         if (checkIfDestinationIsReacheable(this, position) && checkIfPositionIsOccupied(position)) {
             setPosition(position);
+            BATTLEFIELD[position.getRow()][position.getColumn()] = getName();
         } else {
             throw new UnreachablePositionException("Destination is too far away");
         }
