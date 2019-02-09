@@ -28,7 +28,7 @@ public class Wolf extends Character {
             3, new Target(true, true));
 
     public Wolf() {
-        super("Wolf", 11, 15, 5, new Equipment(new WolfClaw(), new WolfClaw()), false);
+        super("Wolf", 11, 15, 5, 6, new Equipment(new WolfClaw(), new WolfClaw()), false);
     }
 
     @Override

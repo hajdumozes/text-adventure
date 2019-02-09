@@ -31,7 +31,7 @@ public abstract class Character {
     private Position position = new Position(0, 0);
     private boolean movedThisTurn = false;
 
-    public Character(String name, int health, int dexterity, int armorClass, Equipment equipment, boolean isFriendly) {
+    public Character(String name, int health, int dexterity, int armorClass, int speed, Equipment equipment, boolean isFriendly) {
         this.name = name;
         this.equipment = equipment;
         this.isFriendly = isFriendly;
@@ -40,6 +40,7 @@ public abstract class Character {
         attributes.add(new DamageBonus());
         attributes.add(new Dexterity(dexterity));
         attributes.add(new Initiative());
+        attributes.add(new Speed());
         if (equipment.getLeftHand() instanceof Shield) {
             getArmorClass().increase(((Shield) equipment.getLeftHand()).getArmorClass().getCurrentValue());
         }
@@ -235,6 +236,19 @@ public abstract class Character {
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public Attribute getSpeed() {
+        return attributes.get(attributes.indexOf(new Speed()));
+    }
+
+
+    public int getSpeedValue() {
+        return attributes.get(attributes.indexOf(new Speed())).getCurrentValue();
+    }
+
+    public void setSpeedValue(int value) {
+        getSpeed().setCurrentValue(value);
     }
 
     public boolean isMovedThisTurn() {

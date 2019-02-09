@@ -3,8 +3,10 @@ package characters;
 import app.Combat;
 import combat.Skill;
 import combat.Target;
-import items.*;
 import items.Equipment.Equipment;
+import items.Longsword;
+import items.Shield;
+import items.Shortsword;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +17,7 @@ public class Paladin extends Character implements Playable {
             findMethod("layOnHands", Character.class), 3, new Target(true, true));
 
     public Paladin() {
-        super("Paladin", 50, 10, 10, new Equipment(new Longsword(), new Shield()), true);
+        super("Paladin", 50, 10, 10, 4, new Equipment(new Longsword(), new Shield()), true);
     }
 
     @Override
