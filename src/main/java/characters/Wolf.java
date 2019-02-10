@@ -69,16 +69,18 @@ public class Wolf extends Character {
         List<Position> optimalRoutes = selectOptimalRoutesToPosition(chosenTarget.getPosition());
         moveToSelectedDestination(optimalRoutes);
 
-        List<Skill> allAvailableSkills = getUsableSkills(this);
-        if (allAvailableSkills.size() > 0 && new Random().nextInt(100) + 1 > 50) {
-            Skill selectedSkill = allAvailableSkills.get(new Random().nextInt(allAvailableSkills.size()));
-            if (selectedSkill.getTarget().isTargetable()) {
-                invokeMethod(selectedSkill.getMethod(), this, chosenTarget);
+        if (countPositionDifference(this.getPosition(), chosenTarget.getPosition()) == getReach()) {
+            List<Skill> allAvailableSkills = getUsableSkills(this);
+            if (allAvailableSkills.size() > 0 && new Random().nextInt(100) + 1 > 50) {
+                Skill selectedSkill = allAvailableSkills.get(new Random().nextInt(allAvailableSkills.size()));
+                if (selectedSkill.getTarget().isTargetable()) {
+                    invokeMethod(selectedSkill.getMethod(), this, chosenTarget);
+                } else {
+                    invokeMethod(selectedSkill.getMethod(), this, null);
+                }
             } else {
-                invokeMethod(selectedSkill.getMethod(), this, null);
+                attack(chosenTarget);
             }
-        } else {
-            attack(chosenTarget);
         }
     }
 
