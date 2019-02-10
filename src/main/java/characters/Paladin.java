@@ -1,6 +1,5 @@
 package characters;
 
-import app.Combat;
 import combat.Skill;
 import combat.Target;
 import items.Equipment.Equipment;
@@ -12,12 +11,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static app.SkillManagement.useSkill;
+
 public class Paladin extends Character implements Playable {
     private Skill layOnHands = new Skill("Lay on Hands", "Heal self for 5HP",
             findMethod("layOnHands", Character.class), 3, new Target(true, true));
 
     public Paladin() {
-        super("Paladin", "Player", 500, 10, 10, 4, new Equipment(new Longsword(), new Shield()), true);
+        super("Paladin", "Player", 50, 10, 5, 4, new Equipment(new Longsword(), new Shield()), true);
     }
 
     @Override
@@ -35,7 +36,7 @@ public class Paladin extends Character implements Playable {
         } else {
             target.getHealth().setCurrentValue(currentHealth + 5);
         }
-        Combat.useSkill(layOnHands);
+        useSkill(layOnHands);
     }
 
     @Override

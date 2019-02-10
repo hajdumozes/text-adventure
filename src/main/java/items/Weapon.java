@@ -36,8 +36,8 @@ public abstract class Weapon extends Item implements Wieldable {
 
     @Override
     public String toString() {
-        int handToWield = twoHanded ? 2 : 1;
-        return MessageFormat.format("{0} {1}d{2} {3}H, Reach:{4}", getName(), getNumberOfDices(),
+        String handToWield = twoHanded ? "Two-handed" : "One-handed";
+        return MessageFormat.format("{0} {1}d{2}, {3}, Reach: {4}", getName(), getNumberOfDices(),
                 getDamage(), handToWield, reach);
     }
 }

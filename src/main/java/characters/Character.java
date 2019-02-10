@@ -120,7 +120,7 @@ public abstract class Character {
         System.out.println(MessageFormat.format("\t{0} decided to defend.", name));
         getArmorClass().increase(5);
         statuses.add(new Status(getArmorClass(), "Defend", 5, 1));
-        System.out.println(MessageFormat.format("\t{0}''s AC increased by {1} for {2} turns.", 5, 1, 1));
+        System.out.println(MessageFormat.format("\t{0}''s AC increased by {1} for {2} turns.", getName(), 5, 1));
     }
 
     public void wait(Character character) {
@@ -129,6 +129,7 @@ public abstract class Character {
 
     public void move(Position position) {
         if (checkIfDestinationIsReacheable(this, position) && checkIfPositionIsOccupied(position)) {
+            System.out.println(MessageFormat.format("\t{0} moved from {1} to {2}", getName(), getPosition(), position));
             setPosition(position);
             refreshBattlefield();
         } else {
@@ -170,6 +171,11 @@ public abstract class Character {
 
     public int getHealthCurrentValue() {
         return attributes.get(attributes.indexOf(new Health())).getCurrentValue();
+    }
+
+    public int getHealthMaxValue() {
+        Health health = (Health) (attributes.get(attributes.indexOf(new Health())));
+        return health.getMaxValue();
     }
 
     public Attribute getArmorClass() {

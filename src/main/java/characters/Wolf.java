@@ -11,8 +11,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
+import static app.AttackEvaluation.findPossibleTargets;
 import static app.Battlefield.*;
-import static app.Combat.*;
+import static app.Combat.rollInitiative;
+import static app.SkillManagement.*;
 
 public class Wolf extends Character {
 
@@ -30,7 +32,7 @@ public class Wolf extends Character {
     }
 
     public Wolf() {
-        super("Wolf", "Wolf", 11, 15, 5, 3, new Equipment(new WolfClaw(), new WolfClaw()), false);
+        super("Wolf", "Wolf", 11, 15, 5, 5, new Equipment(new WolfClaw(), new WolfClaw()), false);
     }
 
     @Override
@@ -66,8 +68,7 @@ public class Wolf extends Character {
     @Override
     public void letAiDecide() {
         Character chosenTarget = letAiChooseTarget();
-        List<Position> optimalRoutes = selectOptimalRoutesToPosition(chosenTarget.getPosition());
-        moveToSelectedDestination(optimalRoutes);
+        moveTowardsTarget(chosenTarget);
 
         if (countPositionDifference(this.getPosition(), chosenTarget.getPosition()) == getReach()) {
             List<Skill> allAvailableSkills = getUsableSkills(this);
@@ -81,7 +82,14 @@ public class Wolf extends Character {
             } else {
                 attack(chosenTarget);
             }
+        } else {
+            moveTowardsTarget(chosenTarget);
         }
+    }
+
+    private void moveTowardsTarget(Character target) {
+        List<Position> optimalRoutes = selectOptimalRoutesToPosition(target.getPosition());
+        moveToSelectedDestination(optimalRoutes);
     }
 
     private void moveToSelectedDestination(List<Position> optimalRoutes) {

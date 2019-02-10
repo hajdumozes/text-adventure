@@ -65,7 +65,7 @@ public class Battlefield {
             int row = character.getPosition().getRow();
             int column = character.getPosition().getColumn();
 
-            BATTLEFIELD[row][column] = character.getGivenName();
+            BATTLEFIELD[row][column] = character.getName();
         }
     }
 

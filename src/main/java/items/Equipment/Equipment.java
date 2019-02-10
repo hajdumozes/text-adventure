@@ -47,6 +47,10 @@ public class Equipment {
 
     @Override
     public String toString() {
-        return MessageFormat.format("\tRight hand: {0},\n\t\tLeft hand: {1}.", rightHand, leftHand);
+        if (!rightHand.isTwoHanded()) {
+            return MessageFormat.format("\tRight hand: {0},\n\t\tLeft hand: {1}.", rightHand, leftHand);
+        } else {
+            return MessageFormat.format("\tRight hand: {0}", rightHand);
+        }
     }
 }

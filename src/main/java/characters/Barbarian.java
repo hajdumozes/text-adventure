@@ -1,6 +1,5 @@
 package characters;
 
-import app.Combat;
 import attributes.DamageBonus;
 import combat.Skill;
 import combat.Status;
@@ -12,6 +11,8 @@ import items.Handaxe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static app.SkillManagement.useSkill;
 
 public class Barbarian extends Character implements Playable {
     private Skill rage = new Skill("Rage", "Increases damage by 2 for 3 turns.",
@@ -31,7 +32,7 @@ public class Barbarian extends Character implements Playable {
     public void rage() {
         this.getDamageBonus().setCurrentValue(getDamageBonus().getCurrentValue() + 2);
         addToStatuses(new Status(new DamageBonus(), "Rage", 2, 3));
-        Combat.useSkill(rage);
+        useSkill(rage);
     }
 
     @Override

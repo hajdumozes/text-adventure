@@ -14,7 +14,7 @@ public class Shield extends Item implements Wieldable {
 
     @Override
     public String toString() {
-        return MessageFormat.format("{0} AC:{1}", getName(), armorClass.getCurrentValue());
+        return MessageFormat.format("{0} +{1}AC", getName(), armorClass.getCurrentValue());
     }
 
     public ArmorClass getArmorClass() {

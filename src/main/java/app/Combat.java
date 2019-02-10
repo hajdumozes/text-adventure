@@ -1,21 +1,17 @@
 package app;
 
-import attributes.Attribute;
 import characters.Character;
-import combat.*;
+import combat.UnreachablePositionException;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static app.Battlefield.countPositionDifference;
+import static app.AttackEvaluation.*;
 import static app.Battlefield.getMovementDestinationFromUser;
 import static app.Main.*;
+import static app.SkillManagement.*;
 
 public class Combat {
 
@@ -53,25 +49,30 @@ public class Combat {
     private static void progressThroughTurnsOfAliveCharacters() {
         CHARACTERS_ALIVE.sort(Comparator.comparing(Character::getInitiative));
         for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
-            System.out.println("\n--------------------------------------------------");
             if (character.isAlive() && character.isFriendly()) {
                 progressThroughTurnOfFriendlyCharacter(character);
             } else if (character.isAlive() && !character.isFriendly()) {
+                System.out.println(CONSOLE_SEPARATOR);
                 System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
                 character.letAiDecide();
             }
         }
     }
 
-    private static void progressThroughTurnOfFriendlyCharacter(Character character) {
+    protected static void progressThroughTurnOfFriendlyCharacter(Character character) {
         Battlefield.showBattlefield();
         printInfoOfAliveCharacters();
+        printOptionsForCurrentFriendlyCharacter(character);
+    }
+
+    protected static void printOptionsForCurrentFriendlyCharacter(Character character) {
+        System.out.println(CONSOLE_SEPARATOR);
         try {
             System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
             System.out.println("\n\tWhat would you like to do?");
             System.out.println("\t1. Attack");
             System.out.println("\t2. Move - free action once per turn");
-            System.out.println("\t3. Defend");
+            System.out.println("\t3. Defend - increase AC by 5 for 1 turn");
             System.out.println("\t4. Special attack");
             System.out.println("\t5. Inspect character");
 
@@ -79,7 +80,7 @@ public class Combat {
             evaluateUserInput(input, character);
         } catch (NumberFormatException | IndexOutOfBoundsException mistype) {
             System.out.println("\tUnsupported actions count as ESC.");
-            progressThroughTurnOfFriendlyCharacter(character);
+            printOptionsForCurrentFriendlyCharacter(character);
         }
     }
 
@@ -118,15 +119,15 @@ public class Combat {
         }
     }
 
-    private static void evaluateCharacterAttack(Character character) {
-        try {
-            character.attack(chooseTargetFromCharacters(filterReachableCharacters
-                    (character, getCharactersFromSelectedSide(false))));
-        } catch (NoTargetException targetException) {
-            System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
-            CONSOLE.nextLine();
-            progressThroughTurnOfFriendlyCharacter(character);
-        }
+    private static void inspectCharacter(Character turnOfCharacter) {
+        List<Character> allCharacters = getCharactersFromSelectedSide(true);
+        allCharacters.addAll(getCharactersFromSelectedSide(false));
+        Character chosenCharacter = chooseTargetFromCharacters(allCharacters);
+        System.out.println(MessageFormat.format("\tName: {0}\n\tHealth: {1}/{2}\n\tInitiative: {3}\n\tDexterity: {4}" +
+                        "\n\tArmor Class: {5}",
+                chosenCharacter.getName(), chosenCharacter.getHealthCurrentValue(), chosenCharacter.getHealthMaxValue(),
+                chosenCharacter.getInitiativeValue(), chosenCharacter.getDexterityValue(), chosenCharacter.getArmorClassValue()));
+        printOptionsForCurrentFriendlyCharacter(turnOfCharacter);
     }
 
     private static void evaluateCharacterMovement(Character character) {
@@ -134,6 +135,7 @@ public class Combat {
             character.move(getMovementDestinationFromUser());
             if (!character.isMovedThisTurn()) {
                 character.setMovedThisTurn(true);
+                System.out.println(MessageFormat.format("\t{0} used up free movement of the turn.", character.getName()));
                 progressThroughTurnOfFriendlyCharacter(character);
             }
         } catch (UnreachablePositionException impossibleMovement) {
@@ -142,157 +144,9 @@ public class Combat {
         }
     }
 
-    private static void evaluateCharacterSkill(Character character) {
-        Skill chosenSkill = chooseSkill(character);
-        if (chosenSkill.getTarget().isTargetable()) {
-            invokeMethod(chosenSkill.getMethod(), character,
-                    chooseTargetFromCharacters(getCharactersFromSelectedSide(chosenSkill.getTarget().isTargetOnPlayersSide())));
-        } else {
-            invokeMethod(chosenSkill.getMethod(), character, null);
-        }
-    }
-
-    private static void inspectCharacter(Character turnOfCharacter) {
-        List<Character> allCharacters = getCharactersFromSelectedSide(true);
-        allCharacters.addAll(getCharactersFromSelectedSide(false));
-        Character chosenCharacter = chooseTargetFromCharacters(allCharacters);
-        System.out.println(MessageFormat.format("\tName: {0}\n\tHealth: {1}/{2}\n\tInitiative: {3}\n\tDexterity: {4}",
-                chosenCharacter.getName(), chosenCharacter.getHealth().getCurrentValue(), chosenCharacter.getHealth().getMaxValue(),
-                chosenCharacter.getInitiative().getCurrentValue(), chosenCharacter.getDexterity().getCurrentValue()));
-        progressThroughTurnOfFriendlyCharacter(turnOfCharacter);
-    }
-
-    private static List<Character> getCharactersFromSelectedSide(boolean isTargetOnPlayersSide) {
-        return findPossibleTargets(isTargetOnPlayersSide);
-    }
-
-    private static List<Character> filterReachableCharacters(Character thisCharacter, List<Character> possibleTargets) {
-        List<Character> reachableCharacters = new ArrayList<>();
-        for (Character target : possibleTargets) {
-            if (countPositionDifference(thisCharacter.getPosition(), target.getPosition()) <= thisCharacter.getReach()) {
-                reachableCharacters.add(target);
-            }
-        }
-        if (reachableCharacters.size() > 0) {
-            return reachableCharacters;
-        } else {
-            throw new NoTargetException("No target is within reach");
-        }
-    }
-
-    private static Character chooseTargetFromCharacters(List<Character> possibleTargets) {
-        System.out.println("\n\tSelect your target");
-        for (int i = 1; i <= possibleTargets.size(); i++) {
-            System.out.println(MessageFormat.format("\t{0}. {1} - {2} HP",
-                    i, possibleTargets.get(i - 1).getName(), possibleTargets.get(i - 1).getHealth().getCurrentValue()));
-        }
-        String input = CONSOLE.nextLine();
-        return possibleTargets.get((Integer.parseInt(input) - 1));
-    }
-
-    public static List<Character> findPossibleTargets(boolean isTargetOnPlayersSide) {
-        if (isTargetOnPlayersSide) {
-            return CHARACTERS_ALIVE.stream().filter(character -> character.isFriendly()).collect(Collectors.toList());
-        } else {
-            return CHARACTERS_ALIVE.stream().filter(character -> !character.isFriendly()).collect(Collectors.toList());
-        }
-    }
-
-    private static Skill chooseSkill(Character character) { //maybe it can be merged with chooseTargetFromCharacters
-        List<Skill> usableSkills = getUsableSkills(character);
-        dealWithOutOfSkillsSituation(usableSkills.size(), character);
-        printSkills(usableSkills);
-        String input = CONSOLE.nextLine();
-        return character.showSpecialAttacks().get((Integer.parseInt(input) - 1));
-    }
-
-    public static List<Skill> getUsableSkills(Character character) {
-        return character.showSpecialAttacks().stream()
-                .filter(skill -> skill.getUsagePerBattle() > 0).collect(Collectors.toList());
-    }
-
-    private static void printSkills(List<Skill> skills) {
-        System.out.println("\n\tWhich skill do you want to use?");
-        for (int i = 1; i <= skills.size(); i++) {
-            if (skills.get(i - 1).getUsagePerBattle() > 0) {
-                Skill currentSkill = skills.get(i - 1);
-                System.out.println(MessageFormat.format("\t{0}. {1} ({2})\n\t\tCan be used {3} more times",
-                        i, currentSkill.getName(), currentSkill.getDescription(),
-                        currentSkill.getUsagePerBattle()));
-            }
-        }
-    }
-
-    private static void dealWithOutOfSkillsSituation(int usableSkills, Character character) {
-        if (usableSkills == 0) {
-            System.out.println("\tOut of skills for this battle. Press Enter to get back.");
-            CONSOLE.nextLine();
-            progressThroughTurnOfFriendlyCharacter(character);
-        }
-    }
-
-    private static void refreshStatuses() {
-        for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
-            Iterator<Status> iterator = character.getStatuses().iterator();
-            while (iterator.hasNext()) {
-                Status current = iterator.next();
-                current.setDuration(current.getDuration() - 1);
-                if (current.getDuration() <= 0) {
-                    System.out.println(MessageFormat.format(
-                            "\n\tEffect of {0} expired on {1}.\n", current.getName(), character.getName()));
-                    nullifyStatusEffect(current, character);
-                    iterator.remove();
-                }
-            }
-        }
-    }
-
     private static void refreshMovementAvailability() {
         for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
             character.setMovedThisTurn(false);
         }
     }
-
-    private static void nullifyStatusEffect(Status status, Character player) {
-        for (Attribute attribute : player.getAttributes()) {
-            if (attribute.getName().equals(status.getAttribute().getName())) {
-                attribute.decrease(status.getValue());
-            }
-        }
-    }
-
-    private static void refreshSkillCountdowns() {
-        for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
-            Iterator<SkillWithCountDown> iterator = character.getSkillWithCountDowns().iterator();
-            while (iterator.hasNext()) {
-                SkillWithCountDown current = iterator.next();
-                current.setCountdown(current.getCountdown() - 1);
-                if (current.getCountdown() <= 0) {
-                    invokeMethod(current.getMethodToInvoke(), character, null);
-                    iterator.remove();
-                }
-            }
-        }
-    }
-
-    public static void useSkill(Skill skill) {
-        if (skill.getUsagePerBattle() > 0)
-            skill.setUsagePerBattle(skill.getUsagePerBattle() - 1);
-        else {
-            System.out.println(MessageFormat.format("\t{0} cannot be used", skill));
-        }
-    }
-
-    public static void invokeMethod(Method method, Character character, Character target) {
-        try {
-            if (target == null) {
-                method.invoke(character);
-            } else {
-                method.invoke(character, target);
-            }
-        } catch (InvocationTargetException | IllegalAccessException iae) {
-            throw new RuntimeException("Method invoking error" + iae);
-        }
-    }
-
 }
