@@ -2,10 +2,7 @@ package app;
 
 import attributes.Attribute;
 import characters.Character;
-import combat.UnreachablePositionException;
-import combat.Skill;
-import combat.SkillWithCountDown;
-import combat.Status;
+import combat.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static app.Battlefield.countPositionDifference;
 import static app.Battlefield.getMovementDestinationFromUser;
 import static app.Main.*;
 
@@ -101,7 +99,7 @@ public class Combat {
     private static void evaluateUserInput(String input, Character character) {
         switch (input) {
             case "1":
-                character.attack(chooseTargetFromCharacters(getCharactersFromSelectedSide(false)));
+                evaluateCharacterAttack(character);
                 break;
             case "2":
                 evaluateCharacterMovement(character);
@@ -110,19 +108,24 @@ public class Combat {
                 character.defend();
                 break;
             case "4":
-                Skill chosenSkill = chooseSkill(character);
-                if (chosenSkill.getTarget().isTargetable()) {
-                    invokeMethod(chosenSkill.getMethod(), character,
-                            chooseTargetFromCharacters(getCharactersFromSelectedSide(chosenSkill.getTarget().isTargetOnPlayersSide())));
-                } else {
-                    invokeMethod(chosenSkill.getMethod(), character, null);
-                }
+                evaluateCharacterSkill(character);
                 break;
             case "5":
                 inspectCharacter(character);
                 break;
             default:
                 throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private static void evaluateCharacterAttack(Character character) {
+        try {
+            character.attack(chooseTargetFromCharacters(filterReachableCharacters
+                    (character, getCharactersFromSelectedSide(false))));
+        } catch (NoTargetException targetException) {
+            System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
+            CONSOLE.nextLine();
+            progressThroughTurnOfFriendlyCharacter(character);
         }
     }
 
@@ -139,6 +142,16 @@ public class Combat {
         }
     }
 
+    private static void evaluateCharacterSkill(Character character) {
+        Skill chosenSkill = chooseSkill(character);
+        if (chosenSkill.getTarget().isTargetable()) {
+            invokeMethod(chosenSkill.getMethod(), character,
+                    chooseTargetFromCharacters(getCharactersFromSelectedSide(chosenSkill.getTarget().isTargetOnPlayersSide())));
+        } else {
+            invokeMethod(chosenSkill.getMethod(), character, null);
+        }
+    }
+
     private static void inspectCharacter(Character turnOfCharacter) {
         List<Character> allCharacters = getCharactersFromSelectedSide(true);
         allCharacters.addAll(getCharactersFromSelectedSide(false));
@@ -151,6 +164,20 @@ public class Combat {
 
     private static List<Character> getCharactersFromSelectedSide(boolean isTargetOnPlayersSide) {
         return findPossibleTargets(isTargetOnPlayersSide);
+    }
+
+    private static List<Character> filterReachableCharacters(Character thisCharacter, List<Character> possibleTargets) {
+        List<Character> reachableCharacters = new ArrayList<>();
+        for (Character target : possibleTargets) {
+            if (countPositionDifference(thisCharacter.getPosition(), target.getPosition()) <= thisCharacter.getReach()) {
+                reachableCharacters.add(target);
+            }
+        }
+        if (reachableCharacters.size() > 0) {
+            return reachableCharacters;
+        } else {
+            throw new NoTargetException("No target is within reach");
+        }
     }
 
     private static Character chooseTargetFromCharacters(List<Character> possibleTargets) {
@@ -198,7 +225,7 @@ public class Combat {
 
     private static void dealWithOutOfSkillsSituation(int usableSkills, Character character) {
         if (usableSkills == 0) {
-            System.out.println("\tOut of skills for this battle. Press a key to get back.");
+            System.out.println("\tOut of skills for this battle. Press Enter to get back.");
             CONSOLE.nextLine();
             progressThroughTurnOfFriendlyCharacter(character);
         }

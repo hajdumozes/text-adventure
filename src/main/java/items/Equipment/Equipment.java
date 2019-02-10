@@ -31,12 +31,17 @@ public class Equipment {
         return leftHand;
     }
 
-    public void setLeftHand(Weapon weapon) {
-        if (weapon.isTwoHanded()) {
-            this.leftHand = weapon;
-            this.rightHand = weapon;
+    public void setLeftHand(Wieldable wieldable) {
+        if (wieldable instanceof Weapon) {
+            Weapon weapon = (Weapon) wieldable;
+            if (weapon.isTwoHanded()) {
+                this.leftHand = weapon;
+                this.rightHand = weapon;
+            } else {
+                this.leftHand = weapon;
+            }
         } else {
-            this.leftHand = weapon;
+            this.leftHand = wieldable;
         }
     }
 

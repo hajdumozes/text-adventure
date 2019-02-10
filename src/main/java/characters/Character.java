@@ -270,4 +270,8 @@ public abstract class Character {
     public void setMovedThisTurn(boolean movedThisTurn) {
         this.movedThisTurn = movedThisTurn;
     }
+
+    public int getReach() {
+        return getEquipment().getRightHand().getReach();
+    }
 }
