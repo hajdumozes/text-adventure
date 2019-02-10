@@ -4,11 +4,11 @@ import attributes.ArmorClass;
 
 import java.text.MessageFormat;
 
-public class Shield extends Weapon {
+public class Shield extends Item implements Wieldable {
     private ArmorClass armorClass;
 
     public Shield() {
-        super("Shield", 0, 1, false);
+        super("Shield");
         this.armorClass = new ArmorClass(2);
     }
 

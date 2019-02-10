@@ -1,14 +1,15 @@
 package items.Equipment;
 
 import items.Weapon;
+import items.Wieldable;
 
 import java.text.MessageFormat;
 
 public class Equipment {
     private Weapon rightHand;
-    private Weapon leftHand;
+    private Wieldable leftHand;
 
-    public Equipment(Weapon rightHand, Weapon leftHand) {
+    public Equipment(Weapon rightHand, Wieldable leftHand) {
         this.rightHand = rightHand;
         this.leftHand = leftHand;
     }
@@ -26,7 +27,7 @@ public class Equipment {
         }
     }
 
-    public Weapon getLeftHand() {
+    public Wieldable getLeftHand() {
         return leftHand;
     }
 

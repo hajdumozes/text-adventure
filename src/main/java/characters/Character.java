@@ -6,6 +6,7 @@ import combat.*;
 import items.Equipment.Equipment;
 import items.Shield;
 import items.Weapon;
+import items.Wieldable;
 
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -103,13 +104,15 @@ public abstract class Character {
 
     private int rollDamage() {
         Weapon rightHandedWeapon = equipment.getRightHand();
-        Weapon leftHandedWeapon = equipment.getLeftHand();
-        int damageWithTwoWeapon = (roll(rightHandedWeapon.getNumberOfDices(), rightHandedWeapon.getDamage())) +
-                (roll(leftHandedWeapon.getNumberOfDices(), leftHandedWeapon.getDamage()));
-        if (!rightHandedWeapon.isTwoHanded() && !leftHandedWeapon.isTwoHanded()) {
-            return damageWithTwoWeapon;
+        Wieldable leftHandedWeapon = equipment.getLeftHand();
+        int damage = roll(rightHandedWeapon.getNumberOfDices(), rightHandedWeapon.getDamage());
+        if (leftHandedWeapon instanceof Weapon) {
+            damage += (roll(((Weapon) leftHandedWeapon).getNumberOfDices(), ((Weapon) leftHandedWeapon).getDamage()));
+        }
+        if (!rightHandedWeapon.isTwoHanded()) {
+            return damage;
         } else {
-            return damageWithTwoWeapon / 2;
+            return damage / 2;
         }
     }
 
