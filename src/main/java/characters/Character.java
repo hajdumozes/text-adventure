@@ -20,6 +20,7 @@ import static app.Main.roll;
 
 public abstract class Character {
     private String name;
+    private String givenName;
     private List<Status> statuses = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
     private List<SkillWithCountDown> skillWithCountDowns = new ArrayList<>();
@@ -29,8 +30,9 @@ public abstract class Character {
     private Position position = new Position(0, 0);
     private boolean movedThisTurn = false;
 
-    public Character(String name, int health, int dexterity, int armorClass, int speed, Equipment equipment, boolean isFriendly) {
+    public Character(String name, String givenName, int health, int dexterity, int armorClass, int speed, Equipment equipment, boolean isFriendly) {
         this.name = name;
+        this.givenName = givenName;
         this.equipment = equipment;
         this.isFriendly = isFriendly;
         attributes.add(new Health(health, health));
@@ -125,7 +127,7 @@ public abstract class Character {
     public void move(Position position) {
         if (checkIfDestinationIsReacheable(this, position) && checkIfPositionIsOccupied(position)) {
             setPosition(position);
-            BATTLEFIELD[position.getRow()][position.getColumn()] = getName();
+            refreshBattlefield();
         } else {
             throw new UnreachablePositionException("Destination is too far away");
         }
@@ -153,6 +155,10 @@ public abstract class Character {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getGivenName() {
+        return givenName;
     }
 
     public DepletableAttribute getHealth() {

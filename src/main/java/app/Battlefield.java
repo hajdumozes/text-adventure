@@ -14,13 +14,17 @@ public class Battlefield {
 
 
     public static void showBattlefield() {
-        emptyBattlefield();
-        fillBattlefield();
+        refreshBattlefield();
         System.out.println();
         System.out.print("\t\t  ");
         createRowNumbers();
         printBattlefield();
         System.out.println("\n\n");
+    }
+
+    public static void refreshBattlefield() {
+        emptyBattlefield();
+        fillBattlefield();
     }
 
     protected static Position getMovementDestinationFromUser() {
@@ -60,7 +64,8 @@ public class Battlefield {
         for (Character character : Main.CHARACTERS_ALIVE) {
             int row = character.getPosition().getRow();
             int column = character.getPosition().getColumn();
-            BATTLEFIELD[row][column] = character.getName();
+
+            BATTLEFIELD[row][column] = character.getGivenName();
         }
     }
 

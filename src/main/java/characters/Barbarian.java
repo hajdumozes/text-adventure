@@ -18,7 +18,7 @@ public class Barbarian extends Character implements Playable {
             findMethod("rage", null), 1, new Target(false, false));
 
     public Barbarian() {
-        super("Barbarian", 50, 10, 5, 4, new Equipment(new Handaxe(), new Handaxe()), true);
+        super("Barbarian", "Player", 50, 10, 5, 4, new Equipment(new Handaxe(), new Handaxe()), true);
     }
 
     @Override

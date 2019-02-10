@@ -17,7 +17,7 @@ public class Paladin extends Character implements Playable {
             findMethod("layOnHands", Character.class), 3, new Target(true, true));
 
     public Paladin() {
-        super("Paladin", 50, 10, 10, 4, new Equipment(new Longsword(), new Shield()), true);
+        super("Paladin", "Player", 500, 10, 10, 4, new Equipment(new Longsword(), new Shield()), true);
     }
 
     @Override

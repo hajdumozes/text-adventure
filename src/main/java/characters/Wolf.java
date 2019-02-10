@@ -30,7 +30,7 @@ public class Wolf extends Character {
     }
 
     public Wolf() {
-        super("Wolf", 11, 15, 5, 3, new Equipment(new WolfClaw(), new WolfClaw()), false);
+        super("Wolf", "Wolf", 11, 15, 5, 3, new Equipment(new WolfClaw(), new WolfClaw()), false);
     }
 
     @Override
