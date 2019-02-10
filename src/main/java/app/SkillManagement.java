@@ -2,9 +2,10 @@ package app;
 
 import attributes.Attribute;
 import characters.Character;
-import combat.Skill;
-import combat.SkillWithCountDown;
 import combat.Status;
+import combat.Targetable;
+import combat.skills.Skill;
+import combat.skills.SkillWithCountDown;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,24 +26,25 @@ public class SkillManagement {
 
     protected static void evaluateCharacterSkill(Character character) {
         Skill chosenSkill = chooseSkill(character);
-        if (chosenSkill.getTarget().isTargetable()) {
-            invokeMethod(chosenSkill.getMethod(), character,
-                    chooseTargetFromCharacters(getCharactersFromSelectedSide(chosenSkill.getTarget().isTargetOnPlayersSide())));
+        if (chosenSkill instanceof Targetable) {
+            Targetable targetableChosenSkill = (Targetable) chosenSkill;
+            invokeMethod(chosenSkill.getMethod(), chosenSkill,
+                    chooseTargetFromCharacters(getCharactersFromSelectedSide(targetableChosenSkill.isTargetOnPlayersSide())));
         } else {
-            invokeMethod(chosenSkill.getMethod(), character, null);
+            invokeMethod(chosenSkill.getMethod(), chosenSkill, null);
         }
     }
 
-    private static Skill chooseSkill(Character character) { //maybe it can be merged with chooseTargetFromCharacters
+    private static Skill chooseSkill(Character character) {
         List<Skill> usableSkills = getUsableSkills(character);
         dealWithOutOfSkillsSituation(usableSkills.size(), character);
         printSkills(usableSkills);
         String input = CONSOLE.nextLine();
-        return character.showSpecialAttacks().get((Integer.parseInt(input) - 1));
+        return character.getSkills().get((Integer.parseInt(input) - 1));
     }
 
     public static List<Skill> getUsableSkills(Character character) {
-        return character.showSpecialAttacks().stream()
+        return character.getSkills().stream()
                 .filter(skill -> skill.getUsagePerBattle() > 0).collect(Collectors.toList());
     }
 
@@ -74,12 +76,24 @@ public class SkillManagement {
         }
     }
 
-    public static void invokeMethod(Method method, Character character, Character target) {
+    public static Method findMethod(Class methodOwnerClass, String methodName, Class targetCharacter) {
+        try {
+            if (targetCharacter == null) {
+                return methodOwnerClass.getMethod(methodName);
+            } else {
+                return methodOwnerClass.getMethod(methodName, targetCharacter);
+            }
+        } catch (NoSuchMethodException nsme) {
+            throw new RuntimeException("Method not found" + nsme);
+        }
+    }
+
+    public static void invokeMethod(Method method, Skill skill, Character target) {
         try {
             if (target == null) {
-                method.invoke(character);
+                method.invoke(skill);
             } else {
-                method.invoke(character, target);
+                method.invoke(skill, target);
             }
         } catch (InvocationTargetException | IllegalAccessException iae) {
             throw new RuntimeException("Method invoking error" + iae);
@@ -100,8 +114,8 @@ public class SkillManagement {
             while (iterator.hasNext()) {
                 SkillWithCountDown current = iterator.next();
                 current.setCountdown(current.getCountdown() - 1);
-                if (current.getCountdown() <= 0) {
-                    invokeMethod(current.getMethodToInvoke(), character, null);
+                if (current.getCountdown() <= 0 && (!(current instanceof Targetable))) {
+                    invokeMethod(current.getMethodToInvoke(), current, null);
                     iterator.remove();
                 }
             }

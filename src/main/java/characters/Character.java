@@ -1,14 +1,19 @@
 package characters;
 
 import app.Main;
-import attributes.*;
-import combat.*;
+import attributes.Attribute;
+import attributes.DepletableAttribute;
+import attributes.ownable.*;
+import combat.Position;
+import combat.Status;
+import combat.UnreachablePositionException;
+import combat.skills.Skill;
+import combat.skills.SkillWithCountDown;
 import items.Equipment.Equipment;
-import items.Shield;
-import items.Weapon;
-import items.Wieldable;
+import items.Equipment.Weapon;
+import items.Equipment.Wieldable;
+import items.Equipment.ownable.Shield;
 
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +29,7 @@ public abstract class Character {
     private String givenName;
     private List<Status> statuses = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
+    private List<Skill> skills = new ArrayList<>();
     private List<SkillWithCountDown> skillWithCountDowns = new ArrayList<>();
     private Equipment equipment;
     private boolean isAlive = true;
@@ -54,7 +60,7 @@ public abstract class Character {
         evaluateAttackRoll(attackingRoll, defender);
     }
 
-    protected void evaluateAttackRoll(int attackingRoll, Character defender) {
+    public void evaluateAttackRoll(int attackingRoll, Character defender) {
         if (attackingRoll == 1) {
             //critical failure
         } else if (attackingRoll == 20) {
@@ -77,20 +83,6 @@ public abstract class Character {
         Main.CHARACTERS_ALIVE.remove(defender);
         if (!getAliveCharactersFromBothSides()) {
             decideOutcome();
-        }
-    }
-
-    public abstract List<Skill> showSpecialAttacks();
-
-    protected Method findMethod(String methodName, Class targetCharacter) {
-        try {
-            if (targetCharacter == null) {
-                return this.getClass().getMethod(methodName);
-            } else {
-                return this.getClass().getMethod(methodName, targetCharacter);
-            }
-        } catch (NoSuchMethodException nsme) {
-            throw new RuntimeException("Method not found" + nsme);
         }
     }
 
@@ -137,7 +129,7 @@ public abstract class Character {
         }
     }
 
-    protected void addToStatuses(Status status) {
+    public void addToStatuses(Status status) {
         statuses.add(status);
     }
 
@@ -190,6 +182,9 @@ public abstract class Character {
         return statuses;
     }
 
+    public List<Skill> getSkills() {
+        return skills;
+    }
 
     public List<Attribute> getAttributes() {
         return attributes;

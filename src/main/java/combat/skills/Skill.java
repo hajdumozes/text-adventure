@@ -1,4 +1,6 @@
-package combat;
+package combat.skills;
+
+import characters.Character;
 
 import java.lang.reflect.Method;
 
@@ -7,14 +9,14 @@ public class Skill {
     private String description;
     private Method method;
     private int usagePerBattle;
-    private Target target;
+    private Character owner;
 
-    public Skill(String name, String description, Method method, int usagePerBattle, Target target) {
+    public Skill(String name, String description, Method method, int usagePerBattle, Character owner) {
         this.name = name;
         this.description = description;
         this.method = method;
         this.usagePerBattle = usagePerBattle;
-        this.target = target;
+        this.owner = owner;
     }
 
     public String getName() {
@@ -29,18 +31,13 @@ public class Skill {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Method getMethod() {
         return method;
     }
 
-    public void setMethod(Method method) {
-        this.method = method;
+    public Character getOwner() {
+        return owner;
     }
-
 
     public int getUsagePerBattle() {
         return usagePerBattle;
@@ -48,13 +45,5 @@ public class Skill {
 
     public void setUsagePerBattle(int usagePerBattle) {
         this.usagePerBattle = usagePerBattle;
-    }
-
-    public Target getTarget() {
-        return target;
-    }
-
-    public void setTarget(Target target) {
-        this.target = target;
     }
 }

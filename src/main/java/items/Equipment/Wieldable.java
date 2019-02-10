@@ -1,4 +1,4 @@
-package items;
+package items.Equipment;
 
 public interface Wieldable {
 }

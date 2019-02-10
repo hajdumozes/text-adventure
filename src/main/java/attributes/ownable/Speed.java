@@ -1,4 +1,6 @@
-package attributes;
+package attributes.ownable;
+
+import attributes.Attribute;
 
 public class Speed extends Attribute {
     public Speed() {

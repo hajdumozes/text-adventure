@@ -1,8 +1,5 @@
 package items.Equipment;
 
-import items.Weapon;
-import items.Wieldable;
-
 import java.text.MessageFormat;
 
 public class Equipment {

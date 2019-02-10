@@ -1,6 +1,8 @@
-package items;
+package items.Equipment.ownable;
 
-import attributes.ArmorClass;
+import attributes.ownable.ArmorClass;
+import items.Equipment.Wieldable;
+import items.Item;
 
 import java.text.MessageFormat;
 

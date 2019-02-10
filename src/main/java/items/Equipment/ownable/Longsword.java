@@ -1,4 +1,6 @@
-package items;
+package items.Equipment.ownable;
+
+import items.Equipment.Weapon;
 
 public class Longsword extends Weapon {
     public Longsword() {

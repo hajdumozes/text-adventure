@@ -1,4 +1,6 @@
-package attributes;
+package attributes.ownable;
+
+import attributes.Attribute;
 
 public class Dexterity extends Attribute {
     public Dexterity(int value) {

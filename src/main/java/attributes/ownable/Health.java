@@ -1,4 +1,6 @@
-package attributes;
+package attributes.ownable;
+
+import attributes.DepletableAttribute;
 
 public class Health extends DepletableAttribute {
 

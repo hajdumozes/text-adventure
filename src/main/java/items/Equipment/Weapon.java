@@ -1,4 +1,6 @@
-package items;
+package items.Equipment;
+
+import items.Item;
 
 import java.text.MessageFormat;
 

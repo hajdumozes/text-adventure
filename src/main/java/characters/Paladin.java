@@ -1,42 +1,21 @@
 package characters;
 
-import combat.Skill;
-import combat.Target;
+import combat.skills.ownable.LayOnHands;
 import items.Equipment.Equipment;
-import items.Longsword;
-import items.Shield;
-import items.Shortsword;
+import items.Equipment.ownable.Longsword;
+import items.Equipment.ownable.Shield;
+import items.Equipment.ownable.Shortsword;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static app.SkillManagement.useSkill;
-
 public class Paladin extends Character implements Playable {
-    private Skill layOnHands = new Skill("Lay on Hands", "Heal self for 5HP",
-            findMethod("layOnHands", Character.class), 3, new Target(true, true));
 
     public Paladin() {
-        super("Paladin", "Player", 50, 10, 5, 4, new Equipment(new Longsword(), new Shield()), true);
-    }
-
-    @Override
-    public List<Skill> showSpecialAttacks() {
-        List<Skill> specialAttacks = new ArrayList<>();
-        specialAttacks.add(layOnHands);
-        return specialAttacks;
-    }
-
-    public void layOnHands(Character target) {
-        int currentHealth = target.getHealth().getCurrentValue();
-        int maxHealth = target.getHealth().getMaxValue();
-        if (currentHealth + 5 > maxHealth) {
-            target.getHealth().setCurrentValue(maxHealth);
-        } else {
-            target.getHealth().setCurrentValue(currentHealth + 5);
-        }
-        useSkill(layOnHands);
+        super("Paladin", "Player", 50, 10, 5, 4,
+                new Equipment(new Longsword(), new Shield()), true);
+        getSkills().add(new LayOnHands(this));
     }
 
     @Override
@@ -48,6 +27,5 @@ public class Paladin extends Character implements Playable {
 
     @Override
     public void letAiDecide() {
-
     }
 }

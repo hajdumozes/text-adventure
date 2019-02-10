@@ -1,4 +1,6 @@
-package attributes;
+package attributes.ownable;
+
+import attributes.Attribute;
 
 public class DamageBonus extends Attribute {
     public DamageBonus() {

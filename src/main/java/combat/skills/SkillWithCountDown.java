@@ -1,14 +1,16 @@
-package combat;
+package combat.skills;
+
+import characters.Character;
 
 import java.lang.reflect.Method;
 
-public class SkillWithCountDown extends Skill{
+public class SkillWithCountDown extends Skill {
     private int countdown;
     private Method methodToInvoke;
 
-    public SkillWithCountDown(String name, String description, Method method, int usagePerBattle, Target target,
+    public SkillWithCountDown(String name, String description, Method method, int usagePerBattle, Character owner,
                               int countdown, Method methodToInvoke) {
-        super(name, description, method, usagePerBattle, target);
+        super(name, description, method, usagePerBattle, owner);
         this.countdown = countdown;
         this.methodToInvoke = methodToInvoke;
     }
@@ -25,7 +27,4 @@ public class SkillWithCountDown extends Skill{
         return methodToInvoke;
     }
 
-    public void setMethodToInvoke(Method methodToInvoke) {
-        this.methodToInvoke = methodToInvoke;
-    }
 }

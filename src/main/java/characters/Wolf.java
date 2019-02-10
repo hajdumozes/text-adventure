@@ -1,10 +1,13 @@
 package characters;
 
-import app.Main;
-import attributes.DamageBonus;
-import combat.*;
+import combat.Position;
+import combat.Targetable;
+import combat.UnreachablePositionException;
+import combat.skills.Skill;
+import combat.skills.ownable.Bite;
+import combat.skills.ownable.Howl;
 import items.Equipment.Equipment;
-import items.WolfClaw;
+import items.Equipment.ownable.WolfClaw;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,56 +16,20 @@ import java.util.Random;
 
 import static app.AttackEvaluation.findPossibleTargets;
 import static app.Battlefield.*;
-import static app.Combat.rollInitiative;
-import static app.SkillManagement.*;
+import static app.SkillManagement.getUsableSkills;
+import static app.SkillManagement.invokeMethod;
 
 public class Wolf extends Character {
-
-    private SkillWithCountDown howl = new SkillWithCountDown("Howl",
-            "Calls for another wolf, which arrives in 3 turns.",
-            findMethod("howl", null), 1,
-            new Target(false, false), 3,
-            findMethod("wolfArrive", null));
-    private Skill bite = new Skill("Bite", "2d4 +2 damage, +4 to hit",
-            findMethod("bite", Character.class),
-            3, new Target(true, true));
 
     {
         setPosition(new Position(5, 6));
     }
 
     public Wolf() {
-        super("Wolf", "Wolf", 11, 15, 5, 5, new Equipment(new WolfClaw(), new WolfClaw()), false);
-    }
-
-    @Override
-    public List<Skill> showSpecialAttacks() {
-        List<Skill> specialAttacks = new ArrayList<>();
-        specialAttacks.add(howl);
-        specialAttacks.add(bite);
-        return specialAttacks;
-    }
-
-    public void howl() {
-        System.out.println("\tWolf howled!");
-        getSkillWithCountDowns().add(howl);
-        useSkill(howl);
-    }
-
-    public void bite(Character target) {
-        this.getDamageBonus().setCurrentValue(getDamageBonus().getCurrentValue() + 2);
-        addToStatuses(new Status(new DamageBonus(), "Bite", 2, 1));
-        System.out.println("\tWolf bit!");
-        int hitRoll = Main.roll(1, 20) + 4;
-        evaluateAttackRoll(hitRoll, target);
-        useSkill(bite);
-    }
-
-    public void wolfArrive() {
-        System.out.println("\n\t# Wolf appeared! #");
-        Wolf reinforcement = new Wolf();
-        Main.CHARACTERS_ALIVE.add(reinforcement);
-        rollInitiative(reinforcement);
+        super("Wolf", "Wolf", 11, 15, 5, 5,
+                new Equipment(new WolfClaw(), new WolfClaw()), false);
+        getSkills().add(new Bite(this));
+        getSkills().add(new Howl(this));
     }
 
     @Override
@@ -74,10 +41,10 @@ public class Wolf extends Character {
             List<Skill> allAvailableSkills = getUsableSkills(this);
             if (allAvailableSkills.size() > 0 && new Random().nextInt(100) + 1 > 50) {
                 Skill selectedSkill = allAvailableSkills.get(new Random().nextInt(allAvailableSkills.size()));
-                if (selectedSkill.getTarget().isTargetable()) {
-                    invokeMethod(selectedSkill.getMethod(), this, chosenTarget);
+                if (selectedSkill instanceof Targetable) {
+                    invokeMethod(selectedSkill.getMethod(), selectedSkill, chosenTarget);
                 } else {
-                    invokeMethod(selectedSkill.getMethod(), this, null);
+                    invokeMethod(selectedSkill.getMethod(), selectedSkill, null);
                 }
             } else {
                 attack(chosenTarget);
