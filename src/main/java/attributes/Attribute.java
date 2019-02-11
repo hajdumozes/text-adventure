@@ -18,7 +18,7 @@ public abstract class Attribute implements Comparable<Attribute> {
 
     @Override
     public int compareTo(Attribute attribute) {
-        return currentValue - attribute.getCurrentValue();
+        return attribute.getCurrentValue() - currentValue;
     }
 
     @Override
