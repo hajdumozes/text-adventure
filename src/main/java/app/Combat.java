@@ -76,7 +76,7 @@ public class Combat {
             System.out.println("\t4. Skills");
             System.out.println("\t5. Inspect character");
 
-            String input = CONSOLE.nextLine();
+            String input = CONSOLE.nextLine().trim();
             evaluateUserInput(input, character);
         } catch (NumberFormatException | IndexOutOfBoundsException mistype) {
             System.out.println("\tUnsupported actions count as ESC.");
@@ -133,7 +133,7 @@ public class Combat {
 
     private static void evaluateCharacterMovement(Character character) {
         try {
-            character.move(getMovementDestinationFromUser());
+            character.move(getMovementDestinationFromUser(character));
             if (!character.isMovedThisTurn()) {
                 character.setMovedThisTurn(true);
                 System.out.println(MessageFormat.format("\t{0} used up free movement of the turn.", character.getName()));

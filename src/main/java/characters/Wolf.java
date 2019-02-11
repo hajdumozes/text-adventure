@@ -116,24 +116,8 @@ public class Wolf extends Character {
         return positionFound;
     }
 
-    private List<Position> findAllPossibleRoutes() {
-        List<Position> routes = new ArrayList<>();
-        for (int i = 0 - getSpeedValue(); i <= getSpeedValue(); i++) {
-            int leftoverSteps = getSpeedValue() - Math.abs(i);
-            for (int j = 0 - leftoverSteps; j <= leftoverSteps; j++) {
-                int newColumn = getPosition().getColumn() + i;
-                int newRow = getPosition().getRow() + j;
-                if (newColumn >= 0 && newColumn < BATTLEFIELD[0].length
-                        && newRow >= 0 && newRow < BATTLEFIELD.length) {
-                    routes.add(new Position(getPosition().getRow() + j, getPosition().getColumn() + i));
-                }
-            }
-        }
-        return routes;
-    }
-
     private List<Position> selectOptimalRoutesToPosition(Position destination) {
-        List<Position> allRoutes = findAllPossibleRoutes();
+        List<Position> allRoutes = findAllPossibleRoutes(this);
         List<Position> optimalRoutes = new ArrayList<>();
         for (Position position : allRoutes) {
             int currentDifference = countPositionDifference(position, destination);

@@ -63,7 +63,7 @@ public class SkillManagement {
         List<Skill> usableSkills = getUsableSkills(character);
         dealWithOutOfSkillsSituation(usableSkills.size(), character);
         printSkills(usableSkills);
-        String input = CONSOLE.nextLine();
+        String input = CONSOLE.nextLine().trim();
         return character.getSkills().get((Integer.parseInt(input) - 1));
     }
 

@@ -50,7 +50,7 @@ public class AttackEvaluation {
             System.out.println(MessageFormat.format("\t{0}. {1} - {2} HP",
                     i, possibleTargets.get(i - 1).getName(), possibleTargets.get(i - 1).getHealth().getCurrentValue()));
         }
-        String input = CONSOLE.nextLine();
+        String input = CONSOLE.nextLine().trim();
         return possibleTargets.get((Integer.parseInt(input) - 1));
     }
 
