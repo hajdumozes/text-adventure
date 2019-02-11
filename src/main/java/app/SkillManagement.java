@@ -2,6 +2,8 @@ package app;
 
 import attributes.Attribute;
 import characters.Character;
+import combat.DistanceBased;
+import combat.NoTargetException;
 import combat.Status;
 import combat.Targetable;
 import combat.skills.Skill;
@@ -15,8 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static app.AttackEvaluation.chooseTargetFromCharacters;
-import static app.AttackEvaluation.getCharactersFromSelectedSide;
+import static app.AttackEvaluation.*;
+import static app.Combat.printOptionsForCurrentFriendlyCharacter;
 import static app.Combat.progressThroughTurnOfFriendlyCharacter;
 import static app.Main.CHARACTERS_ALIVE;
 import static app.Main.CONSOLE;
@@ -27,11 +29,33 @@ public class SkillManagement {
     protected static void evaluateCharacterSkill(Character character) {
         Skill chosenSkill = chooseSkill(character);
         if (chosenSkill instanceof Targetable) {
-            Targetable targetableChosenSkill = (Targetable) chosenSkill;
-            invokeMethod(chosenSkill.getMethod(), chosenSkill,
-                    chooseTargetFromCharacters(getCharactersFromSelectedSide(targetableChosenSkill.isTargetOnPlayersSide())));
+            evaluateTargetableSkill(chosenSkill, character);
         } else {
             invokeMethod(chosenSkill.getMethod(), chosenSkill, null);
+        }
+    }
+
+    private static void evaluateTargetableSkill(Skill skill, Character skillUser) {
+        if (!(skill instanceof DistanceBased)) {
+            invokeMethod(skill.getMethod(), skill,
+                    chooseTargetFromCharacters(getCharactersFromSelectedSide(((Targetable) skill).isTargetOnPlayersSide())));
+        } else {
+            evaluateDistanceBasedSkill(skill, skillUser);
+        }
+    }
+
+    private static void evaluateDistanceBasedSkill(Skill skill, Character skillUser) {
+        try {
+            List<Character> charactersOnSelectedSide = getCharactersFromSelectedSide(
+                    ((Targetable) skill).isTargetOnPlayersSide());
+            List<Character> charactersInSkillsReach = filterReachableCharacters(skillUser, charactersOnSelectedSide,
+                    ((DistanceBased) skill).getReach());
+            invokeMethod(skill.getMethod(), skill,
+                    chooseTargetFromCharacters(charactersInSkillsReach));
+        } catch (NoTargetException targetException) {
+            System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
+            CONSOLE.nextLine();
+            printOptionsForCurrentFriendlyCharacter(skillUser);
         }
     }
 

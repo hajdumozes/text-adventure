@@ -1,13 +1,14 @@
 package combat.skills.ownable;
 
 import characters.Character;
+import combat.DistanceBased;
 import combat.Targetable;
 import combat.skills.Skill;
 
 import static app.SkillManagement.findMethod;
 import static app.SkillManagement.useSkill;
 
-public class LayOnHands extends Skill implements Targetable {
+public class LayOnHands extends Skill implements Targetable, DistanceBased {
 
     public LayOnHands(Character owner) {
         super("Lay on Hands", "Heal ally for 5HP",
@@ -23,6 +24,11 @@ public class LayOnHands extends Skill implements Targetable {
             target.getHealth().setCurrentValue(currentHealth + 5);
         }
         useSkill(this);
+    }
+
+    @Override
+    public int getReach() {
+        return 1;
     }
 
     @Override

@@ -1,10 +1,11 @@
 package items.Equipment;
 
+import combat.DistanceBased;
 import items.Item;
 
 import java.text.MessageFormat;
 
-public abstract class Weapon extends Item implements Wieldable {
+public abstract class Weapon extends Item implements Wieldable, DistanceBased {
     private int numberOfDices;
     private int damage;
     private int reach;

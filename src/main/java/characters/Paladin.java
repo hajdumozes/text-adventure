@@ -1,5 +1,6 @@
 package characters;
 
+import combat.skills.ownable.Bite;
 import combat.skills.ownable.LayOnHands;
 import items.Equipment.Equipment;
 import items.Equipment.ownable.Longsword;
@@ -16,6 +17,7 @@ public class Paladin extends Character implements Playable {
         super("Paladin", "Player", 50, 10, 5, 4,
                 new Equipment(new Longsword(), new Shield()), true);
         getSkills().add(new LayOnHands(this));
+        getSkills().add(new Bite(this));
     }
 
     @Override

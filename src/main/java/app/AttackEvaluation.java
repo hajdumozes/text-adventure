@@ -18,7 +18,7 @@ public class AttackEvaluation {
     protected static void evaluateCharacterAttack(Character character) {
         try {
             character.attack(chooseTargetFromCharacters(filterReachableCharacters
-                    (character, getCharactersFromSelectedSide(false))));
+                    (character, getCharactersFromSelectedSide(false), character.getWeaponReach())));
         } catch (NoTargetException targetException) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
             CONSOLE.nextLine();
@@ -26,10 +26,10 @@ public class AttackEvaluation {
         }
     }
 
-    private static List<Character> filterReachableCharacters(Character thisCharacter, List<Character> possibleTargets) {
+    protected static List<Character> filterReachableCharacters(Character thisCharacter, List<Character> possibleTargets, int reach) {
         List<Character> reachableCharacters = new ArrayList<>();
         for (Character target : possibleTargets) {
-            if (countPositionDifference(thisCharacter.getPosition(), target.getPosition()) <= thisCharacter.getReach()) {
+            if (countPositionDifference(thisCharacter.getPosition(), target.getPosition()) <= reach) {
                 reachableCharacters.add(target);
             }
         }

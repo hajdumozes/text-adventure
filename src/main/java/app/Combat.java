@@ -73,7 +73,7 @@ public class Combat {
             System.out.println("\t1. Attack");
             System.out.println("\t2. Move - free action once per turn");
             System.out.println("\t3. Defend - increase AC by 5 for 1 turn");
-            System.out.println("\t4. Special attack");
+            System.out.println("\t4. Skills");
             System.out.println("\t5. Inspect character");
 
             String input = CONSOLE.nextLine();

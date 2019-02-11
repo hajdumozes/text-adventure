@@ -1,5 +1,6 @@
 package characters;
 
+import combat.DistanceBased;
 import combat.Position;
 import combat.Targetable;
 import combat.UnreachablePositionException;
@@ -36,21 +37,42 @@ public class Wolf extends Character {
     public void letAiDecide() {
         Character chosenTarget = letAiChooseTarget();
         moveTowardsTarget(chosenTarget);
-
-        if (countPositionDifference(this.getPosition(), chosenTarget.getPosition()) == getReach()) {
-            List<Skill> allAvailableSkills = getUsableSkills(this);
-            if (allAvailableSkills.size() > 0 && new Random().nextInt(100) + 1 > 50) {
-                Skill selectedSkill = allAvailableSkills.get(new Random().nextInt(allAvailableSkills.size()));
-                if (selectedSkill instanceof Targetable) {
-                    invokeMethod(selectedSkill.getMethod(), selectedSkill, chosenTarget);
-                } else {
-                    invokeMethod(selectedSkill.getMethod(), selectedSkill, null);
-                }
-            } else {
-                attack(chosenTarget);
-            }
+        int distance = countPositionDifference(getPosition(), chosenTarget.getPosition());
+        Skill selectedSkillInReach = letAiChooseSkill(distance);
+        if (selectedSkillInReach != null) {
+            evaluateSkill(selectedSkillInReach, chosenTarget);
+        } else if (distance <= getWeaponReach()) {
+            attack(chosenTarget);
         } else {
             moveTowardsTarget(chosenTarget);
+        }
+    }
+
+    private Skill letAiChooseSkill(int distance) {
+        List<Skill> allAvailableSkills = getUsableSkills(this);
+        List<Skill> filteredSkills = filterSkillsInReach(allAvailableSkills, distance);
+        if (filteredSkills.size() > 0) {
+            return filteredSkills.get(new Random().nextInt(filteredSkills.size()));
+        } else {
+            return null;
+        }
+    }
+
+    private List<Skill> filterSkillsInReach(List<Skill> skills, int distance) {
+        List<Skill> filteredList = new ArrayList<>();
+        for (Skill skill : skills) {
+            if (!(skill instanceof DistanceBased) || ((DistanceBased) skill).getReach() >= distance) {
+                filteredList.add(skill);
+            }
+        }
+        return filteredList;
+    }
+
+    private void evaluateSkill(Skill skill, Character target) {
+        if (skill instanceof Targetable) {
+            invokeMethod(skill.getMethod(), skill, target);
+        } else {
+            invokeMethod(skill.getMethod(), skill, null);
         }
     }
 
