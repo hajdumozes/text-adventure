@@ -44,6 +44,7 @@ public abstract class Character {
         attributes.add(new Health(health, health));
         attributes.add(new ArmorClass(armorClass));
         attributes.add(new DamageBonus());
+        attributes.add(new AttackBonus());
         attributes.add(new Dexterity(dexterity));
         attributes.add(new Initiative());
         attributes.add(new Speed(speed));
@@ -58,7 +59,7 @@ public abstract class Character {
 
     public void attack(Character defender) {
         System.out.println(MessageFormat.format("\n\t{0} decided to attack.", name));
-        int attackingRoll = new Random().nextInt(20) + 1;
+        int attackingRoll = (new Random().nextInt(20) + 1) + getAttackBonusValue();
         System.out.println(MessageFormat.format("\t{0} rolled {1}.", name, attackingRoll));
         evaluateAttackRoll(attackingRoll, defender);
     }
@@ -142,6 +143,14 @@ public abstract class Character {
 
     public int getDamageBonusValue() {
         return attributes.get(attributes.indexOf(new DamageBonus())).getCurrentValue();
+    }
+
+    public int getAttackBonusValue() {
+        return attributes.get(attributes.indexOf(new AttackBonus())).getCurrentValue();
+    }
+
+    public Attribute getAttackBonus() {
+        return attributes.get(attributes.indexOf(new AttackBonus()));
     }
 
     public String getName() {

@@ -1,5 +1,6 @@
 package characters;
 
+import combat.skills.ownable.Berserk;
 import combat.skills.ownable.Rage;
 import items.Equipment.Equipment;
 import items.Equipment.ownable.Greataxe;
@@ -15,6 +16,7 @@ public class Barbarian extends Character implements Playable {
     public Barbarian() {
         super("Barbarian", "Player", 50, 10, 5, 4, new Equipment(new Handaxe(), new Handaxe()), true);
         getSkills().add(new Rage(this));
+        getSkills().add(new Berserk(this));
     }
 
     @Override
