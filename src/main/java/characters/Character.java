@@ -53,6 +53,7 @@ public abstract class Character {
         statuses.put("Alive", true);
         statuses.put("Friendly", isFriendly);
         statuses.put("MovedThisTurn", false);
+        statuses.put("Stunned", false);
     }
 
     public void attack(Character defender) {
@@ -263,6 +264,10 @@ public abstract class Character {
 
     public boolean hasMovedThisTurn() {
         return getStatuses().get("MovedThisTurn");
+    }
+
+    public boolean isStunned() {
+        return getStatuses().get("Stunned");
     }
 
     public void modifyStatus(String status, boolean value) {

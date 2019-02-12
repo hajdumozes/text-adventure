@@ -138,7 +138,7 @@ public class SkillManagement {
             while (iterator.hasNext()) {
                 SkillWithCountDown current = iterator.next();
                 current.setCountdown(current.getCountdown() - 1);
-                if (current.getCountdown() <= 0 && (!(current instanceof Targetable))) {
+                if (current.getCountdown() <= 0) {
                     invokeMethod(current.getMethodToInvoke(), current, null);
                     iterator.remove();
                 }

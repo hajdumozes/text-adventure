@@ -49,12 +49,16 @@ public class Combat {
     private static void progressThroughTurnsOfAliveCharacters() {
         CHARACTERS_ALIVE.sort(Comparator.comparing(Character::getInitiative));
         for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
-            if (character.isAlive() && character.isFriendly()) {
-                progressThroughTurnOfFriendlyCharacter(character);
-            } else if (character.isAlive() && !character.isFriendly()) {
-                System.out.println(CONSOLE_SEPARATOR);
-                System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
-                character.letAiDecide();
+            if (!character.isStunned()) {
+                if (character.isAlive() && character.isFriendly()) {
+                    progressThroughTurnOfFriendlyCharacter(character);
+                } else if (character.isAlive() && !character.isFriendly()) {
+                    System.out.println(CONSOLE_SEPARATOR);
+                    System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
+                    character.letAiDecide();
+                }
+            } else {
+                System.out.println(MessageFormat.format("\t{0} is stunned.", character.getName()));
             }
         }
     }

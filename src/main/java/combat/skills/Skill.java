@@ -10,6 +10,7 @@ public class Skill {
     private Method method;
     private int usagePerBattle;
     private Character owner;
+    private Character target;
 
     public Skill(String name, String description, Method method, int usagePerBattle, Character owner) {
         this.name = name;
@@ -45,5 +46,13 @@ public class Skill {
 
     public void setUsagePerBattle(int usagePerBattle) {
         this.usagePerBattle = usagePerBattle;
+    }
+
+    public Character getTarget() {
+        return target;
+    }
+
+    public void setTarget(Character target) {
+        this.target = target;
     }
 }
