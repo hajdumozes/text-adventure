@@ -4,8 +4,8 @@ import app.Main;
 import attributes.Attribute;
 import attributes.DepletableAttribute;
 import attributes.ownable.*;
+import combat.Effect;
 import combat.Position;
-import combat.Status;
 import combat.UnreachablePositionException;
 import combat.skills.Skill;
 import combat.skills.SkillWithCountDown;
@@ -16,6 +16,7 @@ import items.Equipment.ownable.Shield;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -27,21 +28,19 @@ import static app.Main.roll;
 public abstract class Character {
     private String name;
     private String givenName;
-    private List<Status> statuses = new ArrayList<>();
+    private List<Effect> effects = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
     private List<Skill> skills = new ArrayList<>();
     private List<SkillWithCountDown> skillWithCountDowns = new ArrayList<>();
     private Equipment equipment;
-    private boolean isAlive = true;
-    private boolean isFriendly;
+    private HashMap<String, Boolean> statuses = new HashMap<>();
     private Position position = new Position(0, 0);
-    private boolean movedThisTurn = false;
 
-    public Character(String name, String givenName, int health, int dexterity, int armorClass, int speed, Equipment equipment, boolean isFriendly) {
+    public Character(String name, String givenName, int health, int dexterity, int armorClass, int speed,
+                     Equipment equipment, boolean isFriendly) {
         this.name = name;
         this.givenName = givenName;
         this.equipment = equipment;
-        this.isFriendly = isFriendly;
         attributes.add(new Health(health, health));
         attributes.add(new ArmorClass(armorClass));
         attributes.add(new DamageBonus());
@@ -51,6 +50,9 @@ public abstract class Character {
         if (equipment.getLeftHand() instanceof Shield) {
             getArmorClass().increase(((Shield) equipment.getLeftHand()).getArmorClass().getCurrentValue());
         }
+        statuses.put("Alive", true);
+        statuses.put("Friendly", isFriendly);
+        statuses.put("MovedThisTurn", false);
     }
 
     public void attack(Character defender) {
@@ -78,7 +80,7 @@ public abstract class Character {
     }
 
     private void kill(Character defender) {
-        defender.isAlive = false;
+        defender.modifyStatus("Alive", false);
         System.out.println(MessageFormat.format("\t{0} died!", defender.getName()));
         Main.CHARACTERS_ALIVE.remove(defender);
         if (!getAliveCharactersFromBothSides()) {
@@ -111,7 +113,7 @@ public abstract class Character {
     public void defend() {
         System.out.println(MessageFormat.format("\t{0} decided to defend.", name));
         getArmorClass().increase(5);
-        statuses.add(new Status(getArmorClass(), "Defend", 5, 1));
+        effects.add(new Effect(getArmorClass(), "Defend", 5, 1));
         System.out.println(MessageFormat.format("\t{0}''s AC increased by {1} for {2} turns.", getName(), 5, 1));
     }
 
@@ -129,12 +131,8 @@ public abstract class Character {
         }
     }
 
-    public void addToStatuses(Status status) {
-        statuses.add(status);
-    }
-
-    protected void addToAttributes(Attribute attribute) {
-        attributes.add(attribute);
+    public void addToEffects(Effect effect) {
+        effects.add(effect);
     }
 
     public Attribute getDamageBonus() {
@@ -178,8 +176,8 @@ public abstract class Character {
         return attributes.get(attributes.indexOf(new ArmorClass())).getCurrentValue();
     }
 
-    public List<Status> getStatuses() {
-        return statuses;
+    public List<Effect> getEffects() {
+        return effects;
     }
 
     public List<Skill> getSkills() {
@@ -198,6 +196,9 @@ public abstract class Character {
         return skillWithCountDowns;
     }
 
+    public HashMap<String, Boolean> getStatuses() {
+        return statuses;
+    }
 
     public Equipment getEquipment() {
         return equipment;
@@ -213,22 +214,6 @@ public abstract class Character {
 
     public int getDexterityValue() {
         return attributes.get(attributes.indexOf(new Dexterity())).getCurrentValue();
-    }
-
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    public void setAlive(boolean alive) {
-        isAlive = alive;
-    }
-
-    public boolean isFriendly() {
-        return isFriendly;
-    }
-
-    public void setFriendly(boolean friendly) {
-        isFriendly = friendly;
     }
 
     public Attribute getInitiative() {
@@ -264,15 +249,23 @@ public abstract class Character {
         getSpeed().setCurrentValue(value);
     }
 
-    public boolean isMovedThisTurn() {
-        return movedThisTurn;
-    }
-
-    public void setMovedThisTurn(boolean movedThisTurn) {
-        this.movedThisTurn = movedThisTurn;
-    }
-
     public int getWeaponReach() {
         return getEquipment().getRightHand().getReach();
+    }
+
+    public boolean isAlive() {
+        return getStatuses().get("Alive");
+    }
+
+    public boolean isFriendly() {
+        return getStatuses().get("Friendly");
+    }
+
+    public boolean hasMovedThisTurn() {
+        return getStatuses().get("MovedThisTurn");
+    }
+
+    public void modifyStatus(String status, boolean value) {
+        getStatuses().put(status, value);
     }
 }

@@ -21,7 +21,7 @@ public class Combat {
         while (getAliveCharactersFromBothSides()) {
             turnCounter++;
             System.out.println(MessageFormat.format("\n\n\t\t\t\t\t\t\t\t\t\t\t\tTURN {0}\n\n", turnCounter));
-            refreshStatuses();
+            refreshEffects();
             refreshSkillCountdowns();
             refreshMovementAvailability();
             progressThroughTurnsOfAliveCharacters();
@@ -134,8 +134,8 @@ public class Combat {
     private static void evaluateCharacterMovement(Character character) {
         try {
             character.move(getMovementDestinationFromUser(character));
-            if (!character.isMovedThisTurn()) {
-                character.setMovedThisTurn(true);
+            if (!character.hasMovedThisTurn()) {
+                character.modifyStatus("MovedThisTurn", true);
                 System.out.println(MessageFormat.format("\t{0} used up free movement of the turn.", character.getName()));
                 progressThroughTurnOfFriendlyCharacter(character);
             }
@@ -147,7 +147,7 @@ public class Combat {
 
     private static void refreshMovementAvailability() {
         for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
-            character.setMovedThisTurn(false);
+            character.modifyStatus("MovedThisTurn", true);
         }
     }
 }

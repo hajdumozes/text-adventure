@@ -3,8 +3,8 @@ package app;
 import attributes.Attribute;
 import characters.Character;
 import combat.DistanceBased;
+import combat.Effect;
 import combat.NoTargetException;
-import combat.Status;
 import combat.Targetable;
 import combat.skills.Skill;
 import combat.skills.SkillWithCountDown;
@@ -124,10 +124,10 @@ public class SkillManagement {
         }
     }
 
-    protected static void nullifyStatusEffect(Status status, Character player) {
+    protected static void nullifyEffect(Effect effect, Character player) {
         for (Attribute attribute : player.getAttributes()) {
-            if (attribute.getName().equals(status.getAttribute().getName())) {
-                attribute.decrease(status.getValue());
+            if (attribute.getName().equals(effect.getAttribute().getName())) {
+                attribute.decrease(effect.getValue());
             }
         }
     }
@@ -146,16 +146,16 @@ public class SkillManagement {
         }
     }
 
-    protected static void refreshStatuses() {
+    protected static void refreshEffects() {
         for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
-            Iterator<Status> iterator = character.getStatuses().iterator();
+            Iterator<Effect> iterator = character.getEffects().iterator();
             while (iterator.hasNext()) {
-                Status current = iterator.next();
+                Effect current = iterator.next();
                 current.setDuration(current.getDuration() - 1);
                 if (current.getDuration() <= 0) {
                     System.out.println(MessageFormat.format(
                             "\n\tEffect of {0} expired on {1}.\n", current.getName(), character.getName()));
-                    nullifyStatusEffect(current, character);
+                    nullifyEffect(current, character);
                     iterator.remove();
                 }
             }

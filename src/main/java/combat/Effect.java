@@ -2,13 +2,13 @@ package combat;
 
 import attributes.Attribute;
 
-public class Status {
+public class Effect {
     private Attribute attribute;
     private String name;
     private int value;
     private int duration;
 
-    public Status(Attribute attribute, String name, int value, int duration) {
+    public Effect(Attribute attribute, String name, int value, int duration) {
         this.attribute = attribute;
         this.name = name;
         this.value = value;
@@ -19,16 +19,16 @@ public class Status {
         return attribute;
     }
 
+    public void setAttribute(Attribute attribute) {
+        this.attribute = attribute;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setAttribute(Attribute attribute) {
-        this.attribute = attribute;
     }
 
     public int getValue() {

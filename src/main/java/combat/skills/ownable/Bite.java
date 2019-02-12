@@ -3,7 +3,7 @@ package combat.skills.ownable;
 import attributes.ownable.DamageBonus;
 import characters.Character;
 import combat.DistanceBased;
-import combat.Status;
+import combat.Effect;
 import combat.Targetable;
 import combat.skills.Skill;
 
@@ -19,7 +19,7 @@ public class Bite extends Skill implements Targetable, DistanceBased {
 
     public void bite(Character target) {
         getOwner().getDamageBonus().setCurrentValue(getOwner().getDamageBonusValue() + 2);
-        getOwner().addToStatuses(new Status(new DamageBonus(), "Bite", 2, 1));
+        getOwner().addToEffects(new Effect(new DamageBonus(), "Bite", 2, 1));
         System.out.println("\tWolf bit!");
         int hitRoll = roll(1, 20) + 4;
         getOwner().evaluateAttackRoll(hitRoll, target);
