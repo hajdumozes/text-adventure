@@ -9,10 +9,9 @@ import combat.Targetable;
 import combat.skills.Skill;
 import combat.skills.SkillWithCountDown;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,14 +30,16 @@ public class SkillManagement {
         if (chosenSkill instanceof Targetable) {
             evaluateTargetableSkill(chosenSkill, character);
         } else {
-            invokeMethod(chosenSkill.getMethod(), chosenSkill, null);
+            chosenSkill.applyTo(null);
         }
     }
 
     private static void evaluateTargetableSkill(Skill skill, Character skillUser) {
         if (!(skill instanceof DistanceBased)) {
-            invokeMethod(skill.getMethod(), skill,
-                    chooseTargetFromCharacters(getCharactersFromSelectedSide(((Targetable) skill).isTargetOnPlayersSide())));
+            skill.applyTo(Collections.singletonList(
+                    chooseTargetFromCharacters(
+                            getCharactersFromSelectedSide(((Targetable) skill).
+                                    isTargetOnPlayersSide()))));
         } else {
             evaluateDistanceBasedSkill(skill, skillUser);
         }
@@ -50,8 +51,9 @@ public class SkillManagement {
                     ((Targetable) skill).isTargetOnPlayersSide());
             List<Character> charactersInSkillsReach = filterReachableCharacters(skillUser, charactersOnSelectedSide,
                     ((DistanceBased) skill).getReach());
-            invokeMethod(skill.getMethod(), skill,
-                    chooseTargetFromCharacters(charactersInSkillsReach));
+            skill.applyTo(Collections.singletonList(
+                    chooseTargetFromCharacters(charactersInSkillsReach))
+            );
         } catch (NoTargetException targetException) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
             CONSOLE.nextLine();
@@ -92,35 +94,11 @@ public class SkillManagement {
         }
     }
 
-    public static void useSkill(Skill skill) {
+    public static void decreaseSkillUsage(Skill skill) {
         if (skill.getUsagePerBattle() > 0)
             skill.setUsagePerBattle(skill.getUsagePerBattle() - 1);
         else {
             System.out.println(MessageFormat.format("\t{0} cannot be used", skill));
-        }
-    }
-
-    public static Method findMethod(Class methodOwnerClass, String methodName, Class targetCharacter) {
-        try {
-            if (targetCharacter == null) {
-                return methodOwnerClass.getMethod(methodName);
-            } else {
-                return methodOwnerClass.getMethod(methodName, targetCharacter);
-            }
-        } catch (NoSuchMethodException nsme) {
-            throw new RuntimeException("Method not found" + nsme);
-        }
-    }
-
-    public static void invokeMethod(Method method, Skill skill, Character target) {
-        try {
-            if (target == null) {
-                method.invoke(skill);
-            } else {
-                method.invoke(skill, target);
-            }
-        } catch (InvocationTargetException | IllegalAccessException iae) {
-            throw new RuntimeException("Method invoking error" + iae);
         }
     }
 
@@ -139,7 +117,7 @@ public class SkillManagement {
                 SkillWithCountDown current = iterator.next();
                 current.setCountdown(current.getCountdown() - 1);
                 if (current.getCountdown() <= 0) {
-                    invokeMethod(current.getMethodToInvoke(), current, null);
+                    current.activateCountdownSkill();
                     iterator.remove();
                 }
             }

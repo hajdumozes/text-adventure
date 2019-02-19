@@ -8,22 +8,21 @@ import combat.Targetable;
 import combat.skills.Skill;
 
 import static app.Main.roll;
-import static app.SkillManagement.findMethod;
-import static app.SkillManagement.useSkill;
+import static app.SkillManagement.decreaseSkillUsage;
 
 public class Bite extends Skill implements Targetable, DistanceBased {
     public Bite(Character owner) {
         super("Bite", "2d4 +2 damage, +4 to hit",
-                findMethod(Bite.class, "bite", Character.class), 3, owner);
+                3, owner);
     }
 
-    public void bite(Character target) {
+    public void useSkill(Character target) {
         getOwner().getDamageBonus().setCurrentValue(getOwner().getDamageBonusValue() + 2);
         getOwner().addToEffects(new Effect(new DamageBonus(), "Bite", 2, 1));
         System.out.println("\tWolf bit!");
         int hitRoll = roll(1, 20) + 4;
         getOwner().evaluateAttackRoll(hitRoll, target);
-        useSkill(this);
+        decreaseSkillUsage(this);
     }
 
     @Override

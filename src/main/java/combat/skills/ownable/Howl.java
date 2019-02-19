@@ -6,21 +6,24 @@ import characters.Wolf;
 import combat.skills.SkillWithCountDown;
 
 import static app.Combat.rollInitiative;
-import static app.SkillManagement.findMethod;
-import static app.SkillManagement.useSkill;
+import static app.SkillManagement.decreaseSkillUsage;
 
 public class Howl extends SkillWithCountDown {
 
     public Howl(Character owner) {
         super("Howl", "Calls for another wolf, which arrives in 3 turns.",
-                findMethod(Howl.class, "howl", null), 1, owner, 3,
-                findMethod(Howl.class, "wolfArrive", null));
+                1, owner, 3);
     }
 
-    public void howl() {
+    public void useSkill(Character target) {
         System.out.println("\tWolf howled!");
         getOwner().getSkillWithCountDowns().add(this);
-        useSkill(this);
+        decreaseSkillUsage(this);
+    }
+
+    @Override
+    public void activateCountdownSkill() {
+        wolfArrive();
     }
 
     public void wolfArrive() {

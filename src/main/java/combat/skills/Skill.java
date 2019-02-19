@@ -2,23 +2,33 @@ package combat.skills;
 
 import characters.Character;
 
-import java.lang.reflect.Method;
+import java.util.Collection;
 
-public class Skill {
+public abstract class Skill {
     private String name;
     private String description;
-    private Method method;
     private int usagePerBattle;
     private Character owner;
     private Character target;
 
-    public Skill(String name, String description, Method method, int usagePerBattle, Character owner) {
+    public Skill(String name, String description, int usagePerBattle, Character owner) {
         this.name = name;
         this.description = description;
-        this.method = method;
         this.usagePerBattle = usagePerBattle;
         this.owner = owner;
     }
+
+    public void applyTo(Collection<Character> characters) {
+        if (characters == null) {
+            useSkill(null);
+        } else {
+            for (Character character : characters) {
+                useSkill(character);
+            }
+        }
+    }
+
+    public abstract void useSkill(Character character);
 
     public String getName() {
         return name;
@@ -30,10 +40,6 @@ public class Skill {
 
     public String getDescription() {
         return description;
-    }
-
-    public Method getMethod() {
-        return method;
     }
 
     public Character getOwner() {

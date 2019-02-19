@@ -10,15 +10,11 @@ import combat.skills.ownable.Howl;
 import items.Equipment.Equipment;
 import items.Equipment.ownable.WolfClaw;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static app.AttackEvaluation.findPossibleTargets;
 import static app.Battlefield.*;
 import static app.SkillManagement.getUsableSkills;
-import static app.SkillManagement.invokeMethod;
 
 public class Wolf extends Character {
 
@@ -70,9 +66,9 @@ public class Wolf extends Character {
 
     private void evaluateSkill(Skill skill, Character target) {
         if (skill instanceof Targetable) {
-            invokeMethod(skill.getMethod(), skill, target);
+            skill.applyTo(Collections.singletonList(target));
         } else {
-            invokeMethod(skill.getMethod(), skill, null);
+            skill.applyTo(Collections.singletonList(null));
         }
     }
 

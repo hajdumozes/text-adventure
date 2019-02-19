@@ -7,22 +7,26 @@ import combat.skills.SkillWithCountDown;
 
 import java.text.MessageFormat;
 
-import static app.SkillManagement.findMethod;
-import static app.SkillManagement.useSkill;
+import static app.SkillManagement.decreaseSkillUsage;
 
 
 public class StrikeOfLight extends SkillWithCountDown implements Targetable, DistanceBased {
     public StrikeOfLight(Character owner) {
         super("Strike of Light", "Stun target for 2 turns.",
-                findMethod(StrikeOfLight.class, "stun", Character.class), 1, owner,
-                2, findMethod(StrikeOfLight.class, "nullifyStun", null));
+                1, owner,
+                2);
     }
 
-    public void stun(Character target) {
+    public void useSkill(Character target) {
         target.getStatuses().put("Stunned", true);
         target.getSkillWithCountDowns().add(this);
-        useSkill(this);
+        decreaseSkillUsage(this);
         setTarget(target);
+    }
+
+    @Override
+    public void activateCountdownSkill() {
+        nullifyStun();
     }
 
     public void nullifyStun() {
