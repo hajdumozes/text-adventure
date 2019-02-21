@@ -35,13 +35,13 @@ public class SkillManagement {
     }
 
     private static void evaluateTargetableSkill(Skill skill, Character skillUser) {
-        if (!(skill instanceof DistanceBased)) {
+        if (skill instanceof DistanceBased) {
+            evaluateDistanceBasedSkill(skill, skillUser);
+        } else {
             skill.applyTo(Collections.singletonList(
                     chooseTargetFromCharacters(
-                            getCharactersFromSelectedSide(((Targetable) skill).
-                                    isTargetOnPlayersSide()))));
-        } else {
-            evaluateDistanceBasedSkill(skill, skillUser);
+                            getCharactersFromSelectedSide(
+                                    ((Targetable) skill).isTargetOnPlayersSide()))));
         }
     }
 
@@ -51,9 +51,7 @@ public class SkillManagement {
                     ((Targetable) skill).isTargetOnPlayersSide());
             List<Character> charactersInSkillsReach = filterReachableCharacters(skillUser, charactersOnSelectedSide,
                     ((DistanceBased) skill).getReach());
-            skill.applyTo(Collections.singletonList(
-                    chooseTargetFromCharacters(charactersInSkillsReach))
-            );
+            skill.applyTo(charactersInSkillsReach);
         } catch (NoTargetException targetException) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
             CONSOLE.nextLine();
