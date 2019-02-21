@@ -2,10 +2,7 @@ package app;
 
 import attributes.Attribute;
 import characters.Character;
-import combat.DistanceBased;
-import combat.Effect;
-import combat.NoTargetException;
-import combat.Targetable;
+import combat.*;
 import combat.skills.Skill;
 import combat.skills.SkillWithCountDown;
 
@@ -29,6 +26,8 @@ public class SkillManagement {
         Skill chosenSkill = chooseSkill(character);
         if (chosenSkill instanceof Targetable) {
             evaluateTargetableSkill(chosenSkill, character);
+        } else if (chosenSkill instanceof Aerial) {
+            evaluateAerialSkill(chosenSkill, character);
         } else {
             chosenSkill.applyTo(null);
         }
@@ -47,16 +46,26 @@ public class SkillManagement {
 
     private static void evaluateDistanceBasedSkill(Skill skill, Character skillUser) {
         try {
-            List<Character> charactersOnSelectedSide = getCharactersFromSelectedSide(
-                    ((Targetable) skill).isTargetOnPlayersSide());
-            List<Character> charactersInSkillsReach = filterReachableCharacters(skillUser, charactersOnSelectedSide,
-                    ((DistanceBased) skill).getReach());
-            skill.applyTo(charactersInSkillsReach);
+            List<Character> charactersInSkillsReach = getFilteredCharacterFromSelectedSide(skill, skillUser);
+            skill.applyTo(Collections.singletonList(
+                    chooseTargetFromCharacters(charactersInSkillsReach)));
         } catch (NoTargetException targetException) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
             CONSOLE.nextLine();
             printOptionsForCurrentFriendlyCharacter(skillUser);
         }
+    }
+
+    private static void evaluateAerialSkill(Skill skill, Character skillUser) {
+        List<Character> charactersInSkillsReach = getFilteredCharacterFromSelectedSide(skill, skillUser);
+        skill.applyTo(charactersInSkillsReach);
+    }
+
+    private static List<Character> getFilteredCharacterFromSelectedSide(Skill skill, Character skillUser) {
+        List<Character> charactersOnSelectedSide = getCharactersFromSelectedSide(
+                ((Targetable) skill).isTargetOnPlayersSide());
+        return filterReachableCharacters(skillUser, charactersOnSelectedSide,
+                ((DistanceBased) skill).getReach());
     }
 
     private static Skill chooseSkill(Character character) {
