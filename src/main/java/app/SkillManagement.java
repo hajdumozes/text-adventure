@@ -62,8 +62,10 @@ public class SkillManagement {
     }
 
     private static List<Character> getFilteredCharacterFromSelectedSide(Skill skill, Character skillUser) {
+        boolean side = skill instanceof Targetable ?
+                ((Targetable) skill).isTargetOnPlayersSide() : ((Aerial) skill).areTargetsOnPlayersSide();
         List<Character> charactersOnSelectedSide = getCharactersFromSelectedSide(
-                ((Targetable) skill).isTargetOnPlayersSide());
+                side);
         return filterReachableCharacters(skillUser, charactersOnSelectedSide,
                 ((DistanceBased) skill).getReach());
     }
