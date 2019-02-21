@@ -5,13 +5,16 @@ import attributes.Attribute;
 import attributes.DepletableAttribute;
 import attributes.ownable.*;
 import combat.Effect;
+import combat.OutOfAmmunitionException;
 import combat.Position;
 import combat.UnreachablePositionException;
 import combat.skills.Skill;
 import combat.skills.SkillWithCountDown;
 import items.Equipment.Equipment;
+import items.Equipment.RangedWeapon;
 import items.Equipment.Weapon;
 import items.Equipment.Wieldable;
+import items.Equipment.ownable.Quiver;
 import items.Equipment.ownable.Shield;
 
 import java.text.MessageFormat;
@@ -58,17 +61,31 @@ public abstract class Character {
     }
 
     public void attack(Character defender) {
+        if (getEquipment().getRightHand() instanceof RangedWeapon) {
+            rangedAttack();
+        }
         System.out.println(MessageFormat.format("\n\t{0} decided to attack.", name));
         int attackingRoll = (new Random().nextInt(20) + 1) + getAttackBonusValue();
         System.out.println(MessageFormat.format("\t{0} rolled {1}.", name, attackingRoll));
         evaluateAttackRoll(attackingRoll, defender);
     }
 
+    private void rangedAttack() {
+        try {
+            Quiver quiver = ((RangedWeapon) getEquipment().getRightHand()).getQuiver();
+            quiver.decreaseAmmunition(1);
+        } catch (OutOfAmmunitionException outOfAmmo) {
+            System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", outOfAmmo.getMessage()));
+        }
+    }
+
     public void evaluateAttackRoll(int attackingRoll, Character defender) {
         if (attackingRoll == 1) {
-            //critical failure
+            System.out.println(MessageFormat.format(
+                    "\tCritical failure! {0} get stunned for 1 turn lamenting over stupidity", name));
+            //Stun duration not implemented yet
         } else if (attackingRoll == 20) {
-            int damage = dealDamage(defender) + dealDamage(defender);
+            int damage = dealDamage(defender) * 2;
             System.out.println(MessageFormat.format("\tCritical hit! {0} dealt {1} damage to {2}.", name, damage, defender.name));
         } else if (attackingRoll < defender.getArmorClassValue()) {
             System.out.println(MessageFormat.format("\t{0} failed to hit {1}.", name, defender.name));
@@ -101,15 +118,14 @@ public abstract class Character {
     private int rollDamage() {
         Weapon rightHandedWeapon = equipment.getRightHand();
         Wieldable leftHandedWeapon = equipment.getLeftHand();
-        int damage = roll(rightHandedWeapon.getNumberOfDices(), rightHandedWeapon.getDamage());
+        int damage = 0;
+        if (rightHandedWeapon != null) {
+            damage += roll(rightHandedWeapon.getNumberOfDices(), rightHandedWeapon.getDamage());
+        }
         if (leftHandedWeapon instanceof Weapon) {
             damage += (roll(((Weapon) leftHandedWeapon).getNumberOfDices(), ((Weapon) leftHandedWeapon).getDamage()));
         }
-        if (!rightHandedWeapon.isTwoHanded()) {
-            return damage;
-        } else {
-            return damage / 2;
-        }
+        return damage;
     }
 
     public void defend() {

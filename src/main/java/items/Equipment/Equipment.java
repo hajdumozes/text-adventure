@@ -11,6 +11,11 @@ public class Equipment {
         this.leftHand = leftHand;
     }
 
+    public Equipment(Weapon twoHanded) {
+        this.rightHand = twoHanded;
+        this.leftHand = null;
+    }
+
     public Weapon getRightHand() {
         return rightHand;
     }

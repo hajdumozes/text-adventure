@@ -23,7 +23,7 @@ public class Barbarian extends Character implements Playable {
     public List<Equipment> showStartingEquipments() {
         return new ArrayList<>(Arrays.asList(
                 new Equipment(new Handaxe(), new Handaxe()),
-                new Equipment(new Greataxe(), new Greataxe())));
+                new Equipment(new Greataxe())));
     }
 
     @Override
