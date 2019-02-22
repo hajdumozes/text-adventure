@@ -7,6 +7,7 @@ import combat.Effect;
 import combat.Targetable;
 import combat.skills.Skill;
 
+import static app.CharacterActions.evaluateAttackRoll;
 import static app.Main.roll;
 import static app.SkillManagement.decreaseSkillUsage;
 
@@ -21,7 +22,7 @@ public class Bite extends Skill implements Targetable, DistanceBased {
         getOwner().addToEffects(new Effect(new DamageBonus(), "Bite", 2, 1));
         System.out.println("\tWolf bit!");
         int hitRoll = roll(1, 20) + 4;
-        getOwner().evaluateAttackRoll(hitRoll, target);
+        evaluateAttackRoll(hitRoll, getOwner(), target);
         decreaseSkillUsage(this);
     }
 

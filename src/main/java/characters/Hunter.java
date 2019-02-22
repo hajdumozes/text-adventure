@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Ranger extends Character implements Playable {
-    public Ranger() {
-        super("Ranger", "Player", 50, 10, 5, 4, new Equipment(new Shortsword(), new Shortsword()), true);
+public class Hunter extends Character implements Playable {
+    public Hunter() {
+        super("Hunter", "Player", 50, 10, 5, 4, new Equipment(new Longbow()),
+                true);
     }
 
     @Override

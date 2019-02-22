@@ -1,10 +1,12 @@
 # Text-adventure
 
-## A simple text-based game, which merges elements of D&D and Heroes of Might and Magic.
+## A simple text-based game, which merges elements of D&D, World of Warcraft and Heroes of Might and Magic.
 
 ## Features:
 * Gameplay is based on user inputs
-* Class and equipment selection availability at the beginning
+* Multiple classes
+    * Class and equipment selection availability at the beginning
+    * Classes and skills are inspired by D&D, WoW and own ideas
 * One battle is available so far
 * Battle is based on D&D d20 system
     * Turns based on Initiative, which comes from a Dexterity check.
@@ -22,11 +24,10 @@
 * Certain attributes are present, but without the modifier availability so far
 
 ## Certain future plans chronologically:
+* Stun Duration
+* Summon for both parties
 * New classes
-* Ranged weapons and ammunition
 * More enemies and skills
 * Magic
 * Dexterity multiplier implementation to damage and initiative
 * More attributes with multipliers
-
-

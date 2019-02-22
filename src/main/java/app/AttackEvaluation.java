@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static app.Battlefield.countPositionDifference;
+import static app.CharacterActions.attack;
 import static app.Combat.printOptionsForCurrentFriendlyCharacter;
 import static app.Main.CHARACTERS_ALIVE;
 import static app.Main.CONSOLE;
@@ -17,7 +18,7 @@ public class AttackEvaluation {
 
     protected static void evaluateCharacterAttack(Character character) {
         try {
-            character.attack(chooseTargetFromCharacters(filterReachableCharacters
+            attack(character, chooseTargetFromCharacters(filterReachableCharacters
                     (character, getCharactersFromSelectedSide(false), character.getWeaponReach())));
         } catch (NoTargetException targetException) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
@@ -54,7 +55,7 @@ public class AttackEvaluation {
         return possibleTargets.get((Integer.parseInt(input) - 1));
     }
 
-    public static List<Character> findPossibleTargets(boolean isTargetOnPlayersSide) {
+    protected static List<Character> findPossibleTargets(boolean isTargetOnPlayersSide) {
         if (isTargetOnPlayersSide) {
             return CHARACTERS_ALIVE.stream().filter(character -> character.isFriendly()).collect(Collectors.toList());
         } else {

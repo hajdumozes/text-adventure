@@ -10,6 +10,8 @@ import java.util.List;
 
 import static app.AttackEvaluation.*;
 import static app.Battlefield.getMovementDestinationFromUser;
+import static app.CharacterActions.defend;
+import static app.CharacterActions.move;
 import static app.Main.*;
 import static app.SkillManagement.*;
 
@@ -88,7 +90,7 @@ public class Combat {
         }
     }
 
-    public static boolean getAliveCharactersFromBothSides() {
+    protected static boolean getAliveCharactersFromBothSides() {
         boolean friendlyIsAlive = false;
         boolean hostileIsAlive = false;
         for (Character character : CHARACTERS_ALIVE) {
@@ -110,7 +112,7 @@ public class Combat {
                 evaluateCharacterMovement(character);
                 break;
             case "3":
-                character.defend();
+                defend(character);
                 break;
             case "4":
                 evaluateCharacterSkill(character);
@@ -137,7 +139,7 @@ public class Combat {
 
     private static void evaluateCharacterMovement(Character character) {
         try {
-            character.move(getMovementDestinationFromUser(character));
+            move(character, getMovementDestinationFromUser(character));
             if (!character.hasMovedThisTurn()) {
                 character.modifyStatus("MovedThisTurn", true);
                 System.out.println(MessageFormat.format("\t{0} used up free movement of the turn.", character.getName()));

@@ -78,7 +78,7 @@ public class SkillManagement {
         return character.getSkills().get((Integer.parseInt(input) - 1));
     }
 
-    public static List<Skill> getUsableSkills(Character character) {
+    protected static List<Skill> getUsableSkills(Character character) {
         return character.getSkills().stream()
                 .filter(skill -> skill.getUsagePerBattle() > 0).collect(Collectors.toList());
     }
