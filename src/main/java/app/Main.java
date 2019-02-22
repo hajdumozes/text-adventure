@@ -32,7 +32,7 @@ public class Main {
     }
 
     public static void decideOutcome() {
-        if (CHARACTERS_ALIVE.get(0).isAlive()) {
+        if (CHARACTERS_ALIVE.get(0).isFriendly()) {
             System.out.println("\n\tCongratulations you've won! You may begin your journey!");
         } else {
             System.out.println("\n\tYou are dead.");

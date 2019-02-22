@@ -16,6 +16,7 @@ import java.util.Random;
 import static app.Battlefield.*;
 import static app.Combat.getAliveCharactersFromBothSides;
 import static app.Combat.printOptionsForCurrentFriendlyCharacter;
+import static app.GeneralAI.getNearestEnemyPosition;
 import static app.Main.*;
 
 public class CharacterActions {
@@ -31,10 +32,19 @@ public class CharacterActions {
 
     private static void rangedAttack(Character attacker) {
         try {
+            checkIfAttackerIsFreeToShoot(attacker);
             Quiver quiver = ((RangedWeapon) attacker.getEquipment().getRightHand()).getQuiver();
             quiver.decreaseAmmunition(1);
         } catch (OutOfAmmunitionException outOfAmmo) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", outOfAmmo.getMessage()));
+            CONSOLE.nextLine();
+            printOptionsForCurrentFriendlyCharacter(attacker);
+        }
+    }
+
+    private static void checkIfAttackerIsFreeToShoot(Character attacker) {
+        if (countPositionDifference(attacker.getPosition(), getNearestEnemyPosition(attacker)) < 2) {
+            System.out.println("\tYou can't shoot while surrounded. Press Enter to get back.");
             CONSOLE.nextLine();
             printOptionsForCurrentFriendlyCharacter(attacker);
         }

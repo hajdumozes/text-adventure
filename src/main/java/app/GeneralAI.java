@@ -87,13 +87,15 @@ public class GeneralAI {
         }
     }
 
-    private static Position getNearestEnemyPosition(Character character) {
-        List<Character> possibleTargets = findPossibleTargets(true);
-        Position positionFound = null;
-        int minimalDifference = countPositionDifference(character.getPosition(), possibleTargets.get(0).getPosition());
+    protected static Position getNearestEnemyPosition(Character character) {
+        List<Character> possibleTargets = findPossibleTargets(!character.isFriendly());
+        Position positionFound = possibleTargets.get(0).getPosition();
+        int minimalDifference = countPositionDifference(character.getPosition(), positionFound);
         for (Character enemy : possibleTargets) {
-            if (countPositionDifference(character.getPosition(), enemy.getPosition()) < minimalDifference) {
+            int actualDifference = countPositionDifference(character.getPosition(), enemy.getPosition());
+            if (actualDifference < minimalDifference) {
                 positionFound = enemy.getPosition();
+                minimalDifference = actualDifference;
             }
         }
         return positionFound;

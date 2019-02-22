@@ -153,7 +153,7 @@ public class Combat {
 
     private static void refreshMovementAvailability() {
         for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
-            character.modifyStatus("MovedThisTurn", true);
+            character.modifyStatus("MovedThisTurn", false);
         }
     }
 }
