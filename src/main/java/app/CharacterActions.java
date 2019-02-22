@@ -1,7 +1,9 @@
 package app;
 
 import characters.Character;
-import combat.*;
+import combat.BattleIsOver;
+import combat.Effect;
+import combat.OutOfAmmunitionException;
 import items.Equipment.RangedWeapon;
 import items.Equipment.Weapon;
 import items.Equipment.Wieldable;
@@ -10,14 +12,10 @@ import items.Equipment.ownable.Quiver;
 import java.text.MessageFormat;
 import java.util.Random;
 
-import static app.Battlefield.*;
-import static app.Combat.areAliveCharactersOnBothSides;
-import static app.Combat.printOptionsForCurrentFriendlyCharacter;
-import static app.GeneralAI.getNearestEnemyPosition;
 import static app.Main.*;
 
 public class CharacterActions {
-    protected static void attack(Character attacker, Character defender) {
+    protected void attack(Character attacker, Character defender) {
         if (attacker.getEquipment().getRightHand() instanceof RangedWeapon) {
             rangedAttack(attacker);
         }
@@ -27,7 +25,7 @@ public class CharacterActions {
         evaluateAttackRoll(attackingRoll, attacker, defender);
     }
 
-    private static void rangedAttack(Character attacker) {
+    private void rangedAttack(Character attacker) {
         try {
             checkIfAttackerIsFreeToShoot(attacker);
             Quiver quiver = ((RangedWeapon) attacker.getEquipment().getRightHand()).getQuiver();
@@ -35,19 +33,20 @@ public class CharacterActions {
         } catch (OutOfAmmunitionException outOfAmmo) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", outOfAmmo.getMessage()));
             CONSOLE.nextLine();
-            printOptionsForCurrentFriendlyCharacter(attacker);
+            new Combat().printOptionsForCurrentFriendlyCharacter(attacker);
         }
     }
 
-    private static void checkIfAttackerIsFreeToShoot(Character attacker) {
-        if (countPositionDifference(attacker.getPosition(), getNearestEnemyPosition(attacker)) < 2) {
+    private void checkIfAttackerIsFreeToShoot(Character attacker) {
+        if (new Battlefield().countPositionDifference(attacker.getPosition(),
+                new GeneralAI().getNearestEnemyPosition(attacker)) < 2) {
             System.out.println("\tYou can't shoot while surrounded. Press Enter to get back.");
             CONSOLE.nextLine();
-            printOptionsForCurrentFriendlyCharacter(attacker);
+            new Combat().printOptionsForCurrentFriendlyCharacter(attacker);
         }
     }
 
-    public static void evaluateAttackRoll(int attackingRoll, Character attacker, Character defender) {
+    public void evaluateAttackRoll(int attackingRoll, Character attacker, Character defender) {
         if (attackingRoll == 1) {
             System.out.println(MessageFormat.format(
                     "\tCritical failure! {0} get stunned for 1 turn lamenting over stupidity", attacker.getName()));
@@ -69,36 +68,37 @@ public class CharacterActions {
         }
     }
 
-    private static void kill(Character defender) {
+    private void kill(Character defender) {
         defender.modifyStatus("Alive", false);
         System.out.println(MessageFormat.format("\t{0} died!", defender.getName()));
         CHARACTERS_ALIVE.remove(defender);
         CHARACTERS_DEAD.add(defender);
-        if (!areAliveCharactersOnBothSides()) {
+        if (!new Combat().areAliveCharactersOnBothSides()) {
             throw new BattleIsOver("Battle is over");
         }
     }
 
-    private static int rollDamage(Character attacker) {
+    private int rollDamage(Character attacker) {
+        Main main = new Main();
         Weapon rightHandedWeapon = attacker.getEquipment().getRightHand();
         Wieldable leftHandedWeapon = attacker.getEquipment().getLeftHand();
         int damage = 0;
         if (rightHandedWeapon != null) {
-            damage += roll(rightHandedWeapon.getNumberOfDices(), rightHandedWeapon.getDamage());
+            damage += main.roll(rightHandedWeapon.getNumberOfDices(), rightHandedWeapon.getDamage());
         }
         if (leftHandedWeapon instanceof Weapon) {
-            damage += (roll(((Weapon) leftHandedWeapon).getNumberOfDices(), ((Weapon) leftHandedWeapon).getDamage()));
+            damage += (main.roll(((Weapon) leftHandedWeapon).getNumberOfDices(), ((Weapon) leftHandedWeapon).getDamage()));
         }
         return damage;
     }
 
-    private static int dealDamage(Character attacker, Character defender) {
+    private int dealDamage(Character attacker, Character defender) {
         int damage = rollDamage(attacker) + attacker.getDamageBonusValue();
         defender.getHealth().decrease(damage);
         return damage;
     }
 
-    protected static void defend(Character character) {
+    protected void defend(Character character) {
         System.out.println(MessageFormat.format("\t{0} decided to defend.", character.getName()));
         character.getArmorClass().increase(5);
         character.getEffects().add(new Effect(character.getArmorClass(), "Defend", 5, 1));
@@ -106,18 +106,7 @@ public class CharacterActions {
                 character.getName(), 5, 1));
     }
 
-    protected static void wait(Character character) {
+    protected void wait(Character character) {
         // useless right now
-    }
-
-    protected static void move(Character character, Position position) {
-        if (checkIfDestinationIsReacheable(character, position) && checkIfPositionIsOccupied(position)) {
-            System.out.println(MessageFormat.format("\t{0} moved from {1} to {2}",
-                    character.getName(), character.getPosition(), position));
-            character.setPosition(position);
-            refreshBattlefield();
-        } else {
-            throw new UnreachablePositionException("Destination is too far away");
-        }
     }
 }

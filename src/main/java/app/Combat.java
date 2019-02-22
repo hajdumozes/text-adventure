@@ -2,7 +2,6 @@ package app;
 
 import characters.Character;
 import combat.BattleIsOver;
-import combat.UnreachablePositionException;
 import combat.WinCondition;
 
 import java.text.MessageFormat;
@@ -10,25 +9,21 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static app.AttackEvaluation.*;
-import static app.Battlefield.getMovementDestinationFromUser;
-import static app.CharacterActions.defend;
-import static app.CharacterActions.move;
 import static app.Main.*;
-import static app.SkillManagement.*;
 
 public class Combat {
 
-    protected static void progressThroughBattle(WinCondition... winConditions) {
+    protected void progressThroughBattle(WinCondition... winConditions) {
         try {
             int turnCounter = 0;
             rollInitiativeForAllCharacters();
             while (areAliveCharactersOnBothSides() && areAllFalse(winConditions)) {
                 turnCounter++;
                 System.out.println(MessageFormat.format("\n\n\t\t\t\t\t\t\t\t\t\t\t\tTURN {0}\n\n", turnCounter));
-                refreshEffects();
-                refreshSkillCountdowns();
-                refreshMovementAvailability();
+                SkillManagement skillManagement = new SkillManagement();
+                skillManagement.refreshEffects();
+                skillManagement.refreshSkillCountdowns();
+                new Movement().refreshMovementAvailability();
                 progressThroughTurnsOfAliveCharacters();
             }
             decideOutcome(winConditions);
@@ -37,7 +32,24 @@ public class Combat {
         }
     }
 
-    private static boolean areAllFalse(WinCondition[] winConditions) {
+    public void decideOutcome(WinCondition... winConditions) {
+        boolean overByWinCondition = false;
+        boolean win = false;
+        for (WinCondition winCondition : winConditions) {
+            if (winCondition.determine()) {
+                overByWinCondition = true;
+                win = winCondition.WinIfHappens();
+            }
+        }
+        if (!overByWinCondition) {
+            win = CHARACTERS_ALIVE.get(0).isFriendly();
+        }
+        String output = win ? "\n\tCongratulations you've won! You may begin your journey!" :
+                "\n\tYou are dead.";
+        System.out.println(output);
+    }
+
+    private boolean areAllFalse(WinCondition[] winConditions) {
         for (WinCondition condition : winConditions) {
             if (condition.determine()) {
                 return false;
@@ -46,25 +58,25 @@ public class Combat {
         return true;
     }
 
-    private static void rollInitiativeForAllCharacters() {
+    private void rollInitiativeForAllCharacters() {
         for (Character character : CHARACTERS_ALIVE) {
             rollInitiative(character);
         }
     }
 
-    public static void rollInitiative(Character character) {
-        int initiative = roll(1, 20) + (character.getDexterityValue() / 2);
+    public void rollInitiative(Character character) {
+        int initiative = new Main().roll(1, 20) + (character.getDexterityValue() / 2);
         character.getInitiative().setCurrentValue(initiative);
     }
 
-    private static void printInfoOfAliveCharacters() {
+    private void printInfoOfAliveCharacters() {
         for (Character character : CHARACTERS_ALIVE) {
             System.out.println(MessageFormat.format(
                     "\t{0}''s HP: {1}", character.getName(), character.getHealthCurrentValue()));
         }
     }
 
-    private static void progressThroughTurnsOfAliveCharacters() {
+    private void progressThroughTurnsOfAliveCharacters() {
         CHARACTERS_ALIVE.sort(Comparator.comparing(Character::getInitiative));
         for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
             if (!character.isStunned()) {
@@ -81,13 +93,13 @@ public class Combat {
         }
     }
 
-    protected static void progressThroughTurnOfFriendlyCharacter(Character character) {
-        Battlefield.showBattlefield();
+    protected void progressThroughTurnOfFriendlyCharacter(Character character) {
+        new Battlefield().showBattlefield();
         printInfoOfAliveCharacters();
         printOptionsForCurrentFriendlyCharacter(character);
     }
 
-    protected static void printOptionsForCurrentFriendlyCharacter(Character character) {
+    protected void printOptionsForCurrentFriendlyCharacter(Character character) {
         System.out.println(CONSOLE_SEPARATOR);
         try {
             System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
@@ -106,7 +118,7 @@ public class Combat {
         }
     }
 
-    protected static boolean areAliveCharactersOnBothSides() {
+    protected boolean areAliveCharactersOnBothSides() {
         boolean friendlyIsAlive = false;
         boolean hostileIsAlive = false;
         for (Character character : CHARACTERS_ALIVE) {
@@ -119,7 +131,7 @@ public class Combat {
         return friendlyIsAlive && hostileIsAlive;
     }
 
-    public static List<Character> getDeadCharactersBySide(boolean playersSide) {
+    public List<Character> getDeadCharactersBySide(boolean playersSide) {
         List<Character> deadCharacters = new ArrayList<>();
         for (Character character : CHARACTERS_DEAD) {
             if (character.isFriendly() == playersSide) {
@@ -129,19 +141,19 @@ public class Combat {
         return deadCharacters;
     }
 
-    private static void evaluateUserInput(String input, Character character) {
+    private void evaluateUserInput(String input, Character character) {
         switch (input) {
             case "1":
-                evaluateCharacterAttack(character);
+                new AttackEvaluation().evaluateCharacterAttack(character);
                 break;
             case "2":
-                evaluateCharacterMovement(character);
+                new Movement().evaluateCharacterMovement(character);
                 break;
             case "3":
-                defend(character);
+                new CharacterActions().defend(character);
                 break;
             case "4":
-                evaluateCharacterSkill(character);
+                new SkillManagement().evaluateCharacterSkill(character);
                 break;
             case "5":
                 inspectCharacter(character);
@@ -151,35 +163,16 @@ public class Combat {
         }
     }
 
-    private static void inspectCharacter(Character turnOfCharacter) {
-        List<Character> allCharacters = getCharactersFromSelectedSide(true);
-        allCharacters.addAll(getCharactersFromSelectedSide(false));
-        Character chosenCharacter = chooseTargetFromCharacters(allCharacters);
+    private void inspectCharacter(Character turnOfCharacter) {
+        AttackEvaluation attackEvaluation = new AttackEvaluation();
+        List<Character> allCharacters = attackEvaluation.getCharactersFromSelectedSide(true);
+        allCharacters.addAll(attackEvaluation.getCharactersFromSelectedSide(false));
+        Character chosenCharacter = attackEvaluation.chooseTargetFromCharacters(allCharacters);
         System.out.println(MessageFormat.format("\tName: {0}\n\tHealth: {1}/{2}\n\tInitiative: {3}\n\tDexterity: {4}" +
                         "\n\tArmor Character: {5}\n\tDamage Bonus: {6}",
                 chosenCharacter.getName(), chosenCharacter.getHealthCurrentValue(), chosenCharacter.getHealthMaxValue(),
                 chosenCharacter.getInitiativeValue(), chosenCharacter.getDexterityValue(),
                 chosenCharacter.getArmorClassValue(), chosenCharacter.getDamageBonusValue()));
         printOptionsForCurrentFriendlyCharacter(turnOfCharacter);
-    }
-
-    private static void evaluateCharacterMovement(Character character) {
-        try {
-            move(character, getMovementDestinationFromUser(character));
-            if (!character.hasMovedThisTurn()) {
-                character.modifyStatus("MovedThisTurn", true);
-                System.out.println(MessageFormat.format("\t{0} used up free movement of the turn.", character.getName()));
-                progressThroughTurnOfFriendlyCharacter(character);
-            }
-        } catch (UnreachablePositionException impossibleMovement) {
-            System.out.println("\t" + impossibleMovement.getMessage());
-            evaluateCharacterMovement(character);
-        }
-    }
-
-    private static void refreshMovementAvailability() {
-        for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
-            character.modifyStatus("MovedThisTurn", false);
-        }
     }
 }

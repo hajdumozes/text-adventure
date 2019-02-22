@@ -8,8 +8,6 @@ import items.Equipment.Equipment;
 import java.text.MessageFormat;
 import java.util.*;
 
-import static app.Combat.progressThroughBattle;
-
 public class Main {
     public static final List<Character> CHARACTERS_ALIVE = new ArrayList<>();
     public static final List<? extends Playable> PLAYABLE_CLASSES =
@@ -19,9 +17,10 @@ public class Main {
     public static final String CONSOLE_SEPARATOR = "______________________________________________________";
 
     public static void main(String[] args) {
-        chooseClass();
-        chooseEquipment();
-        rollAbility();
+        Main main = new Main();
+        main.chooseClass();
+        main.chooseEquipment();
+        main.rollAbility();
         Character wolf = new Wolf();
         CHARACTERS_ALIVE.add(wolf);
         System.out.println(CONSOLE_SEPARATOR);
@@ -30,27 +29,10 @@ public class Main {
                 "\t this tale, or the newcoming hero dies to the first lonely wolf in the deep of the woods? \n" +
                 "\t Let's find out!\n");
 
-        progressThroughBattle(new WinCondition(3, Wolf.class, false, true));
+        new Combat().progressThroughBattle(new WinCondition(3, Wolf.class, false, true));
     }
 
-    public static void decideOutcome(WinCondition... winConditions) {
-        boolean overByWinCondition = false;
-        boolean win = false;
-        for (WinCondition winCondition : winConditions) {
-            if (winCondition.determine()) {
-                overByWinCondition = true;
-                win = winCondition.WinIfHappens();
-            }
-        }
-        if (!overByWinCondition) {
-            win = CHARACTERS_ALIVE.get(0).isFriendly();
-        }
-        String output = win ? "\n\tCongratulations you've won! You may begin your journey!" :
-                "\n\tYou are dead.";
-        System.out.println(output);
-    }
-
-    private static void chooseClass() {
+    private void chooseClass() {
         try {
             System.out.println("\n\tChoose your starting class:\n");
             for (int i = 1; i <= PLAYABLE_CLASSES.size(); i++) {
@@ -67,7 +49,7 @@ public class Main {
         }
     }
 
-    public static int rollAbility() {
+    public int rollAbility() {
         List<Integer> rolls = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             rolls.add(roll(1, 6));
@@ -80,7 +62,7 @@ public class Main {
         // With more ability the return will have an impact. Player will roll 6 times and choose which points go where.
     }
 
-    private static void chooseEquipment() {
+    private void chooseEquipment() {
         System.out.println(CONSOLE_SEPARATOR);
         try {
             System.out.println("\n\tChoose your starting equipment:\n");
@@ -98,7 +80,7 @@ public class Main {
         }
     }
 
-    public static int roll(int numberOfDices, int maxNumber) {
+    public int roll(int numberOfDices, int maxNumber) {
         return numberOfDices * new Random().nextInt(maxNumber) + 1;
     }
 }

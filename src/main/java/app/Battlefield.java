@@ -3,20 +3,15 @@ package app;
 import characters.Character;
 import combat.Position;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static app.Main.CONSOLE;
-
 public class Battlefield {
     public static final String[][] BATTLEFIELD = new String[9][9];
 
-    static {
+    {
         emptyBattlefield();
     }
 
 
-    public static void showBattlefield() {
+    public void showBattlefield() {
         refreshBattlefield();
         System.out.println();
         System.out.print("\t\t  ");
@@ -25,53 +20,17 @@ public class Battlefield {
         System.out.println("\n\n");
     }
 
-    public static void refreshBattlefield() {
+    public void refreshBattlefield() {
         emptyBattlefield();
         fillBattlefield();
     }
 
-    protected static Position getMovementDestinationFromUser(Character character) {
-        System.out.println("\tGive destination in the following pattern: A3");
-        printReachableRoutes(character);
-        String input = CONSOLE.nextLine().trim().toUpperCase();
-        int row = input.charAt(0) - 65;
-        int column = Integer.parseInt(input.substring(1, 2)) - 1;
-        return new Position(row, column);
-    }
-
-    private static void printReachableRoutes(Character character) {
-        List<Position> allRoutes = findAllPossibleRoutes(character);
-        StringBuilder output = new StringBuilder("\n\tAvailable positions:");
-        for (Position position : allRoutes) {
-            output.append("\t");
-            output.append(position);
-        }
-        System.out.println(output);
-    }
-
-    public static List<Position> findAllPossibleRoutes(Character character) {
-        List<Position> routes = new ArrayList<>();
-        for (int i = 0 - character.getSpeedValue(); i <= character.getSpeedValue(); i++) {
-            int leftoverSteps = character.getSpeedValue() - Math.abs(i);
-            for (int j = 0 - leftoverSteps; j <= leftoverSteps; j++) {
-                int newColumn = character.getPosition().getColumn() + i;
-                int newRow = character.getPosition().getRow() + j;
-                if (newColumn >= 0 && newColumn < BATTLEFIELD[0].length
-                        && newRow >= 0 && newRow < BATTLEFIELD.length) {
-                    routes.add(new Position(character.getPosition().getRow() + j,
-                            character.getPosition().getColumn() + i));
-                }
-            }
-        }
-        return routes;
-    }
-
-    public static boolean checkIfDestinationIsReacheable(Character character, Position position) {
+    public boolean checkIfDestinationIsReacheable(Character character, Position position) {
         int difference = countPositionDifference(character.getPosition(), position);
         return difference <= character.getSpeedValue();
     }
 
-    public static int countPositionDifference(Position one, Position other) {
+    public int countPositionDifference(Position one, Position other) {
         int oneColumn = one.getColumn();
         int oneRow = one.getRow();
         int otherColumn = other.getColumn();
@@ -79,7 +38,7 @@ public class Battlefield {
         return Math.abs((oneColumn - otherColumn)) + Math.abs((oneRow - otherRow));
     }
 
-    private static void emptyBattlefield() {
+    private void emptyBattlefield() {
         for (int row = 0; row < BATTLEFIELD.length; row++) {
             for (int column = 0; column < BATTLEFIELD[row].length; column++) {
                 BATTLEFIELD[row][column] = "  x ";
@@ -87,11 +46,11 @@ public class Battlefield {
         }
     }
 
-    public static boolean checkIfPositionIsOccupied(Position position) {
+    public boolean checkIfPositionIsOccupied(Position position) {
         return BATTLEFIELD[position.getRow()][position.getColumn()].trim().equals("x");
     }
 
-    private static void fillBattlefield() {
+    private void fillBattlefield() {
         for (Character character : Main.CHARACTERS_ALIVE) {
             int row = character.getPosition().getRow();
             int column = character.getPosition().getColumn();
@@ -100,7 +59,7 @@ public class Battlefield {
         }
     }
 
-    private static void printBattlefield() {
+    private void printBattlefield() {
         for (int row = 0; row < BATTLEFIELD.length; row++) {
             char letter = (char) (row + 65);
             System.out.print("\t" + letter + " |\t");
@@ -113,7 +72,7 @@ public class Battlefield {
         }
     }
 
-    private static String createPaddingForName(String name) {
+    private String createPaddingForName(String name) {
         StringBuilder padding = new StringBuilder();
         for (int i = 0; i < 10 - name.length(); i++) {
             padding.append(" ");
@@ -121,7 +80,7 @@ public class Battlefield {
         return padding.toString();
     }
 
-    private static void createRowNumbers() {
+    private void createRowNumbers() {
         for (int i = 1; i <= BATTLEFIELD[0].length; i++) {
             System.out.print(i + "         ");
         }
