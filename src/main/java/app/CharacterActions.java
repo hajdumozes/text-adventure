@@ -1,10 +1,7 @@
 package app;
 
 import characters.Character;
-import combat.Effect;
-import combat.OutOfAmmunitionException;
-import combat.Position;
-import combat.UnreachablePositionException;
+import combat.*;
 import items.Equipment.RangedWeapon;
 import items.Equipment.Weapon;
 import items.Equipment.Wieldable;
@@ -14,7 +11,7 @@ import java.text.MessageFormat;
 import java.util.Random;
 
 import static app.Battlefield.*;
-import static app.Combat.getAliveCharactersFromBothSides;
+import static app.Combat.areAliveCharactersOnBothSides;
 import static app.Combat.printOptionsForCurrentFriendlyCharacter;
 import static app.GeneralAI.getNearestEnemyPosition;
 import static app.Main.*;
@@ -75,9 +72,10 @@ public class CharacterActions {
     private static void kill(Character defender) {
         defender.modifyStatus("Alive", false);
         System.out.println(MessageFormat.format("\t{0} died!", defender.getName()));
-        Main.CHARACTERS_ALIVE.remove(defender);
-        if (!getAliveCharactersFromBothSides()) {
-            decideOutcome();
+        CHARACTERS_ALIVE.remove(defender);
+        CHARACTERS_DEAD.add(defender);
+        if (!areAliveCharactersOnBothSides()) {
+            throw new BattleIsOver("Battle is over");
         }
     }
 

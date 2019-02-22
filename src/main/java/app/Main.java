@@ -2,6 +2,7 @@ package app;
 
 import characters.Character;
 import characters.*;
+import combat.WinCondition;
 import items.Equipment.Equipment;
 
 import java.text.MessageFormat;
@@ -13,6 +14,7 @@ public class Main {
     public static final List<Character> CHARACTERS_ALIVE = new ArrayList<>();
     public static final List<? extends Playable> PLAYABLE_CLASSES =
             new ArrayList<>(Arrays.asList(new Barbarian(), new Paladin(), new Hunter()));
+    public static final List<Character> CHARACTERS_DEAD = new ArrayList<>();
     public static final Scanner CONSOLE = new Scanner(System.in);
     public static final String CONSOLE_SEPARATOR = "______________________________________________________";
 
@@ -28,15 +30,24 @@ public class Main {
                 "\t this tale, or the newcoming hero dies to the first lonely wolf in the deep of the woods? \n" +
                 "\t Let's find out!\n");
 
-        progressThroughBattle();
+        progressThroughBattle(new WinCondition(3, Wolf.class, false, true));
     }
 
-    public static void decideOutcome() {
-        if (CHARACTERS_ALIVE.get(0).isFriendly()) {
-            System.out.println("\n\tCongratulations you've won! You may begin your journey!");
-        } else {
-            System.out.println("\n\tYou are dead.");
+    public static void decideOutcome(WinCondition... winConditions) {
+        boolean overByWinCondition = false;
+        boolean win = false;
+        for (WinCondition winCondition : winConditions) {
+            if (winCondition.determine()) {
+                overByWinCondition = true;
+                win = winCondition.WinIfHappens();
+            }
         }
+        if (!overByWinCondition) {
+            win = CHARACTERS_ALIVE.get(0).isFriendly();
+        }
+        String output = win ? "\n\tCongratulations you've won! You may begin your journey!" :
+                "\n\tYou are dead.";
+        System.out.println(output);
     }
 
     private static void chooseClass() {

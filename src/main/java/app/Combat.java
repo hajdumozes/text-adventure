@@ -1,7 +1,9 @@
 package app;
 
 import characters.Character;
+import combat.BattleIsOver;
 import combat.UnreachablePositionException;
+import combat.WinCondition;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -17,17 +19,31 @@ import static app.SkillManagement.*;
 
 public class Combat {
 
-    protected static void progressThroughBattle() {
-        int turnCounter = 0;
-        rollInitiativeForAllCharacters();
-        while (getAliveCharactersFromBothSides()) {
-            turnCounter++;
-            System.out.println(MessageFormat.format("\n\n\t\t\t\t\t\t\t\t\t\t\t\tTURN {0}\n\n", turnCounter));
-            refreshEffects();
-            refreshSkillCountdowns();
-            refreshMovementAvailability();
-            progressThroughTurnsOfAliveCharacters();
+    protected static void progressThroughBattle(WinCondition... winConditions) {
+        try {
+            int turnCounter = 0;
+            rollInitiativeForAllCharacters();
+            while (areAliveCharactersOnBothSides() && areAllFalse(winConditions)) {
+                turnCounter++;
+                System.out.println(MessageFormat.format("\n\n\t\t\t\t\t\t\t\t\t\t\t\tTURN {0}\n\n", turnCounter));
+                refreshEffects();
+                refreshSkillCountdowns();
+                refreshMovementAvailability();
+                progressThroughTurnsOfAliveCharacters();
+            }
+            decideOutcome(winConditions);
+        } catch (BattleIsOver battleIsOver) {
+            decideOutcome(winConditions);
         }
+    }
+
+    private static boolean areAllFalse(WinCondition[] winConditions) {
+        for (WinCondition condition : winConditions) {
+            if (condition.determine()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static void rollInitiativeForAllCharacters() {
@@ -90,7 +106,7 @@ public class Combat {
         }
     }
 
-    protected static boolean getAliveCharactersFromBothSides() {
+    protected static boolean areAliveCharactersOnBothSides() {
         boolean friendlyIsAlive = false;
         boolean hostileIsAlive = false;
         for (Character character : CHARACTERS_ALIVE) {
@@ -101,6 +117,16 @@ public class Combat {
             }
         }
         return friendlyIsAlive && hostileIsAlive;
+    }
+
+    public static List<Character> getDeadCharactersBySide(boolean playersSide) {
+        List<Character> deadCharacters = new ArrayList<>();
+        for (Character character : CHARACTERS_DEAD) {
+            if (character.isFriendly() == playersSide) {
+                deadCharacters.add(character);
+            }
+        }
+        return deadCharacters;
     }
 
     private static void evaluateUserInput(String input, Character character) {
@@ -130,7 +156,7 @@ public class Combat {
         allCharacters.addAll(getCharactersFromSelectedSide(false));
         Character chosenCharacter = chooseTargetFromCharacters(allCharacters);
         System.out.println(MessageFormat.format("\tName: {0}\n\tHealth: {1}/{2}\n\tInitiative: {3}\n\tDexterity: {4}" +
-                        "\n\tArmor Class: {5}\n\tDamage Bonus: {6}",
+                        "\n\tArmor Character: {5}\n\tDamage Bonus: {6}",
                 chosenCharacter.getName(), chosenCharacter.getHealthCurrentValue(), chosenCharacter.getHealthMaxValue(),
                 chosenCharacter.getInitiativeValue(), chosenCharacter.getDexterityValue(),
                 chosenCharacter.getArmorClassValue(), chosenCharacter.getDamageBonusValue()));
