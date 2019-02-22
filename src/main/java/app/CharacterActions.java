@@ -14,7 +14,7 @@ import java.util.Random;
 
 import static app.Main.*;
 
-public class CharacterActions {
+public class CharacterActions extends Combat {
     protected void attack(Character attacker, Character defender) {
         if (attacker.getEquipment().getRightHand() instanceof RangedWeapon) {
             rangedAttack(attacker);
@@ -33,7 +33,7 @@ public class CharacterActions {
         } catch (OutOfAmmunitionException outOfAmmo) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", outOfAmmo.getMessage()));
             CONSOLE.nextLine();
-            new Combat().printOptionsForCurrentFriendlyCharacter(attacker);
+            printOptionsForCurrentFriendlyCharacter(attacker);
         }
     }
 
@@ -42,7 +42,7 @@ public class CharacterActions {
                 new GeneralAI().getNearestEnemyPosition(attacker)) < 2) {
             System.out.println("\tYou can't shoot while surrounded. Press Enter to get back.");
             CONSOLE.nextLine();
-            new Combat().printOptionsForCurrentFriendlyCharacter(attacker);
+            printOptionsForCurrentFriendlyCharacter(attacker);
         }
     }
 
@@ -73,7 +73,7 @@ public class CharacterActions {
         System.out.println(MessageFormat.format("\t{0} died!", defender.getName()));
         CHARACTERS_ALIVE.remove(defender);
         CHARACTERS_DEAD.add(defender);
-        if (!new Combat().areAliveCharactersOnBothSides()) {
+        if (!areAliveCharactersOnBothSides()) {
             throw new BattleIsOver("Battle is over");
         }
     }

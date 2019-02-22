@@ -8,21 +8,19 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static app.Battlefield.BATTLEFIELD;
 import static app.Main.CHARACTERS_ALIVE;
 import static app.Main.CONSOLE;
 
-public class Movement {
+public class Movement extends Battlefield {
 
     protected void evaluateCharacterMovement(Character character) {
-        Combat combat = new Combat();
         try {
             move(character, getMovementDestinationFromUser(character));
             if (!character.hasMovedThisTurn()) {
                 character.modifyStatus("MovedThisTurn", true);
                 System.out.println(MessageFormat.format("\t{0} used up free movement of the turn.",
                         character.getName()));
-                combat.progressThroughTurnOfFriendlyCharacter(character);
+                new Combat().progressThroughTurnOfFriendlyCharacter(character);
             }
         } catch (UnreachablePositionException impossibleMovement) {
             System.out.println("\t" + impossibleMovement.getMessage());
@@ -31,13 +29,12 @@ public class Movement {
     }
 
     protected void move(Character character, Position position) {
-        Battlefield battlefield = new Battlefield();
-        if (battlefield.checkIfDestinationIsReacheable(character, position)
-                && battlefield.checkIfPositionIsOccupied(position)) {
+        if (checkIfDestinationIsReacheable(character, position)
+                && checkIfPositionIsOccupied(position)) {
             System.out.println(MessageFormat.format("\t{0} moved from {1} to {2}",
                     character.getName(), character.getPosition(), position));
             character.setPosition(position);
-            battlefield.refreshBattlefield();
+            refreshBattlefield();
         } else {
             throw new UnreachablePositionException("Destination is too far away");
         }

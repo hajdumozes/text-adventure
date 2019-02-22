@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static app.Main.CHARACTERS_ALIVE;
 import static app.Main.CONSOLE;
 
-public class AttackEvaluation {
+public class AttackEvaluation extends Combat {
 
     protected void evaluateCharacterAttack(Character character) {
         try {
@@ -20,7 +20,7 @@ public class AttackEvaluation {
         } catch (NoTargetException targetException) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
             CONSOLE.nextLine();
-            new Combat().printOptionsForCurrentFriendlyCharacter(character);
+            printOptionsForCurrentFriendlyCharacter(character);
         }
     }
 

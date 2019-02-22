@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static app.Main.CHARACTERS_ALIVE;
 import static app.Main.CONSOLE;
 
-public class SkillManagement {
+public class SkillManagement extends Combat {
 
 
     protected void evaluateCharacterSkill(Character character) {
@@ -50,7 +50,7 @@ public class SkillManagement {
         } catch (NoTargetException targetException) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
             CONSOLE.nextLine();
-            new Combat().printOptionsForCurrentFriendlyCharacter(skillUser);
+            printOptionsForCurrentFriendlyCharacter(skillUser);
         }
     }
 
@@ -98,7 +98,7 @@ public class SkillManagement {
         if (usableSkills == 0) {
             System.out.println("\tOut of skills for this battle. Press Enter to get back.");
             CONSOLE.nextLine();
-            new Combat().progressThroughTurnOfFriendlyCharacter(character);
+            progressThroughTurnOfFriendlyCharacter(character);
         }
     }
 
