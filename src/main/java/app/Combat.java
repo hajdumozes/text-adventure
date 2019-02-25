@@ -168,9 +168,11 @@ public class Combat {
         List<Character> allCharacters = attackEvaluation.getCharactersFromSelectedSide(true);
         allCharacters.addAll(attackEvaluation.getCharactersFromSelectedSide(false));
         Character chosenCharacter = attackEvaluation.chooseTargetFromCharacters(allCharacters);
-        System.out.println(MessageFormat.format("\tName: {0}\n\tHealth: {1}/{2}\n\tInitiative: {3}\n\tDexterity: {4}" +
-                        "\n\tArmor Character: {5}\n\tDamage Bonus: {6}",
-                chosenCharacter.getName(), chosenCharacter.getHealthCurrentValue(), chosenCharacter.getHealthMaxValue(),
+        System.out.println(MessageFormat.format("\tName: {0}\n\tClass: {1}\n\tHealth: {2}/{3}" +
+                        "\n\tInitiative: {4}\n\tDexterity: {5}" +
+                        "\n\tArmor Class: {6}\n\tDamage Bonus: {7}",
+                chosenCharacter.getName(), chosenCharacter.getClassName(),
+                chosenCharacter.getHealthCurrentValue(), chosenCharacter.getHealthMaxValue(),
                 chosenCharacter.getInitiativeValue(), chosenCharacter.getDexterityValue(),
                 chosenCharacter.getArmorClassValue(), chosenCharacter.getDamageBonusValue()));
         printOptionsForCurrentFriendlyCharacter(turnOfCharacter);

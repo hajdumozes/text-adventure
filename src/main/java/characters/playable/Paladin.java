@@ -1,5 +1,6 @@
-package characters;
+package characters.playable;
 
+import characters.Character;
 import combat.skills.ownable.LayOnHands;
 import combat.skills.ownable.StrikeOfLight;
 import items.Equipment.Equipment;

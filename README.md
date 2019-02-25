@@ -14,9 +14,10 @@
     * Multiple characters can fight on each side
     * Basic aggressive AI is available, using skill, when they are available
     * Target selection availability
-* Skills are available to all characters, including enemies.
+* Skills are available to all characters, including enemies
     * Skills have a limiter per battle instead of a Mana/Stamina system
     * Certain skills have a lasting duration, others may have a delayed effect or a selectable target
+    * Summon
 * Battlefield is based on HoMM battlefield
     * Only those characters can be attacked, which are in reach of the weapon or the selected skill
     * Movement is based on speed
@@ -25,7 +26,6 @@
 
 ## Certain future plans chronologically:
 * Stun Duration
-* Summon for both parties
 * New classes
 * More enemies and skills
 * Magic

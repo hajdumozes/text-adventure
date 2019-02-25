@@ -36,7 +36,7 @@ public class Battlefield {
     public void emptyBattlefield() {
         for (int row = 0; row < BATTLEFIELD.length; row++) {
             for (int column = 0; column < BATTLEFIELD[row].length; column++) {
-                BATTLEFIELD[row][column] = "  x ";
+                BATTLEFIELD[row][column] = "\t\t  x ";
             }
         }
     }
@@ -50,7 +50,8 @@ public class Battlefield {
             int row = character.getPosition().getRow();
             int column = character.getPosition().getColumn();
 
-            BATTLEFIELD[row][column] = character.getName();
+            BATTLEFIELD[row][column] = character.getName().length() > 11 ? "\t" + character.getName() :
+                    "\t\t" + character.getName();
         }
     }
 
@@ -77,8 +78,9 @@ public class Battlefield {
 
     private void createRowNumbers() {
         for (int i = 1; i <= BATTLEFIELD[0].length; i++) {
-            System.out.print(i + "         ");
+            System.out.print("\t\t " + i + "         ");
         }
-        System.out.println("\n\t  _______________________________________________________________________________________");
+        System.out.println("\n\t  __________________________________________________________________________________" +
+                "______________________________________________________________");
     }
 }

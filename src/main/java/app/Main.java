@@ -1,8 +1,11 @@
 package app;
 
 import characters.Character;
-import characters.*;
 import characters.animals.Wolf;
+import characters.playable.Barbarian;
+import characters.playable.Hunter;
+import characters.playable.Paladin;
+import characters.playable.Playable;
 import combat.WinCondition;
 import items.Equipment.Equipment;
 
@@ -20,7 +23,8 @@ public class Main {
 
     public static void main(String[] args) {
         Main main = new Main();
-        main.chooseClass();
+        String name = main.chooseName();
+        main.chooseClass(name);
         main.chooseEquipment();
         main.rollAbility();
         Character wolf = new Wolf();
@@ -35,20 +39,27 @@ public class Main {
         new Combat().progressThroughBattle(new WinCondition(3, Wolf.class, false, true));
     }
 
-    private void chooseClass() {
+    private String chooseName() {
+        System.out.println("\n\tChoose your character's name:");
+        String input = CONSOLE.nextLine().trim();
+        return input;
+    }
+
+    private void chooseClass(String name) {
         try {
             System.out.println("\n\tChoose your starting class:\n");
             for (int i = 1; i <= PLAYABLE_CLASSES.size(); i++) {
                 System.out.println(MessageFormat.format("\t {0}. {1}", i,
-                        ((Character) PLAYABLE_CLASSES.get(i - 1)).getName()));
+                        ((Character) PLAYABLE_CLASSES.get(i - 1)).getClassName()));
             }
             String input = CONSOLE.nextLine().trim();
             Character character = (Character) PLAYABLE_CLASSES.get(Integer.parseInt(input) - 1);
             CHARACTERS_ALIVE.add(character);
-            System.out.println(MessageFormat.format("\n\tYou selected {0}.", character.getName()));
+            character.setName(name);
+            System.out.println(MessageFormat.format("\n\tYou selected {0}.", character.getClassName()));
         } catch (NumberFormatException | IndexOutOfBoundsException invalidClass) {
             System.out.println("\tInvalid input. Try again.");
-            chooseClass();
+            chooseClass(name);
         }
     }
 
@@ -79,7 +90,7 @@ public class Main {
             ((Character) chosenCharacter).setEquipment(equipment);
         } catch (NumberFormatException | IndexOutOfBoundsException invalidClass) {
             System.out.println("\tInvalid input. Try again.");
-            chooseClass();
+            chooseEquipment();
         }
     }
 

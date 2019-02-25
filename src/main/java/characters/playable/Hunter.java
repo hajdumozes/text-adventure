@@ -1,6 +1,7 @@
-package characters;
+package characters.playable;
 
 import app.Main;
+import characters.Character;
 import characters.animals.Wolf;
 import combat.skills.ownable.SummonAnimal;
 import items.Equipment.Equipment;
@@ -16,7 +17,7 @@ public class Hunter extends Character implements Playable {
         super("Hunter", "Player", 50, 10, 5, 4, new Equipment(new Longbow()),
                 true);
         getSkills().add(new SummonAnimal(this));
-        Main.SUMMONABLE_CHARACTERS.add(new Wolf(true, this));
+        Main.SUMMONABLE_CHARACTERS.add(new Wolf(true, this, "Hunter's Wolf"));
     }
 
     @Override

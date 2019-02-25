@@ -1,4 +1,4 @@
-package characters;
+package characters.playable;
 
 import items.Equipment.Equipment;
 

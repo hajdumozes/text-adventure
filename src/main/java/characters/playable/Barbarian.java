@@ -1,5 +1,6 @@
-package characters;
+package characters.playable;
 
+import characters.Character;
 import combat.skills.ownable.Berserk;
 import combat.skills.ownable.Rage;
 import items.Equipment.Equipment;

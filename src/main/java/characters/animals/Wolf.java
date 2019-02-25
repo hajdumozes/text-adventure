@@ -15,11 +15,11 @@ public class Wolf extends Animal {
     }
 
     public Wolf() {
-        this(false, null);
+        this(false, null, "Enemy Wolf");
     }
 
-    public Wolf(boolean isFriendly, Character owner) {
-        super("Wolf", "Wolf", 11, 15, 5, 5,
+    public Wolf(boolean isFriendly, Character owner, String givenName) {
+        super("Wolf", givenName, 11, 15, 5, 5,
                 new Equipment(new WolfClaw(), new WolfClaw()), isFriendly, owner);
         getSkills().add(new Bite(this));
         getSkills().add(new Howl(this));

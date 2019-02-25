@@ -16,7 +16,7 @@ import java.util.List;
 
 public abstract class Character {
     private String name;
-    private String givenName;
+    private String className;
     private List<Effect> effects = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
     private List<Skill> skills = new ArrayList<>();
@@ -25,10 +25,10 @@ public abstract class Character {
     private HashMap<String, Boolean> statuses = new HashMap<>();
     private Position position = new Position(0, 0);
 
-    public Character(String name, String givenName, int health, int dexterity, int armorClass, int speed,
+    public Character(String className, String name, int health, int dexterity, int armorClass, int speed,
                      Equipment equipment, boolean isFriendly) {
         this.name = name;
-        this.givenName = givenName;
+        this.className = className;
         this.equipment = equipment;
         attributes.add(new Health(health, health));
         attributes.add(new ArmorClass(armorClass));
@@ -77,8 +77,12 @@ public abstract class Character {
         this.name = name;
     }
 
-    public String getGivenName() {
-        return givenName;
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public DepletableAttribute getHealth() {

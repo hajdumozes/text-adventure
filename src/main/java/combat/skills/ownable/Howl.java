@@ -28,7 +28,8 @@ public class Howl extends SkillWithCountDown {
 
     public void wolfArrive() {
         System.out.println("\n\t# Wolf appeared! #");
-        Wolf reinforcement = new Wolf();
+        Wolf reinforcement = new Wolf(getOwner().isFriendly(), getOwner(),
+                getOwner().isFriendly() ? "Friendly Wolf" : "Enemy Wolf");
         Main.CHARACTERS_ALIVE.add(reinforcement);
         new Combat().rollInitiative(reinforcement);
     }
