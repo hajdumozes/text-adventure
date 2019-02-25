@@ -60,16 +60,21 @@ public class Movement extends Battlefield {
     }
 
     public List<Position> findAllPossibleRoutes(Character character) {
+        return findAllPossibleRoutesByGivenDistance(character, character.getSpeedValue());
+    }
+
+    public List<Position> findAllPossibleRoutesByGivenDistance(Character character, int distance) {
         List<Position> routes = new ArrayList<>();
-        for (int i = 0 - character.getSpeedValue(); i <= character.getSpeedValue(); i++) {
-            int leftoverSteps = character.getSpeedValue() - Math.abs(i);
-            for (int j = 0 - leftoverSteps; j <= leftoverSteps; j++) {
-                int newColumn = character.getPosition().getColumn() + i;
-                int newRow = character.getPosition().getRow() + j;
+        for (int i = 0 - distance; i <= distance; i++) {
+            int leftoverSteps = distance - Math.abs(i);
+            for (int k = 0 - leftoverSteps; k <= leftoverSteps; k++) {
+                int newRow = character.getPosition().getRow() + i;
+                int newColumn = character.getPosition().getColumn() + k;
                 if (newColumn >= 0 && newColumn < BATTLEFIELD[0].length
-                        && newRow >= 0 && newRow < BATTLEFIELD.length) {
-                    routes.add(new Position(character.getPosition().getRow() + j,
-                            character.getPosition().getColumn() + i));
+                        && newRow >= 0 && newRow < BATTLEFIELD.length
+                        && BATTLEFIELD[newRow][newColumn].trim().equals("x")) {
+                    routes.add(new Position(character.getPosition().getRow() + i,
+                            character.getPosition().getColumn() + k));
                 }
             }
         }

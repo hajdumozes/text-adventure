@@ -2,6 +2,7 @@ package app;
 
 import characters.Character;
 import characters.*;
+import characters.animals.Wolf;
 import combat.WinCondition;
 import items.Equipment.Equipment;
 
@@ -10,9 +11,10 @@ import java.util.*;
 
 public class Main {
     public static final List<Character> CHARACTERS_ALIVE = new ArrayList<>();
+    public static final List<Character> CHARACTERS_DEAD = new ArrayList<>();
+    public static final List<Character> SUMMONABLE_CHARACTERS = new ArrayList<>();
     public static final List<? extends Playable> PLAYABLE_CLASSES =
             new ArrayList<>(Arrays.asList(new Barbarian(), new Paladin(), new Hunter()));
-    public static final List<Character> CHARACTERS_DEAD = new ArrayList<>();
     public static final Scanner CONSOLE = new Scanner(System.in);
     public static final String CONSOLE_SEPARATOR = "______________________________________________________";
 
@@ -29,6 +31,7 @@ public class Main {
                 "\t this tale, or the newcoming hero dies to the first lonely wolf in the deep of the woods? \n" +
                 "\t Let's find out!\n");
 
+        new Battlefield().emptyBattlefield();
         new Combat().progressThroughBattle(new WinCondition(3, Wolf.class, false, true));
     }
 

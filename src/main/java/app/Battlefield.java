@@ -6,11 +6,6 @@ import combat.Position;
 public class Battlefield {
     public static final String[][] BATTLEFIELD = new String[9][9];
 
-    {
-        emptyBattlefield();
-    }
-
-
     public void showBattlefield() {
         refreshBattlefield();
         System.out.println();
@@ -38,7 +33,7 @@ public class Battlefield {
         return Math.abs((oneColumn - otherColumn)) + Math.abs((oneRow - otherRow));
     }
 
-    private void emptyBattlefield() {
+    public void emptyBattlefield() {
         for (int row = 0; row < BATTLEFIELD.length; row++) {
             for (int column = 0; column < BATTLEFIELD[row].length; column++) {
                 BATTLEFIELD[row][column] = "  x ";

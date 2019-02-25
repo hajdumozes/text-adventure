@@ -1,12 +1,12 @@
 package combat.skills.ownable;
 
+import app.SkillManagement;
 import attributes.ownable.ArmorClass;
 import attributes.ownable.AttackBonus;
 import characters.Character;
 import combat.Effect;
 import combat.skills.Skill;
 
-import static app.SkillManagement.decreaseSkillUsage;
 
 public class Berserk extends Skill {
     public Berserk(Character owner) {
@@ -19,6 +19,6 @@ public class Berserk extends Skill {
         getOwner().addToEffects(new Effect(new AttackBonus(), "increased attack of Berserk", 5, 3));
         getOwner().getArmorClass().setCurrentValue(getOwner().getArmorClassValue() - 5);
         getOwner().addToEffects(new Effect(new ArmorClass(), "decreased defense of Berserk", -5, 3));
-        decreaseSkillUsage(this);
+        new SkillManagement().decreaseSkillUsage(this);
     }
 }

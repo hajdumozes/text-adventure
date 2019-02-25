@@ -38,7 +38,7 @@ public class AttackEvaluation extends Combat {
         }
     }
 
-    protected List<Character> getCharactersFromSelectedSide(boolean isTargetOnPlayersSide) {
+    public List<Character> getCharactersFromSelectedSide(boolean isTargetOnPlayersSide) {
         return findPossibleTargets(isTargetOnPlayersSide);
     }
 

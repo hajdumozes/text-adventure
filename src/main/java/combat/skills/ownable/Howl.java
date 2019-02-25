@@ -1,12 +1,12 @@
 package combat.skills.ownable;
 
+import app.Combat;
 import app.Main;
+import app.SkillManagement;
 import characters.Character;
-import characters.Wolf;
+import characters.animals.Wolf;
 import combat.skills.SkillWithCountDown;
 
-import static app.Combat.rollInitiative;
-import static app.SkillManagement.decreaseSkillUsage;
 
 public class Howl extends SkillWithCountDown {
 
@@ -18,7 +18,7 @@ public class Howl extends SkillWithCountDown {
     public void useSkill(Character target) {
         System.out.println("\tWolf howled!");
         getOwner().getSkillWithCountDowns().add(this);
-        decreaseSkillUsage(this);
+        new SkillManagement().decreaseSkillUsage(this);
     }
 
     @Override
@@ -30,6 +30,6 @@ public class Howl extends SkillWithCountDown {
         System.out.println("\n\t# Wolf appeared! #");
         Wolf reinforcement = new Wolf();
         Main.CHARACTERS_ALIVE.add(reinforcement);
-        rollInitiative(reinforcement);
+        new Combat().rollInitiative(reinforcement);
     }
 }

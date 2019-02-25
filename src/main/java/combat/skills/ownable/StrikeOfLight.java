@@ -1,13 +1,12 @@
 package combat.skills.ownable;
 
+import app.SkillManagement;
 import characters.Character;
 import combat.DistanceBased;
 import combat.Targetable;
 import combat.skills.SkillWithCountDown;
 
 import java.text.MessageFormat;
-
-import static app.SkillManagement.decreaseSkillUsage;
 
 
 public class StrikeOfLight extends SkillWithCountDown implements Targetable, DistanceBased {
@@ -20,7 +19,7 @@ public class StrikeOfLight extends SkillWithCountDown implements Targetable, Dis
     public void useSkill(Character target) {
         target.getStatuses().put("Stunned", true);
         target.getSkillWithCountDowns().add(this);
-        decreaseSkillUsage(this);
+        new SkillManagement().decreaseSkillUsage(this);
         setTarget(target);
     }
 

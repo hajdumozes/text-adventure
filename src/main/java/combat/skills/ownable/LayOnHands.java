@@ -1,11 +1,10 @@
 package combat.skills.ownable;
 
+import app.SkillManagement;
 import characters.Character;
 import combat.DistanceBased;
 import combat.Targetable;
 import combat.skills.Skill;
-
-import static app.SkillManagement.decreaseSkillUsage;
 
 public class LayOnHands extends Skill implements Targetable, DistanceBased {
 
@@ -22,7 +21,7 @@ public class LayOnHands extends Skill implements Targetable, DistanceBased {
         } else {
             target.getHealth().setCurrentValue(currentHealth + 5);
         }
-        decreaseSkillUsage(this);
+        new SkillManagement().decreaseSkillUsage(this);
     }
 
     @Override

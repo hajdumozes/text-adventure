@@ -1,10 +1,9 @@
 package combat;
 
+import app.AttackEvaluation;
 import characters.Character;
 
 import java.util.List;
-
-import static app.Combat.getDeadCharactersBySide;
 
 public class WinCondition {
     private int amount;
@@ -36,7 +35,7 @@ public class WinCondition {
     }
 
     public boolean determine() {
-        List<Character> deadCharactersBySide = getDeadCharactersBySide(playersParty);
+        List<Character> deadCharactersBySide = new AttackEvaluation().getDeadCharactersBySide(playersParty);
         int deadCharactersOfClass = 0;
         for (Character character : deadCharactersBySide) {
             if (character.getClass() == characterClass) {
