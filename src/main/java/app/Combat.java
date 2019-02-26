@@ -3,6 +3,7 @@ package app;
 import characters.Character;
 import combat.WinCondition;
 import combat.exceptions.BattleIsOver;
+import combat.exceptions.CantFinishAction;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -79,16 +80,21 @@ public class Combat {
     private void progressThroughTurnsOfAliveCharacters() {
         CHARACTERS_ALIVE.sort(Comparator.comparing(Character::getInitiative));
         for (Character character : new ArrayList<>(CHARACTERS_ALIVE)) {
-            if (!character.isStunned()) {
-                if (character.isAlive() && character.isFriendly()) {
-                    progressThroughTurnOfFriendlyCharacter(character);
-                } else if (character.isAlive() && !character.isFriendly()) {
-                    System.out.println(CONSOLE_SEPARATOR);
-                    System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
-                    character.letAiDecide();
+            try {
+                if (!character.isStunned()) {
+                    if (character.isAlive() && character.isFriendly()) {
+                        progressThroughTurnOfFriendlyCharacter(character);
+                    } else if (character.isAlive() && !character.isFriendly()) {
+                        System.out.println(CONSOLE_SEPARATOR);
+                        System.out.println(MessageFormat.format("\n\t{0}''s turn:", character.getName()));
+                        character.letAiDecide();
+                    }
+                } else {
+                    System.out.println(MessageFormat.format("\t{0} is stunned.", character.getName()));
                 }
-            } else {
-                System.out.println(MessageFormat.format("\t{0} is stunned.", character.getName()));
+            } catch (CantFinishAction unfinishedAction) {
+                System.out.println(MessageFormat.format("\t{0} couldn''t finish it''s turn {1}",
+                        character, unfinishedAction.getMessage()));
             }
         }
     }

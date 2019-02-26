@@ -38,8 +38,8 @@ public class Movement extends Battlefield {
                     character.getName(), character.getPosition(), position));
             Position originalPosition = character.getPosition();
             BATTLEFIELD[originalPosition.getRow()][originalPosition.getColumn()] = new EmptySpace();
-            triggerTrapIfCurrent(position.getRow(), position.getColumn(), character);
             character.setPosition(position);
+            triggerTrapIfCurrent(position.getRow(), position.getColumn(), character);
             refreshBattlefield();
         } else {
             throw new UnreachablePositionException("Destination is too far away or occupied.");
@@ -73,7 +73,7 @@ public class Movement extends Battlefield {
     }
 
     public void printPositions(List<Position> positions) {
-        StringBuilder output = new StringBuilder("\n\tAvailable positions:");
+        StringBuilder output = new StringBuilder("\n\tAvailable coordinates:");
         for (Position position : positions) {
             output.append("\t");
             output.append(position);

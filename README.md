@@ -27,8 +27,6 @@
 * Certain attributes are present, but without the modifier availability so far
 
 ## Certain future plans chronologically:
-* Stun duration extension
-* Trap placement bugfix when placement is not correct
 * New classes
 * More enemies and skills
 * Magic

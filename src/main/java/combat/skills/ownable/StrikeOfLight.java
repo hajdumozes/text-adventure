@@ -15,7 +15,8 @@ public class StrikeOfLight extends Skill implements Targetable, DistanceBased {
 
     public void useSkill(Character target) {
         target.getStatuses().put("Stunned", true);
-        target.getEffects().add(new StatusEffect("Stun", 2, "Stunned", false));
+        StatusEffect statusEffect = new StatusEffect("Stun", 2, "Stunned", false);
+        statusEffect.increaseEffectDuration(target, statusEffect);
         decreaseSkillUsage();
     }
 

@@ -19,7 +19,8 @@ public class Main {
     public static final List<? extends Playable> PLAYABLE_CLASSES =
             new ArrayList<>(Arrays.asList(new Barbarian(), new Paladin(), new Hunter()));
     public static final Scanner CONSOLE = new Scanner(System.in);
-    public static final String CONSOLE_SEPARATOR = "______________________________________________________";
+    public static final String CONSOLE_SEPARATOR = "______________________________________________________" +
+            "______________________________________________________";
 
     public static void main(String[] args) {
         Main main = new Main();
