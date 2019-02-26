@@ -36,6 +36,7 @@ public class Main {
                 "\t Let's find out!\n");
 
         new Battlefield().emptyBattlefield();
+        new Battlefield().putRandomTreesToBattlefield();
         new Combat().progressThroughBattle(new WinCondition(3, Wolf.class, false, true));
     }
 

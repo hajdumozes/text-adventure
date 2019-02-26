@@ -4,6 +4,9 @@ import characters.Character;
 import combat.Position;
 import objects.BattlefieldObject;
 import objects.EmptySpace;
+import objects.Tree;
+
+import java.util.Random;
 
 public class Battlefield {
     public static final BattlefieldObject[][] BATTLEFIELD = new BattlefieldObject[9][9];
@@ -15,6 +18,15 @@ public class Battlefield {
         createRowNumbers();
         printBattlefield();
         System.out.println("\n\n");
+    }
+
+    protected void putRandomTreesToBattlefield() {
+        int numberOfTrees = new Random().nextInt(10);
+        for (int i = 0; i < numberOfTrees; i++) {
+            int row = new Random().nextInt(BATTLEFIELD.length);
+            int column = new Random().nextInt(BATTLEFIELD[row].length);
+            BATTLEFIELD[row][column] = new Tree();
+        }
     }
 
     public void refreshBattlefield() {
@@ -43,7 +55,7 @@ public class Battlefield {
     }
 
     public boolean checkIfPositionIsOccupied(Position position) {
-        return BATTLEFIELD[position.getRow()][position.getColumn()].getName().trim().equals("x");
+        return BATTLEFIELD[position.getRow()][position.getColumn()] instanceof EmptySpace;
     }
 
     private void fillBattlefield() {

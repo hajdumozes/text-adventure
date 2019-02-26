@@ -39,7 +39,7 @@ public class Movement extends Battlefield {
             character.setPosition(position);
             refreshBattlefield();
         } else {
-            throw new UnreachablePositionException("Destination is too far away");
+            throw new UnreachablePositionException("Destination is too far away or occupied.");
         }
     }
 
