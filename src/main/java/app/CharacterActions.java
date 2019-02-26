@@ -1,7 +1,7 @@
 package app;
 
 import characters.Character;
-import combat.Effect;
+import combat.effects.AttributeEffect;
 import combat.exceptions.BattleIsOver;
 import combat.exceptions.OutOfAmmunitionException;
 import items.Equipment.RangedWeapon;
@@ -101,7 +101,7 @@ public class CharacterActions extends Combat {
     protected void defend(Character character) {
         System.out.println(MessageFormat.format("\t{0} decided to defend.", character.getName()));
         character.getArmorClass().increase(5);
-        character.getEffects().add(new Effect(character.getArmorClass(), "Defend", 5, 1));
+        character.getEffects().add(new AttributeEffect(character.getArmorClass(), "Defend", 5, 1));
         System.out.println(MessageFormat.format("\t{0}''s AC increased by {1} for {2} turns.",
                 character.getName(), 5, 1));
     }

@@ -4,8 +4,10 @@ import attributes.Attribute;
 import characters.Character;
 import combat.Aerial;
 import combat.DistanceBased;
-import combat.Effect;
 import combat.Targetable;
+import combat.effects.AttributeEffect;
+import combat.effects.Effect;
+import combat.effects.StatusEffect;
 import combat.exceptions.NoTargetException;
 import combat.skills.Skill;
 import combat.skills.SkillWithCountDown;
@@ -114,11 +116,16 @@ public class SkillManagement extends Combat {
         }
     }
 
-    protected void nullifyEffect(Effect effect, Character player) {
-        for (Attribute attribute : player.getAttributes()) {
-            if (attribute.getName().equals(effect.getAttribute().getName())) {
-                attribute.decrease(effect.getValue());
+    protected void nullifyEffect(Effect effect, Character character) {
+        if (effect instanceof AttributeEffect) {
+            for (Attribute attribute : character.getAttributes()) {
+                if (attribute.getName().equals(((AttributeEffect) effect).getAttribute().getName())) {
+                    attribute.decrease(((AttributeEffect) effect).getValue());
+                }
             }
+        } else if (effect instanceof StatusEffect) {
+            character.getStatuses().put(((StatusEffect) effect).getStatusName(),
+                    ((StatusEffect) effect).getStatusValue());
         }
     }
 

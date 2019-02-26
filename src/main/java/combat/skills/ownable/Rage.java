@@ -2,7 +2,7 @@ package combat.skills.ownable;
 
 import attributes.ownable.DamageBonus;
 import characters.Character;
-import combat.Effect;
+import combat.effects.AttributeEffect;
 import combat.skills.Skill;
 
 public class Rage extends Skill {
@@ -15,7 +15,7 @@ public class Rage extends Skill {
 
     public void useSkill(Character target) {
         getOwner().getDamageBonus().setCurrentValue(getOwner().getDamageBonusValue() + 2);
-        getOwner().addToEffects(new Effect(new DamageBonus(), "Rage", 2, 3));
+        getOwner().addToEffects(new AttributeEffect(new DamageBonus(), "Rage", 2, 3));
         decreaseSkillUsage();
     }
 }

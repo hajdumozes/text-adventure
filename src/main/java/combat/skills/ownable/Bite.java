@@ -5,8 +5,8 @@ import app.Main;
 import attributes.ownable.DamageBonus;
 import characters.Character;
 import combat.DistanceBased;
-import combat.Effect;
 import combat.Targetable;
+import combat.effects.AttributeEffect;
 import combat.skills.Skill;
 
 public class Bite extends Skill implements Targetable, DistanceBased {
@@ -17,7 +17,7 @@ public class Bite extends Skill implements Targetable, DistanceBased {
 
     public void useSkill(Character target) {
         getOwner().getDamageBonus().setCurrentValue(getOwner().getDamageBonusValue() + 2);
-        getOwner().addToEffects(new Effect(new DamageBonus(), "Bite", 2, 1));
+        getOwner().addToEffects(new AttributeEffect(new DamageBonus(), "Bite", 2, 1));
         System.out.println("\tWolf bit!");
         int hitRoll = new Main().roll(1, 20) + 4;
         new CharacterActions().evaluateAttackRoll(hitRoll, getOwner(), target);

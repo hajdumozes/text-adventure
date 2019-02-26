@@ -16,16 +16,19 @@
     * Target selection availability
 * Skills are available to all characters, including enemies
     * Skills have a limiter per battle instead of a Mana/Stamina system
-    * Certain skills have a lasting duration, others may have a delayed effect or a selectable target
+    * Certain skills have a lasting duration, others may have a delayed attributeEffect or a selectable target
     * Summon
+    * Traps
 * Battlefield is based on HoMM battlefield
     * Only those characters can be attacked, which are in reach of the weapon or the selected skill
     * Movement is based on speed
     * AI is able to determine the shortest route for an attack
+    * Obstacles
 * Certain attributes are present, but without the modifier availability so far
 
 ## Certain future plans chronologically:
-* Stun Duration
+* Stun duration extension
+* Trap placement bugfix when placement is not correct
 * New classes
 * More enemies and skills
 * Magic

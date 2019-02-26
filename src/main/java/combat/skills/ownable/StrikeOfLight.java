@@ -3,33 +3,20 @@ package combat.skills.ownable;
 import characters.Character;
 import combat.DistanceBased;
 import combat.Targetable;
-import combat.skills.SkillWithCountDown;
+import combat.effects.StatusEffect;
+import combat.skills.Skill;
 
-import java.text.MessageFormat;
 
-
-public class StrikeOfLight extends SkillWithCountDown implements Targetable, DistanceBased {
+public class StrikeOfLight extends Skill implements Targetable, DistanceBased {
     public StrikeOfLight(Character owner) {
         super("Strike of Light", "Stun target for 2 turns.",
-                1, owner,
-                2);
+                1, owner);
     }
 
     public void useSkill(Character target) {
         target.getStatuses().put("Stunned", true);
-        target.getSkillWithCountDowns().add(this);
+        target.getEffects().add(new StatusEffect("Stun", 2, "Stunned", false));
         decreaseSkillUsage();
-        setTarget(target);
-    }
-
-    @Override
-    public void activateCountdownSkill() {
-        nullifyStun();
-    }
-
-    public void nullifyStun() {
-        System.out.println(MessageFormat.format("\n\t{0} is no longer stunned.", getTarget().getName()));
-        getTarget().getStatuses().put("Stunned", false);
     }
 
     @Override

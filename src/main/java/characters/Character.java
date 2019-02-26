@@ -3,8 +3,9 @@ package characters;
 import attributes.Attribute;
 import attributes.DepletableAttribute;
 import attributes.ownable.*;
-import combat.Effect;
 import combat.Position;
+import combat.effects.AttributeEffect;
+import combat.effects.Effect;
 import combat.skills.Skill;
 import combat.skills.SkillWithCountDown;
 import items.Equipment.Equipment;
@@ -50,8 +51,8 @@ public abstract class Character extends BattlefieldObject {
     public abstract void letAiDecide();
 
 
-    public void addToEffects(Effect effect) {
-        effects.add(effect);
+    public void addToEffects(AttributeEffect attributeEffect) {
+        effects.add(attributeEffect);
     }
 
     public Attribute getDamageBonus() {

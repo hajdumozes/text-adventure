@@ -22,7 +22,7 @@ public class SetTrap extends Skill {
         List<Position> emptySpaces = movement.findAllPossibleRoutesByGivenDistance(getOwner(), 1);
         movement.printPositions(emptySpaces);
         Position selectedPosition = movement.getPositionFromUser();
-        BATTLEFIELD[selectedPosition.getRow()][selectedPosition.getColumn()] = new Trap(1, 4);
+        BATTLEFIELD[selectedPosition.getRow()][selectedPosition.getColumn()] = new Trap(1, 4, 3);
         decreaseSkillUsage();
     }
 }
