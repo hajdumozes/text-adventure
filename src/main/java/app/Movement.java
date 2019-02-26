@@ -3,6 +3,7 @@ package app;
 import characters.Character;
 import combat.Position;
 import combat.UnreachablePositionException;
+import objects.EmptySpace;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class Movement extends Battlefield {
                 int newColumn = character.getPosition().getColumn() + k;
                 if (newColumn >= 0 && newColumn < BATTLEFIELD[0].length
                         && newRow >= 0 && newRow < BATTLEFIELD.length
-                        && BATTLEFIELD[newRow][newColumn].trim().equals("x")) {
+                        && BATTLEFIELD[newRow][newColumn] instanceof EmptySpace) {
                     routes.add(new Position(character.getPosition().getRow() + i,
                             character.getPosition().getColumn() + k));
                 }

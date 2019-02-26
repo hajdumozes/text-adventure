@@ -9,13 +9,13 @@ import combat.skills.Skill;
 import combat.skills.SkillWithCountDown;
 import items.Equipment.Equipment;
 import items.Equipment.ownable.Shield;
+import objects.BattlefieldObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class Character {
-    private String name;
+public abstract class Character extends BattlefieldObject {
     private String className;
     private List<Effect> effects = new ArrayList<>();
     private List<Attribute> attributes = new ArrayList<>();
@@ -25,9 +25,10 @@ public abstract class Character {
     private HashMap<String, Boolean> statuses = new HashMap<>();
     private Position position = new Position(0, 0);
 
+
     public Character(String className, String name, int health, int dexterity, int armorClass, int speed,
                      Equipment equipment, boolean isFriendly) {
-        this.name = name;
+        super(name);
         this.className = className;
         this.equipment = equipment;
         attributes.add(new Health(health, health));
@@ -67,14 +68,6 @@ public abstract class Character {
 
     public Attribute getAttackBonus() {
         return attributes.get(attributes.indexOf(new AttackBonus()));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getClassName() {

@@ -2,9 +2,11 @@ package app;
 
 import characters.Character;
 import combat.Position;
+import objects.BattlefieldObject;
+import objects.EmptySpace;
 
 public class Battlefield {
-    public static final String[][] BATTLEFIELD = new String[9][9];
+    public static final BattlefieldObject[][] BATTLEFIELD = new BattlefieldObject[9][9];
 
     public void showBattlefield() {
         refreshBattlefield();
@@ -36,13 +38,13 @@ public class Battlefield {
     public void emptyBattlefield() {
         for (int row = 0; row < BATTLEFIELD.length; row++) {
             for (int column = 0; column < BATTLEFIELD[row].length; column++) {
-                BATTLEFIELD[row][column] = "\t\t  x ";
+                BATTLEFIELD[row][column] = new EmptySpace();
             }
         }
     }
 
     public boolean checkIfPositionIsOccupied(Position position) {
-        return BATTLEFIELD[position.getRow()][position.getColumn()].trim().equals("x");
+        return BATTLEFIELD[position.getRow()][position.getColumn()].getName().trim().equals("x");
     }
 
     private void fillBattlefield() {
@@ -50,8 +52,7 @@ public class Battlefield {
             int row = character.getPosition().getRow();
             int column = character.getPosition().getColumn();
 
-            BATTLEFIELD[row][column] = character.getName().length() > 11 ? "\t" + character.getName() :
-                    "\t\t" + character.getName();
+            BATTLEFIELD[row][column] = character;
         }
     }
 
@@ -60,12 +61,21 @@ public class Battlefield {
             char letter = (char) (row + 65);
             System.out.print("\t" + letter + " |\t");
             for (int column = 0; column < BATTLEFIELD[row].length; column++) {
-                String name = BATTLEFIELD[row][column];
-                String padding = createPaddingForName(name);
-                System.out.print(name + padding);
+                BattlefieldObject battlefieldObject = BATTLEFIELD[row][column];
+                String prefix = createPrefixForExistentObjects(battlefieldObject);
+                String padding = createPaddingForName(battlefieldObject.getName());
+                System.out.print(prefix + battlefieldObject + padding);
             }
             System.out.println();
         }
+    }
+
+    private String createPrefixForExistentObjects(BattlefieldObject battlefieldObject) {
+        String prefix = "";
+        if (!(battlefieldObject instanceof EmptySpace)) {
+            prefix = battlefieldObject.getName().length() > 11 ? "\t" : "\t\t";
+        }
+        return prefix;
     }
 
     private String createPaddingForName(String name) {
