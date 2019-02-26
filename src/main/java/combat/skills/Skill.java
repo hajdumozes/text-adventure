@@ -1,5 +1,6 @@
 package combat.skills;
 
+import app.SkillManagement;
 import characters.Character;
 
 import java.util.Collection;
@@ -26,6 +27,10 @@ public abstract class Skill {
                 useSkill(character);
             }
         }
+    }
+
+    protected void decreaseSkillUsage() {
+        new SkillManagement().decreaseSkillUsage(this);
     }
 
     public abstract void useSkill(Character character);

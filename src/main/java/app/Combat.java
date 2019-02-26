@@ -1,8 +1,8 @@
 package app;
 
 import characters.Character;
-import combat.BattleIsOver;
 import combat.WinCondition;
+import combat.exceptions.BattleIsOver;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

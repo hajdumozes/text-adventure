@@ -1,6 +1,6 @@
 package items.Equipment.ownable;
 
-import combat.OutOfAmmunitionException;
+import combat.exceptions.OutOfAmmunitionException;
 
 public class Quiver {
     private int ammunition;

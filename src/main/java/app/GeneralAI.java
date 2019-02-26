@@ -4,7 +4,7 @@ import characters.Character;
 import combat.DistanceBased;
 import combat.Position;
 import combat.Targetable;
-import combat.UnreachablePositionException;
+import combat.exceptions.UnreachablePositionException;
 import combat.skills.Skill;
 
 import java.util.*;

@@ -1,6 +1,5 @@
 package combat.skills.ownable;
 
-import app.SkillManagement;
 import characters.Character;
 import combat.DistanceBased;
 import combat.Targetable;
@@ -19,7 +18,7 @@ public class StrikeOfLight extends SkillWithCountDown implements Targetable, Dis
     public void useSkill(Character target) {
         target.getStatuses().put("Stunned", true);
         target.getSkillWithCountDowns().add(this);
-        new SkillManagement().decreaseSkillUsage(this);
+        decreaseSkillUsage();
         setTarget(target);
     }
 

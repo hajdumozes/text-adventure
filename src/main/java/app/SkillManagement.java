@@ -2,7 +2,11 @@ package app;
 
 import attributes.Attribute;
 import characters.Character;
-import combat.*;
+import combat.Aerial;
+import combat.DistanceBased;
+import combat.Effect;
+import combat.Targetable;
+import combat.exceptions.NoTargetException;
 import combat.skills.Skill;
 import combat.skills.SkillWithCountDown;
 

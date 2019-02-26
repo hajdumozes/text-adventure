@@ -2,7 +2,6 @@ package combat.skills.ownable;
 
 import app.CharacterActions;
 import app.Main;
-import app.SkillManagement;
 import attributes.ownable.DamageBonus;
 import characters.Character;
 import combat.DistanceBased;
@@ -22,7 +21,7 @@ public class Bite extends Skill implements Targetable, DistanceBased {
         System.out.println("\tWolf bit!");
         int hitRoll = new Main().roll(1, 20) + 4;
         new CharacterActions().evaluateAttackRoll(hitRoll, getOwner(), target);
-        new SkillManagement().decreaseSkillUsage(this);
+        decreaseSkillUsage();
     }
 
     @Override

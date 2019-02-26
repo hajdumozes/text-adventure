@@ -2,7 +2,6 @@ package combat.skills.ownable;
 
 import app.Combat;
 import app.Main;
-import app.SkillManagement;
 import characters.Character;
 import characters.animals.Wolf;
 import combat.skills.SkillWithCountDown;
@@ -18,7 +17,7 @@ public class Howl extends SkillWithCountDown {
     public void useSkill(Character target) {
         System.out.println("\tWolf howled!");
         getOwner().getSkillWithCountDowns().add(this);
-        new SkillManagement().decreaseSkillUsage(this);
+        decreaseSkillUsage();
     }
 
     @Override

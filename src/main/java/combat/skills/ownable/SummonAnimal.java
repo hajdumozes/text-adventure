@@ -30,5 +30,6 @@ public class SummonAnimal extends Skill {
                 ((Wolf) summonableCharacter).adjustPositionToSummoner(summonableCharacter, getOwner());
             }
         }
+        decreaseSkillUsage();
     }
 }

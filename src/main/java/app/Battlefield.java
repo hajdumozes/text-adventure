@@ -4,6 +4,7 @@ import characters.Character;
 import combat.Position;
 import objects.BattlefieldObject;
 import objects.EmptySpace;
+import objects.Trap;
 import objects.Tree;
 
 import java.util.Random;
@@ -55,7 +56,8 @@ public class Battlefield {
     }
 
     public boolean checkIfPositionIsOccupied(Position position) {
-        return BATTLEFIELD[position.getRow()][position.getColumn()] instanceof EmptySpace;
+        BattlefieldObject object = BATTLEFIELD[position.getRow()][position.getColumn()];
+        return object instanceof EmptySpace || object instanceof Trap;
     }
 
     private void fillBattlefield() {

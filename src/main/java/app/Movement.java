@@ -2,8 +2,10 @@ package app;
 
 import characters.Character;
 import combat.Position;
-import combat.UnreachablePositionException;
+import combat.exceptions.UnreachablePositionException;
+import objects.BattlefieldObject;
 import objects.EmptySpace;
+import objects.Trap;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class Movement extends Battlefield {
                     character.getName(), character.getPosition(), position));
             Position originalPosition = character.getPosition();
             BATTLEFIELD[originalPosition.getRow()][originalPosition.getColumn()] = new EmptySpace();
+            triggerTrapIfCurrent(position.getRow(), position.getColumn(), character);
             character.setPosition(position);
             refreshBattlefield();
         } else {
@@ -43,9 +46,21 @@ public class Movement extends Battlefield {
         }
     }
 
+    private void triggerTrapIfCurrent(int row, int column, Character movingCharacter) {
+        BattlefieldObject object = BATTLEFIELD[row][column];
+        if (object instanceof Trap) {
+            ((Trap) object).trigger(movingCharacter);
+        }
+    }
+
     protected Position getMovementDestinationFromUser(Character character) {
         System.out.println("\tGive destination in the following pattern: A3");
         printReachableRoutes(character);
+        return getPositionFromUser();
+
+    }
+
+    public Position getPositionFromUser() {
         String input = CONSOLE.nextLine().trim().toUpperCase();
         int row = input.charAt(0) - 65;
         int column = Integer.parseInt(input.substring(1, 2)) - 1;
@@ -54,8 +69,12 @@ public class Movement extends Battlefield {
 
     private void printReachableRoutes(Character character) {
         List<Position> allRoutes = findAllPossibleRoutes(character);
+        printPositions(allRoutes);
+    }
+
+    public void printPositions(List<Position> positions) {
         StringBuilder output = new StringBuilder("\n\tAvailable positions:");
-        for (Position position : allRoutes) {
+        for (Position position : positions) {
             output.append("\t");
             output.append(position);
         }
@@ -75,7 +94,7 @@ public class Movement extends Battlefield {
                 int newColumn = character.getPosition().getColumn() + k;
                 if (newColumn >= 0 && newColumn < BATTLEFIELD[0].length
                         && newRow >= 0 && newRow < BATTLEFIELD.length
-                        && BATTLEFIELD[newRow][newColumn] instanceof EmptySpace) {
+                        && checkIfPositionIsOccupied(new Position(newRow, newColumn))) {
                     routes.add(new Position(character.getPosition().getRow() + i,
                             character.getPosition().getColumn() + k));
                 }

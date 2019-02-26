@@ -1,9 +1,9 @@
 package app;
 
 import characters.Character;
-import combat.BattleIsOver;
 import combat.Effect;
-import combat.OutOfAmmunitionException;
+import combat.exceptions.BattleIsOver;
+import combat.exceptions.OutOfAmmunitionException;
 import items.Equipment.RangedWeapon;
 import items.Equipment.Weapon;
 import items.Equipment.Wieldable;

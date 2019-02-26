@@ -1,7 +1,7 @@
 package app;
 
 import characters.Character;
-import combat.NoTargetException;
+import combat.exceptions.NoTargetException;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
