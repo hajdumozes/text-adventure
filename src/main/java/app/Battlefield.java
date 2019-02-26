@@ -18,7 +18,6 @@ public class Battlefield {
     }
 
     public void refreshBattlefield() {
-        emptyBattlefield();
         fillBattlefield();
     }
 

@@ -34,6 +34,8 @@ public class Movement extends Battlefield {
                 && checkIfPositionIsOccupied(position)) {
             System.out.println(MessageFormat.format("\t{0} moved from {1} to {2}",
                     character.getName(), character.getPosition(), position));
+            Position originalPosition = character.getPosition();
+            BATTLEFIELD[originalPosition.getRow()][originalPosition.getColumn()] = new EmptySpace();
             character.setPosition(position);
             refreshBattlefield();
         } else {
