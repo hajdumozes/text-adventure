@@ -2,10 +2,7 @@ package app;
 
 import characters.Character;
 import characters.animals.Wolf;
-import characters.playable.Barbarian;
-import characters.playable.Hunter;
-import characters.playable.Paladin;
-import characters.playable.Playable;
+import characters.playable.*;
 import combat.WinCondition;
 import items.Equipment.Equipment;
 
@@ -17,7 +14,7 @@ public class Main {
     public static final List<Character> CHARACTERS_DEAD = new ArrayList<>();
     public static final List<Character> SUMMONABLE_CHARACTERS = new ArrayList<>();
     public static final List<? extends Playable> PLAYABLE_CLASSES =
-            new ArrayList<>(Arrays.asList(new Barbarian(), new Paladin(), new Hunter()));
+            new ArrayList<>(Arrays.asList(new Barbarian(), new Paladin(), new Hunter(), new Wizard()));
     public static final Scanner CONSOLE = new Scanner(System.in);
     public static final String CONSOLE_SEPARATOR = "______________________________________________________" +
             "______________________________________________________";
