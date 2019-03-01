@@ -1,4 +1,4 @@
-package app;
+package app.actions;
 
 import attributes.Attribute;
 import characters.Character;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import static app.Main.CHARACTERS_ALIVE;
 import static app.Main.CONSOLE;
 
-public class SkillManagement extends Combat {
+public class SkillManagement extends AttackEvaluation {
 
 
     protected void evaluateCharacterSkill(Character character) {
@@ -37,13 +37,12 @@ public class SkillManagement extends Combat {
     }
 
     private void evaluateTargetableSkill(Skill skill, Character skillUser) {
-        AttackEvaluation attackEvaluation = new AttackEvaluation();
         if (skill instanceof DistanceBased) {
             evaluateDistanceBasedSkill(skill, skillUser);
         } else {
             skill.applyTo(Collections.singletonList(
-                    attackEvaluation.chooseTargetFromCharacters(
-                            attackEvaluation.getCharactersFromSelectedSide(
+                    chooseTargetFromCharacters(
+                            getCharactersFromSelectedSide(
                                     ((Targetable) skill).isTargetOnPlayersSide()))));
         }
     }
@@ -52,7 +51,7 @@ public class SkillManagement extends Combat {
         try {
             List<Character> charactersInSkillsReach = getFilteredCharacterFromSelectedSide(skill, skillUser);
             skill.applyTo(Collections.singletonList(
-                    new AttackEvaluation().chooseTargetFromCharacters(charactersInSkillsReach)));
+                    chooseTargetFromCharacters(charactersInSkillsReach)));
         } catch (NoTargetException targetException) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
             CONSOLE.nextLine();
@@ -71,7 +70,7 @@ public class SkillManagement extends Combat {
                 ((Targetable) skill).isTargetOnPlayersSide() : ((Aerial) skill).areTargetsOnPlayersSide();
         List<Character> charactersOnSelectedSide = attackEvaluation.getCharactersFromSelectedSide(
                 side);
-        return attackEvaluation.filterReachableCharacters(skillUser, charactersOnSelectedSide,
+        return filterReachableCharacters(skillUser, charactersOnSelectedSide,
                 ((DistanceBased) skill).getReach());
     }
 

@@ -1,5 +1,7 @@
 package app;
 
+import app.actions.Combat;
+import app.battlefield.Battlefield;
 import characters.Character;
 import characters.animals.Wolf;
 import characters.playable.*;

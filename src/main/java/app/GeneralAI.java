@@ -1,5 +1,8 @@
 package app;
 
+import app.actions.SkillManagement;
+import app.battlefield.Battlefield;
+import app.battlefield.Movement;
 import characters.Character;
 import combat.DistanceBased;
 import combat.Position;
@@ -9,7 +12,7 @@ import combat.skills.Skill;
 
 import java.util.*;
 
-public class GeneralAI {
+public class GeneralAI extends SkillManagement {
 
     public void letGeneralAIDecide(Character character) {
         Character chosenTarget = letAiChooseOpponent(character);
@@ -19,14 +22,14 @@ public class GeneralAI {
         if (selectedSkillInReach != null) {
             evaluateSkill(selectedSkillInReach, chosenTarget);
         } else if (distance <= character.getWeaponReach()) {
-            new CharacterActions().attack(character, chosenTarget);
+            attack(character, chosenTarget);
         } else {
             moveTowardsTarget(character, chosenTarget);
         }
     }
 
     private Skill letAiChooseSkill(Character character, int distance) {
-        List<Skill> allAvailableSkills = new SkillManagement().getUsableSkills(character);
+        List<Skill> allAvailableSkills = getUsableSkills(character);
         List<Skill> filteredSkills = filterSkillsInReach(allAvailableSkills, distance);
         if (filteredSkills.size() > 0) {
             return filteredSkills.get(new Random().nextInt(filteredSkills.size()));
@@ -72,7 +75,7 @@ public class GeneralAI {
 
     private Character letAiChooseOpponent(Character character) {
         int percentageChance = new Random().nextInt(100) + 1;
-        List<Character> enemies = new AttackEvaluation().findPossibleTargets(!character.isFriendly());
+        List<Character> enemies = findPossibleTargets(!character.isFriendly());
         enemies.sort(Comparator.comparing(enemy -> enemy.getHealth().getCurrentValue()));
         if (percentageChance < 70) {
             return enemies.get(enemies.size() - 1);
@@ -81,9 +84,9 @@ public class GeneralAI {
         }
     }
 
-    protected Position getNearestEnemyPosition(Character character) {
+    public Position getNearestEnemyPosition(Character character) {
         Battlefield battlefield = new Battlefield();
-        List<Character> possibleTargets = new AttackEvaluation().findPossibleTargets(!character.isFriendly());
+        List<Character> possibleTargets = findPossibleTargets(!character.isFriendly());
         Position positionFound = possibleTargets.get(0).getPosition();
         int minimalDifference = battlefield.countPositionDifference(character.getPosition(), positionFound);
         for (Character enemy : possibleTargets) {

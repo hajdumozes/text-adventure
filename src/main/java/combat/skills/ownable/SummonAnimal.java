@@ -1,7 +1,7 @@
 package combat.skills.ownable;
 
-import app.AttackEvaluation;
 import app.Main;
+import app.actions.AttackEvaluation;
 import characters.Character;
 import characters.animals.Animal;
 import characters.animals.Wolf;

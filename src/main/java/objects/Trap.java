@@ -2,7 +2,7 @@ package objects;
 
 import app.Main;
 import characters.Character;
-import combat.effects.StatusEffect;
+import combat.effects.StunEffect;
 import combat.exceptions.CantFinishAction;
 
 import java.text.MessageFormat;
@@ -42,8 +42,7 @@ public class Trap extends BattlefieldObject {
         int trapDamage = new Main().roll(numberOfDices, damage);
         target.getHealth().setCurrentValue(target.getHealthCurrentValue() - trapDamage);
         target.getStatuses().put("Stunned", true);
-        StatusEffect stunEffect = new StatusEffect("Stun", stunDuration, "Stunned", false);
-        stunEffect.increaseEffectDuration(target, stunEffect);
+        new StunEffect(1).increaseEffectDuration(target);
         System.out.println(MessageFormat.format("\tTrap dealt {0} damage to {1}. {1} is stunned for {2} turns.",
                 trapDamage, target.getName(), stunDuration));
         throw new CantFinishAction("because the unexpected trap.");

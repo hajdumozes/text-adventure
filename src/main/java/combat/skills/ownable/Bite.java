@@ -1,7 +1,7 @@
 package combat.skills.ownable;
 
-import app.CharacterActions;
 import app.Main;
+import app.actions.CharacterActions;
 import attributes.ownable.DamageBonus;
 import characters.Character;
 import combat.DistanceBased;
@@ -31,6 +31,6 @@ public class Bite extends Skill implements Targetable, DistanceBased {
 
     @Override
     public boolean isTargetOnPlayersSide() {
-        return false;
+        return !getOwner().isFriendly();
     }
 }

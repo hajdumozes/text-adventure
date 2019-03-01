@@ -1,6 +1,6 @@
 package combat;
 
-import app.AttackEvaluation;
+import app.actions.AttackEvaluation;
 import characters.Character;
 
 import java.util.List;

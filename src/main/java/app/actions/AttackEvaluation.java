@@ -1,5 +1,6 @@
-package app;
+package app.actions;
 
+import app.battlefield.Battlefield;
 import characters.Character;
 import combat.exceptions.NoTargetException;
 
@@ -11,11 +12,11 @@ import java.util.stream.Collectors;
 import static app.Main.CHARACTERS_ALIVE;
 import static app.Main.CONSOLE;
 
-public class AttackEvaluation extends Combat {
+public class AttackEvaluation extends CharacterActions {
 
     protected void evaluateCharacterAttack(Character character) {
         try {
-            new CharacterActions().attack(character, chooseTargetFromCharacters(filterReachableCharacters
+            attack(character, chooseTargetFromCharacters(filterReachableCharacters
                     (character, getCharactersFromSelectedSide(false), character.getWeaponReach())));
         } catch (NoTargetException targetException) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));

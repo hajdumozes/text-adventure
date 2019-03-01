@@ -30,12 +30,12 @@ public class StatusEffect extends Effect {
         this.statusValue = statusValue;
     }
 
-    public void increaseEffectDuration(Character target, StatusEffect statusEffect) {
-        if (target.getEffects().contains(statusEffect)) {
-            StatusEffect existent = (StatusEffect) target.getEffects().get(target.getEffects().indexOf(statusEffect));
-            existent.setDuration(existent.getDuration() + statusEffect.getDuration());
+    public void increaseEffectDuration(Character target) {
+        if (target.getEffects().contains(this)) {
+            StatusEffect existent = (StatusEffect) target.getEffects().get(target.getEffects().indexOf(this));
+            existent.setDuration(existent.getDuration() + this.getDuration());
         } else {
-            target.getEffects().add(statusEffect);
+            target.getEffects().add(this);
         }
     }
 

@@ -1,6 +1,6 @@
 package combat.skills.ownable;
 
-import app.Movement;
+import app.battlefield.Movement;
 import characters.Character;
 import combat.Position;
 import combat.skills.Skill;
@@ -8,7 +8,7 @@ import objects.Trap;
 
 import java.util.List;
 
-import static app.Battlefield.BATTLEFIELD;
+import static app.battlefield.Battlefield.BATTLEFIELD;
 
 public class SetTrap extends Skill {
     public SetTrap(Character owner) {

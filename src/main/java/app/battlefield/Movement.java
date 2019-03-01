@@ -1,5 +1,6 @@
-package app;
+package app.battlefield;
 
+import app.actions.Combat;
 import characters.Character;
 import combat.Position;
 import combat.exceptions.UnreachablePositionException;
@@ -31,7 +32,7 @@ public class Movement extends Battlefield {
         }
     }
 
-    protected void move(Character character, Position position) {
+    public void move(Character character, Position position) {
         if (checkIfDestinationIsReacheable(character, position)
                 && checkIfPositionIsOccupied(position)) {
             System.out.println(MessageFormat.format("\t{0} moved from {1} to {2}",

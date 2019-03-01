@@ -1,13 +1,18 @@
-package app;
+package app.actions;
 
+import app.GeneralAI;
+import app.Main;
+import app.battlefield.Battlefield;
 import characters.Character;
 import combat.effects.AttributeEffect;
+import combat.effects.StunEffect;
 import combat.exceptions.BattleIsOver;
 import combat.exceptions.OutOfAmmunitionException;
 import items.Equipment.RangedWeapon;
 import items.Equipment.Weapon;
 import items.Equipment.Wieldable;
 import items.Equipment.ownable.Quiver;
+import objects.EmptySpace;
 
 import java.text.MessageFormat;
 import java.util.Random;
@@ -48,9 +53,9 @@ public class CharacterActions extends Combat {
 
     public void evaluateAttackRoll(int attackingRoll, Character attacker, Character defender) {
         if (attackingRoll == 1) {
+            new StunEffect(1).increaseEffectDuration(attacker);
             System.out.println(MessageFormat.format(
                     "\tCritical failure! {0} get stunned for 1 turn lamenting over stupidity", attacker.getName()));
-            //Stun duration not implemented yet
         } else if (attackingRoll == 20) {
             int damage = dealDamage(attacker, defender) * 2;
             System.out.println(MessageFormat.format("\tCritical hit! {0} dealt {1} damage to {2}.",
@@ -63,16 +68,18 @@ public class CharacterActions extends Combat {
             System.out.println(MessageFormat.format("\t{0} hit {1}, and dealt {2} damage.",
                     attacker.getName(), defender.getName(), damage));
         }
+
         if (defender.getHealthCurrentValue() <= 0) {
             kill(defender);
         }
     }
 
-    private void kill(Character defender) {
+    public void kill(Character defender) {
         defender.modifyStatus("Alive", false);
         System.out.println(MessageFormat.format("\t{0} died!", defender.getName()));
         CHARACTERS_ALIVE.remove(defender);
         CHARACTERS_DEAD.add(defender);
+        BATTLEFIELD[defender.getPosition().getRow()][defender.getPosition().getColumn()] = new EmptySpace();
         if (!areAliveCharactersOnBothSides()) {
             throw new BattleIsOver("Battle is over");
         }

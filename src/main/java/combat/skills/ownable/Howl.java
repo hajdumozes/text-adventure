@@ -1,7 +1,7 @@
 package combat.skills.ownable;
 
-import app.Combat;
 import app.Main;
+import app.actions.Combat;
 import characters.Character;
 import characters.animals.Wolf;
 import combat.skills.SkillWithCountDown;

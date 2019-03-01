@@ -1,6 +1,7 @@
 package characters.playable;
 
 import characters.Character;
+import combat.skills.ownable.Frostbolt;
 import items.Equipment.Equipment;
 import items.Equipment.ownable.Quarterstaff;
 
@@ -13,6 +14,7 @@ public class Wizard extends Character implements Playable {
     public Wizard() {
         super("Wizard", "Player", 50, 5, 2, 3, new Equipment(new Quarterstaff()),
                 true);
+        getSkills().add(new Frostbolt(this));
 
     }
 

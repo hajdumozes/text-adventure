@@ -1,5 +1,8 @@
-package app;
+package app.actions;
 
+import app.Main;
+import app.battlefield.Battlefield;
+import app.battlefield.Movement;
 import characters.Character;
 import combat.WinCondition;
 import combat.exceptions.BattleIsOver;
@@ -12,9 +15,9 @@ import java.util.List;
 
 import static app.Main.*;
 
-public class Combat {
+public class Combat extends Movement {
 
-    protected void progressThroughBattle(WinCondition... winConditions) {
+    public void progressThroughBattle(WinCondition... winConditions) {
         try {
             int turnCounter = 0;
             rollInitiativeForAllCharacters();
@@ -99,7 +102,7 @@ public class Combat {
         }
     }
 
-    protected void progressThroughTurnOfFriendlyCharacter(Character character) {
+    public void progressThroughTurnOfFriendlyCharacter(Character character) {
         new Battlefield().showBattlefield();
         printInfoOfAliveCharacters();
         printOptionsForCurrentFriendlyCharacter(character);
@@ -153,7 +156,7 @@ public class Combat {
                 new AttackEvaluation().evaluateCharacterAttack(character);
                 break;
             case "2":
-                new Movement().evaluateCharacterMovement(character);
+                evaluateCharacterMovement(character);
                 break;
             case "3":
                 new CharacterActions().defend(character);
@@ -175,12 +178,13 @@ public class Combat {
         allCharacters.addAll(attackEvaluation.getCharactersFromSelectedSide(false));
         Character chosenCharacter = attackEvaluation.chooseTargetFromCharacters(allCharacters);
         System.out.println(MessageFormat.format("\tName: {0}\n\tClass: {1}\n\tHealth: {2}/{3}" +
-                        "\n\tInitiative: {4}\n\tDexterity: {5}" +
-                        "\n\tArmor Class: {6}\n\tDamage Bonus: {7}",
+                        "\n\tInitiative: {4}\n\tSpeed: {5}\n\tDexterity: {6}" +
+                        "\n\tArmor Class: {7}\n\tDamage Bonus: {8}",
                 chosenCharacter.getName(), chosenCharacter.getClassName(),
                 chosenCharacter.getHealthCurrentValue(), chosenCharacter.getHealthMaxValue(),
-                chosenCharacter.getInitiativeValue(), chosenCharacter.getDexterityValue(),
-                chosenCharacter.getArmorClassValue(), chosenCharacter.getDamageBonusValue()));
+                chosenCharacter.getInitiativeValue(), chosenCharacter.getSpeedValue(),
+                chosenCharacter.getDexterityValue(), chosenCharacter.getArmorClassValue(),
+                chosenCharacter.getDamageBonusValue()));
         printOptionsForCurrentFriendlyCharacter(turnOfCharacter);
     }
 }

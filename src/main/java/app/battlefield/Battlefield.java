@@ -1,5 +1,6 @@
-package app;
+package app.battlefield;
 
+import app.Main;
 import characters.Character;
 import combat.Position;
 import objects.BattlefieldObject;
@@ -21,7 +22,7 @@ public class Battlefield {
         System.out.println("\n\n");
     }
 
-    protected void putRandomTreesToBattlefield() {
+    public void putRandomTreesToBattlefield() {
         int numberOfTrees = new Random().nextInt(10);
         for (int i = 0; i < numberOfTrees; i++) {
             int row = new Random().nextInt(BATTLEFIELD.length);

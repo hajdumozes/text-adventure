@@ -1,6 +1,6 @@
 package combat.skills;
 
-import app.SkillManagement;
+import app.actions.SkillManagement;
 import characters.Character;
 
 import java.util.Collection;

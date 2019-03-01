@@ -30,6 +30,6 @@ public class LayOnHands extends Skill implements Targetable, DistanceBased {
 
     @Override
     public boolean isTargetOnPlayersSide() {
-        return true;
+        return getOwner().isFriendly();
     }
 }

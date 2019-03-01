@@ -1,6 +1,6 @@
 package characters;
 
-import app.Movement;
+import app.battlefield.Movement;
 import combat.Position;
 
 import java.util.List;

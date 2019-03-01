@@ -3,7 +3,7 @@ package combat.skills.ownable;
 import characters.Character;
 import combat.DistanceBased;
 import combat.Targetable;
-import combat.effects.StatusEffect;
+import combat.effects.StunEffect;
 import combat.skills.Skill;
 
 
@@ -15,8 +15,7 @@ public class StrikeOfLight extends Skill implements Targetable, DistanceBased {
 
     public void useSkill(Character target) {
         target.getStatuses().put("Stunned", true);
-        StatusEffect statusEffect = new StatusEffect("Stun", 2, "Stunned", false);
-        statusEffect.increaseEffectDuration(target, statusEffect);
+        new StunEffect(2).increaseEffectDuration(target);
         decreaseSkillUsage();
     }
 
@@ -27,6 +26,6 @@ public class StrikeOfLight extends Skill implements Targetable, DistanceBased {
 
     @Override
     public boolean isTargetOnPlayersSide() {
-        return false;
+        return !getOwner().isFriendly();
     }
 }
