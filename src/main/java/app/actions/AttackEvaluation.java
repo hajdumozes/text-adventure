@@ -2,6 +2,7 @@ package app.actions;
 
 import app.battlefield.Battlefield;
 import characters.Character;
+import combat.Position;
 import combat.exceptions.NoTargetException;
 
 import java.text.MessageFormat;
@@ -17,7 +18,7 @@ public class AttackEvaluation extends CharacterActions {
     protected void evaluateCharacterAttack(Character character) {
         try {
             attack(character, chooseTargetFromCharacters(filterReachableCharacters
-                    (character, getCharactersFromSelectedSide(false), character.getWeaponReach())));
+                    (character.getPosition(), getCharactersFromSelectedSide(false), character.getWeaponReach())));
         } catch (NoTargetException targetException) {
             System.out.println(MessageFormat.format("\t{0}. Press Enter to get back.", targetException.getMessage()));
             CONSOLE.nextLine();
@@ -25,10 +26,10 @@ public class AttackEvaluation extends CharacterActions {
         }
     }
 
-    protected List<Character> filterReachableCharacters(Character thisCharacter, List<Character> possibleTargets, int reach) {
+    public List<Character> filterReachableCharacters(Position position, List<Character> possibleTargets, int reach) {
         List<Character> reachableCharacters = new ArrayList<>();
         for (Character target : possibleTargets) {
-            if (new Battlefield().countPositionDifference(thisCharacter.getPosition(), target.getPosition()) <= reach) {
+            if (new Battlefield().countPositionDifference(position, target.getPosition()) <= reach) {
                 reachableCharacters.add(target);
             }
         }

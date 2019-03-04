@@ -70,7 +70,7 @@ public class SkillManagement extends AttackEvaluation {
                 ((Targetable) skill).isTargetOnPlayersSide() : ((Aerial) skill).areTargetsOnPlayersSide();
         List<Character> charactersOnSelectedSide = attackEvaluation.getCharactersFromSelectedSide(
                 side);
-        return filterReachableCharacters(skillUser, charactersOnSelectedSide,
+        return filterReachableCharacters(skillUser.getPosition(), charactersOnSelectedSide,
                 ((DistanceBased) skill).getReach());
     }
 
