@@ -63,10 +63,12 @@ public class Battlefield {
 
     private void fillBattlefield() {
         for (Character character : Main.CHARACTERS_ALIVE) {
-            int row = character.getPosition().getRow();
-            int column = character.getPosition().getColumn();
+            if (character.getPosition() != null) {
+                int row = character.getPosition().getRow();
+                int column = character.getPosition().getColumn();
 
-            BATTLEFIELD[row][column] = character;
+                BATTLEFIELD[row][column] = character;
+            }
         }
     }
 

@@ -24,7 +24,7 @@ public abstract class Character extends BattlefieldObject {
     private List<SkillWithCountDown> skillWithCountDowns = new ArrayList<>();
     private Equipment equipment;
     private HashMap<String, Boolean> statuses = new HashMap<>();
-    private Position position = new Position(0, 0);
+    private Position position = null;
 
 
     public Character(String className, String name, int health, int dexterity, int armorClass, int speed,

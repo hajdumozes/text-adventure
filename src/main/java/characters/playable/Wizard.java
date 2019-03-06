@@ -13,7 +13,12 @@ import java.util.List;
 public class Wizard extends Character implements Playable {
 
     public Wizard() {
-        super("Wizard", "Player", 50, 5, 2, 3, new Equipment(new Quarterstaff()),
+        this("Player");
+
+    }
+
+    public Wizard(String name) {
+        super("Wizard", name, 50, 5, 2, 3, new Equipment(new Quarterstaff()),
                 true);
         getSkills().add(new Frostbolt(this));
         getSkills().add(new Fireball(this));

@@ -4,6 +4,7 @@ import app.Main;
 import app.battlefield.Battlefield;
 import app.battlefield.Movement;
 import characters.Character;
+import combat.Position;
 import combat.WinCondition;
 import combat.exceptions.BattleIsOver;
 import combat.exceptions.CantFinishAction;
@@ -18,6 +19,7 @@ import static app.Main.*;
 public class Combat extends Movement {
 
     public void progressThroughBattle(WinCondition... winConditions) {
+        positionFriendlyCharacters();
         try {
             int turnCounter = 0;
             rollInitiativeForAllCharacters();
@@ -36,6 +38,29 @@ public class Combat extends Movement {
         }
     }
 
+    private void positionFriendlyCharacters() {
+        System.out.println("\tBefore initiating the battle you must position you team. Give coordinates according" +
+                " to the following sample: 'A3'");
+        for (Character character : CHARACTERS_ALIVE) {
+            new Battlefield().showBattlefield();
+            positionFriendlyCharacter(character);
+        }
+    }
+
+    private void positionFriendlyCharacter(Character character) {
+        if (character.isFriendly()) {
+            System.out.println(MessageFormat.format("\tPlace {0} to the following coordinate:", character));
+            Position position = new Movement().getPositionFromUser();
+            if (position.getColumn() < 3 && new Battlefield().checkIfPositionIsOccupied(position)) {
+                character.setPosition(position);
+            } else {
+                System.out.println("\tIncorrect coordinate. It is occupied already or is out of your arranging field." +
+                        "\nBe aware. You may only place characters on column 1, 2 and 3.");
+                positionFriendlyCharacter(character);
+            }
+        }
+    }
+
     public void decideOutcome(WinCondition... winConditions) {
         boolean overByWinCondition = false;
         boolean win = false;
@@ -48,8 +73,8 @@ public class Combat extends Movement {
         if (!overByWinCondition) {
             win = CHARACTERS_ALIVE.get(0).isFriendly();
         }
-        String output = win ? "\n\tCongratulations you've won! You may begin your journey!" :
-                "\n\tYou are dead.";
+        String output = win ? "\n\tCongratulations, you cleared the fist stage!" :
+                "\n\tYou lost.";
         System.out.println(output);
     }
 

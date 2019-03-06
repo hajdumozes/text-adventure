@@ -27,8 +27,6 @@
 * Certain attributes are present, but without the modifier availability so far
 
 ## Certain future plans chronologically:
-* New classes
 * More enemies and skills
-* Magic
 * Dexterity multiplier implementation to damage and initiative
 * More attributes with multipliers

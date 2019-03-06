@@ -30,14 +30,18 @@ public class Main {
         Character wolf = new Wolf();
         CHARACTERS_ALIVE.add(wolf);
         System.out.println(CONSOLE_SEPARATOR);
-        System.out.println("\n\t Every good story begins with a traveler, who is lost in the woods and have to \n" +
-                "\t climb the ladder of the hierarchy from the very base of it. Should we even start telling \n" +
-                "\t this tale, or the newcoming hero dies to the first lonely wolf in the deep of the woods? \n" +
-                "\t Let's find out!\n");
-
+        System.out.println("\n\n\tForget stories. Face the facts. This is a test. A test of endurance.\n" +
+                "\tYou are not alone, though. You will face the arena with 3 party members:\n\n" +
+                "\tZephyros as a wizard doesn't belong to the front lines, and use high risk - high reward attacks.\n" +
+                "\tAdalbert is your friendly paladin neighbour. You know, healing, disabling and stuff.\n" +
+                "\tFríða uses sneaky hunter tactics and turn nature against the foes.\n\n " +
+                "\tAre you ready? The first challenge awaits you. The wolves. Kill them all, or kill 10 to make them run.\n");
+        CHARACTERS_ALIVE.add(new Wizard("Zephyros"));
+        CHARACTERS_ALIVE.add(new Paladin("Adalbert"));
+        CHARACTERS_ALIVE.add(new Hunter("Fríða"));
         new Battlefield().emptyBattlefield();
         new Battlefield().putRandomTreesToBattlefield();
-        new Combat().progressThroughBattle(new WinCondition(3, Wolf.class, false, true));
+        new Combat().progressThroughBattle(new WinCondition(10, Wolf.class, false, true));
     }
 
     private String chooseName() {

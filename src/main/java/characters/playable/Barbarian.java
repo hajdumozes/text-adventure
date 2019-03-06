@@ -15,6 +15,10 @@ import java.util.List;
 public class Barbarian extends Character implements Playable {
 
     public Barbarian() {
+        this("Player");
+    }
+
+    public Barbarian(String name) {
         super("Barbarian", "Player", 50, 10, 5, 4, new Equipment(new Handaxe(), new Handaxe()), true);
         getSkills().add(new Rage(this));
         getSkills().add(new Berserk(this));

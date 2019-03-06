@@ -73,7 +73,8 @@ public class Fireball extends Skill implements PositionBased {
 
     private void criticalFailure(Character caster) {
         System.out.println(MessageFormat.format(
-                "\tCritical failure! {0}''s hand slipped and the fireball blasted in {0}''s palm.",
+                "\tCritical failure! {0}''s hand slipped and the fireball blasted in {0}''s palm" +
+                        "{0} suffered 24 damage and got stunned for 1 turn.",
                 caster.getName()));
         new StunEffect(1).increaseEffectDuration(caster);
         caster.getHealth().decrease(24);

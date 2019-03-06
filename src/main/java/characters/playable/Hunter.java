@@ -15,7 +15,11 @@ import java.util.List;
 
 public class Hunter extends Character implements Playable {
     public Hunter() {
-        super("Hunter", "Player", 50, 10, 5, 4, new Equipment(new Longbow()),
+        this("Player");
+    }
+
+    public Hunter(String name) {
+        super("Hunter", name, 50, 10, 5, 4, new Equipment(new Longbow()),
                 true);
         getSkills().add(new SummonAnimal(this));
         getSkills().add(new SetTrap(this));

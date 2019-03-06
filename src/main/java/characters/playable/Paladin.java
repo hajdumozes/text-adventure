@@ -15,7 +15,11 @@ import java.util.List;
 public class Paladin extends Character implements Playable {
 
     public Paladin() {
-        super("Paladin", "Player", 500, 10, 5, 4,
+        this("Player");
+    }
+
+    public Paladin(String name) {
+        super("Paladin", name, 50, 10, 5, 4,
                 new Equipment(new Longsword(), new Shield()), true);
         getSkills().add(new LayOnHands(this));
         getSkills().add(new StrikeOfLight(this));
