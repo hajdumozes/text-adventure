@@ -2,17 +2,12 @@ package characters.animals;
 
 import app.GeneralAI;
 import characters.Character;
-import combat.Position;
 import combat.skills.ownable.Bite;
 import combat.skills.ownable.Howl;
 import items.Equipment.Equipment;
 import items.Equipment.ownable.WolfClaw;
 
 public class Wolf extends Animal {
-
-    {
-        setPosition(new Position(5, 6));
-    }
 
     public Wolf() {
         this(false, null, "Enemy Wolf");

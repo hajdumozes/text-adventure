@@ -2,9 +2,12 @@ package combat.skills.ownable;
 
 import app.Main;
 import app.actions.Combat;
+import app.battlefield.Positioning;
 import characters.Character;
 import characters.animals.Wolf;
 import combat.skills.SkillWithCountDown;
+
+import java.util.Collections;
 
 
 public class Howl extends SkillWithCountDown {
@@ -29,6 +32,7 @@ public class Howl extends SkillWithCountDown {
         System.out.println("\n\t# Wolf appeared! #");
         Wolf reinforcement = new Wolf(getOwner().isFriendly(), getOwner(),
                 getOwner().isFriendly() ? "Friendly Wolf" : "Enemy Wolf");
+        new Positioning().positionCharacters(Collections.singletonList(reinforcement));
         Main.CHARACTERS_ALIVE.add(reinforcement);
         new Combat().rollInitiative(reinforcement);
     }

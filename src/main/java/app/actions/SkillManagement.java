@@ -79,7 +79,7 @@ public class SkillManagement extends AttackEvaluation {
         dealWithOutOfSkillsSituation(usableSkills.size(), character);
         printSkills(usableSkills);
         String input = CONSOLE.nextLine().trim();
-        return character.getSkills().get((Integer.parseInt(input) - 1));
+        return usableSkills.get((Integer.parseInt(input) - 1));
     }
 
     protected List<Skill> getUsableSkills(Character character) {

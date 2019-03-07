@@ -15,6 +15,7 @@ import items.Equipment.ownable.Quiver;
 import objects.EmptySpace;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Random;
 
 import static app.Main.*;
@@ -115,5 +116,21 @@ public class CharacterActions extends Combat {
 
     protected void wait(Character character) {
         // useless right now
+    }
+
+    public void inspectCharacter(Character turnOfCharacter) {
+        AttackEvaluation attackEvaluation = new AttackEvaluation();
+        List<Character> allCharacters = attackEvaluation.getCharactersFromSelectedSide(true);
+        allCharacters.addAll(attackEvaluation.getCharactersFromSelectedSide(false));
+        Character chosenCharacter = attackEvaluation.chooseTargetFromCharacters(allCharacters);
+        System.out.println(MessageFormat.format("\tName: {0}\n\tClass: {1}\n\tHealth: {2}/{3}" +
+                        "\n\tInitiative: {4}\n\tSpeed: {5}\n\tDexterity: {6}" +
+                        "\n\tArmor Class: {7}\n\tDamage Bonus: {8}",
+                chosenCharacter.getName(), chosenCharacter.getClassName(),
+                chosenCharacter.getHealthCurrentValue(), chosenCharacter.getHealthMaxValue(),
+                chosenCharacter.getInitiativeValue(), chosenCharacter.getSpeedValue(),
+                chosenCharacter.getDexterityValue(), chosenCharacter.getArmorClassValue(),
+                chosenCharacter.getDamageBonusValue()));
+        printOptionsForCurrentFriendlyCharacter(turnOfCharacter);
     }
 }

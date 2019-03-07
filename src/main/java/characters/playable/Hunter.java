@@ -23,7 +23,7 @@ public class Hunter extends Character implements Playable {
                 true);
         getSkills().add(new SummonAnimal(this));
         getSkills().add(new SetTrap(this));
-        Main.SUMMONABLE_CHARACTERS.add(new Wolf(true, this, "Hunter's Wolf"));
+        Main.SUMMONABLE_CHARACTERS.add(new Wolf(true, this, name + "''s Wolf"));
     }
 
     @Override

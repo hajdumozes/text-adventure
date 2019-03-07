@@ -62,10 +62,17 @@ public class Movement extends Battlefield {
     }
 
     public Position getPositionFromUser() {
-        String input = CONSOLE.nextLine().trim().toUpperCase();
-        int row = input.charAt(0) - 65;
-        int column = Integer.parseInt(input.substring(1, 2)) - 1;
-        return new Position(row, column);
+        try {
+            String input = CONSOLE.nextLine().trim().toUpperCase();
+            int row = input.charAt(0) - 65;
+            int column = Integer.parseInt(input.substring(1, 2)) - 1;
+            if (row < 0 || row >= BATTLEFIELD.length || column < 0 || column >= BATTLEFIELD.length) {
+                throw new IndexOutOfBoundsException();
+            }
+            return new Position(row, column);
+        } catch (NumberFormatException | IndexOutOfBoundsException incorrectPosition) {
+            throw new UnreachablePositionException("Incorrect coordinate format. Please, try again.");
+        }
     }
 
     private void printReachableRoutes(Character character) {

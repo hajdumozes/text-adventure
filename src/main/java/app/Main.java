@@ -27,8 +27,9 @@ public class Main {
         main.chooseClass(name);
         main.chooseEquipment();
         main.rollAbility();
-        Character wolf = new Wolf();
-        CHARACTERS_ALIVE.add(wolf);
+        for (int i = 0; i < 4; i++) {
+            CHARACTERS_ALIVE.add(new Wolf());
+        }
         System.out.println(CONSOLE_SEPARATOR);
         System.out.println("\n\n\tForget stories. Face the facts. This is a test. A test of endurance.\n" +
                 "\tYou are not alone, though. You will face the arena with 3 party members:\n\n" +
